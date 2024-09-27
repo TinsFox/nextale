@@ -16,6 +16,8 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, document);
 
+  app.enableCors();
+
   app.use(
     '/reference',
     apiReference({
