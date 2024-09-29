@@ -13,6 +13,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
+      cache: true,
     }),
     ThrottlerModule.forRoot([
       {

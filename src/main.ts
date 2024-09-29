@@ -12,6 +12,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('NexTale')
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
 
   SwaggerModule.setup('api', app, document);
@@ -26,6 +27,14 @@ async function bootstrap() {
       },
     }),
   );
-  await app.listen(3000);
+  await app.listen(3000, '0.0.0.0', async () => {
+    const url = await app.getUrl();
+
+    const pid = process.pid;
+    console.log(`Process ID is ${pid}`);
+    console.log(`Server is running on ${url}`);
+    console.log(`Scalar API Reference is running on ${url}/reference`);
+    console.log(`Swagger document is running on ${url}/api`);
+  });
 }
 bootstrap();
