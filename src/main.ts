@@ -6,11 +6,16 @@ import { migrateDatabase } from '~/database/database.migrate';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 
+import { isProduction } from './common/constants/env.constant';
+
 const globalPrefix = 'api/v1';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix(globalPrefix);
+  if (isProduction) {
+    app.setGlobalPrefix(globalPrefix);
+  }
+
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
     .setTitle('NexTale')
@@ -21,14 +26,18 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
 
-  SwaggerModule.setup(`${globalPrefix}/api-docs`, app, document);
+  SwaggerModule.setup(
+    `${isProduction ? globalPrefix : ''}/api-docs`,
+    app,
+    document,
+  );
 
   app.use(cookieParser());
 
   app.enableCors();
 
   app.use(
-    `/${globalPrefix}/api-reference`,
+    `${isProduction ? globalPrefix : ''}/api-reference`,
     apiReference({
       spec: {
         content: document,
@@ -44,10 +53,14 @@ async function bootstrap() {
     console.log(`Server is running on ${url}`);
     console.log(`Global Prefix is ${globalPrefix}`);
     console.log(
-      `Scalar API Reference is running on ${url}/${globalPrefix}/api-reference`,
+      `Scalar API Reference is running on ${url}/${
+        isProduction ? globalPrefix : ''
+      }api-reference`,
     );
     console.log(
-      `Swagger document is running on ${url}/${globalPrefix}/api-docs`,
+      `Swagger document is running on ${url}/${
+        isProduction ? globalPrefix : ''
+      }api-docs`,
     );
   });
 }

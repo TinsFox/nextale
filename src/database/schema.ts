@@ -21,8 +21,8 @@ export const users = pgTable('users', {
   updatedAt: timestamp('updated_at').defaultNow(),
 });
 
-export type User = typeof users.$inferSelect; // return type when queried
-export type CreateUser = typeof users.$inferInsert; // insert type
+export type User = typeof users.$inferSelect;
+export type CreateUser = typeof users.$inferInsert;
 
 // 定义文章状态枚举
 export const postStatusEnum = pgEnum('post_status', [

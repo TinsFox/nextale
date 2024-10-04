@@ -16,6 +16,7 @@ export class UsersService {
     });
     return user;
   }
+
   async create(user: CreateUserDto) {
     const hashedPassword = await bcrypt.hash(user.password, 10);
     if (await this.findOne(user.username)) {

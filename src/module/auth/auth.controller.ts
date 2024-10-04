@@ -1,40 +1,43 @@
 import {
   Body,
   Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
   Post,
-  Request,
   UseGuards,
+  Response,
+  Get,
 } from '@nestjs/common';
-import { AuthGuard } from './auth.guard';
+
 import { AuthService } from './auth.service';
-import { Public } from './decorators/public.decorator';
+
 import { CreateUserDto } from './dto/create-user-dto';
+
+import { COOKIE_NAME } from '~/common/constants';
+import { LoginDto } from './dto/login-dto';
 import { LocalAuthGuard } from './local-auth.guard';
+
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Public()
-  @HttpCode(HttpStatus.OK)
-  @Post('login')
   @UseGuards(LocalAuthGuard)
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
+  @Post('login')
+  async login(@Body() signInDto: LoginDto, @Response() res: any) {
+    const token = await this.authService.signIn(
+      signInDto.username,
+      signInDto.password,
+    );
+    res.cookie(COOKIE_NAME, token, { httpOnly: true, secure: true });
+    return res.json({ token, message: 'login success' });
   }
 
-  @Public()
-  @HttpCode(HttpStatus.OK)
   @Post('signup')
   signUp(@Body() signUpDto: CreateUserDto) {
     return this.authService.signUp(signUpDto);
   }
 
-  @UseGuards(AuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  @Get('logout')
+  logout(@Response() res: any) {
+    res.clearCookie(COOKIE_NAME);
+    return res.json({ message: 'logout success' });
   }
 }
