@@ -62,3 +62,8 @@ export const posts = pgTable('posts', {
 
 export type Post = typeof posts.$inferSelect; // return type when queried
 export type CreatePost = typeof posts.$inferInsert; // insert type
+
+export const dbSchema = {
+  users,
+  posts,
+};

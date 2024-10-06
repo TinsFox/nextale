@@ -6,6 +6,7 @@ import { migrateDatabase } from '~/database/database.migrate';
 import cookieParser from 'cookie-parser';
 
 import { isProduction } from './common/constants/env.constant';
+import { ValidationPipe } from '@nestjs/common';
 
 const globalPrefix = 'api/v1';
 
@@ -14,7 +15,7 @@ async function bootstrap() {
   if (isProduction) {
     app.setGlobalPrefix(globalPrefix);
   }
-
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   const config = new DocumentBuilder()
     .setTitle('NexTale')
     .setDescription('NexTale API description')

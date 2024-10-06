@@ -8,12 +8,14 @@ import {
   Delete,
   HttpStatus,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { User } from '~/common/decorators/user.decorator';
 import { UserPayload } from '~/types/user.auth';
+import { PaginationQueryDto } from '~/common/dto/pagination-query.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -33,8 +35,8 @@ export class PostsController {
   }
 
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  findAll(@Query() query: PaginationQueryDto) {
+    return this.postsService.findAll(query);
   }
 
   @Get(':id')

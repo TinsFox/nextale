@@ -15,9 +15,10 @@ import * as schema from '~/database/schema';
         const queryClient = postgres(process.env.DATABASE_URL!, {
           ssl: 'require',
         });
-        return drizzle(queryClient, { schema }) as PostgresJsDatabase<
-          typeof schema
-        >;
+        return drizzle(queryClient, {
+          schema,
+          logger: true,
+        }) as PostgresJsDatabase<typeof schema>;
       },
     },
   ],

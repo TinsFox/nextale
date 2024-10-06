@@ -1,9 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
+
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { PaginationQueryDto } from '~/common/dto/pagination-query.dto';
+import { PaginatedResult } from '~/common/interfaces/paginated-result.interface';
+import { paginateQuery } from '~/common/helpers/pagination.helper';
+import { posts } from '~/database/schema';
 import { DRIZZLE } from '../database/database.module';
 import { DrizzleDB } from '../database/drizzle';
-import { posts } from '~/database/schema';
 
 @Injectable()
 export class PostsService {
@@ -19,9 +23,8 @@ export class PostsService {
     return post;
   }
 
-  async findAll() {
-    const posts = await this.db.query.posts.findMany();
-    return posts;
+  async findAll(query: PaginationQueryDto): Promise<PaginatedResult<any>> {
+    return paginateQuery(this.db, 'posts', query);
   }
 
   findOne(id: number) {
