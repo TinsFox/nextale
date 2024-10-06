@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { HealthModule } from '../health/health.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from '../../config/configuration';
-import { DatabaseModule } from '../../database/database.module';
 import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
@@ -20,7 +19,6 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
       load: [configuration],
       cache: true,
     }),
-    DatabaseModule,
     HealthModule,
     AuthModule,
     UsersModule,

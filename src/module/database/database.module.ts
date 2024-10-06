@@ -7,19 +7,20 @@ import postgres from 'postgres';
 export const DRIZZLE = Symbol('drizzle-connection');
 import * as schema from '~/database/schema';
 
+export const postgresDBClient = postgres(process.env.DATABASE_URL!, {
+  ssl: 'require',
+});
+
+export const db = drizzle(postgresDBClient, {
+  schema,
+  logger: true,
+}) as PostgresJsDatabase<typeof schema>;
+
 @Module({
   providers: [
     {
       provide: DRIZZLE,
-      useFactory: async () => {
-        const queryClient = postgres(process.env.DATABASE_URL!, {
-          ssl: 'require',
-        });
-        return drizzle(queryClient, {
-          schema,
-          logger: true,
-        }) as PostgresJsDatabase<typeof schema>;
-      },
+      useValue: db,
     },
   ],
   exports: [DRIZZLE],

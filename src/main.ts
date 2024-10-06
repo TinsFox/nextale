@@ -1,8 +1,9 @@
+import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '~/module/app/app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
-import { migrateDatabase } from '~/database/database.migrate';
+import { migrateDatabase } from '~/module/database/database.migrate';
 import cookieParser from 'cookie-parser';
 
 import { isProduction } from './common/constants/env.constant';
