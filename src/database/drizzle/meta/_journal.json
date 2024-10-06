@@ -36,6 +36,20 @@
       "when": 1728237431614,
       "tag": "0004_complete_leo",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1728240533711,
+      "tag": "0005_absent_magneto",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1728240807095,
+      "tag": "0006_workable_fenris",
+      "breakpoints": true
     }
   ]
 }

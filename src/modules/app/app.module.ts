@@ -16,6 +16,7 @@ import { ProjectsModule } from '../projects/projects.module';
 import { NotesModule } from '../notes/notes.module';
 import { PagesModule } from '../pages/pages.module';
 import { CategoriesModule } from '../categories/categories.module';
+import { CloudFunctionsModule } from '../cloud-functions/cloud-functions.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { CategoriesModule } from '../categories/categories.module';
     NotesModule,
     PagesModule,
     CategoriesModule,
+    CloudFunctionsModule,
   ],
   controllers: [AppController],
   providers: [

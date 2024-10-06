@@ -117,3 +117,20 @@ export const dbSchema = {
   tags,
   categories,
 };
+
+const httpMethodEnum = pgEnum('http_method', ['GET', 'POST', 'PUT', 'DELETE']);
+
+export const cloudFunctions = pgTable('cloud_functions', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  url: varchar('url', { length: 255 }).notNull().unique(),
+  code: text('code').notNull(),
+  method: json('method').$type<string[]>().default([]),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+  secret: varchar('secret', { length: 255 }),
+  javascriptCode: text('javascript_code'),
+});
+
+export type CloudFunction = typeof cloudFunctions.$inferSelect;
+export type NewCloudFunction = typeof cloudFunctions.$inferInsert;
