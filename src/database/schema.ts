@@ -10,6 +10,7 @@ import {
   pgEnum,
 } from 'drizzle-orm/pg-core';
 import { POST_STATUS } from '~/common/constants/post.constant';
+import { PROJECT_STATUS } from '~/common/constants/project.constant';
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
@@ -87,6 +88,28 @@ export const categories = pgTable('categories', {
 
 export type Category = typeof categories.$inferSelect; // return type when queried
 export type CreateCategory = typeof categories.$inferInsert; // insert type
+
+export const projectStatusEnum = pgEnum('project_status', PROJECT_STATUS);
+
+export const projects = pgTable('projects', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 256 }),
+  docsUrl: varchar('docs_url', { length: 256 }),
+  previewUrl: varchar('preview_url', { length: 256 }),
+  videoUrl: varchar('video_url', { length: 256 }),
+  summary: varchar('summary', { length: 256 }),
+  previewImage: json('preview_image').$type<string[]>().default([]),
+  readme: text('readme'),
+  order: integer('order').default(0),
+  coverImage: varchar('cover_image', { length: 256 }),
+  status: projectStatusEnum('status').default('draft'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+  techStack: json('tech_stack').$type<string[]>().default([]),
+});
+
+export type Project = typeof projects.$inferSelect;
+export type CreateProject = typeof projects.$inferInsert;
 
 export const dbSchema = {
   users,
