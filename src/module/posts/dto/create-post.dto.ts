@@ -4,6 +4,7 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   Length,
 } from 'class-validator';
@@ -21,37 +22,48 @@ export class CreatePostDto {
 
   @IsString()
   @Length(1, 20)
-  coverImage: string;
+  @IsOptional()
+  coverImage?: string;
 
   @IsArray()
-  tags: string[];
+  @IsOptional()
+  tags?: string[];
 
   @IsBoolean()
-  isCopyright: boolean;
+  @IsOptional()
+  isCopyright?: boolean;
 
   @IsBoolean()
-  isTop: boolean;
+  @IsOptional()
+  isTop?: boolean;
 
   @IsNumber()
-  topOrder: number;
+  @IsOptional()
+  topOrder?: number;
 
   @IsString()
-  summary: string;
+  @IsOptional()
+  summary?: string;
 
   @IsString()
-  customCreatedAt: string;
+  @IsOptional()
+  customCreatedAt?: string;
 
   @IsString()
-  customUpdatedAt: string;
+  @IsOptional()
+  customUpdatedAt?: string;
 
   @IsArray()
-  relatedPosts: string[];
+  @IsOptional()
+  relatedPosts?: string[];
 
   @IsString()
-  category: string;
+  @IsOptional()
+  category?: string;
 
   @IsString()
-  slug: string;
+  @IsOptional()
+  slug?: string;
 
   @IsNotEmpty()
   @IsEnum(PostStatusEnum)
