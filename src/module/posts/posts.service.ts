@@ -8,9 +8,14 @@ import { posts } from '~/database/schema';
 @Injectable()
 export class PostsService {
   constructor(@Inject(DRIZZLE) private db: DrizzleDB) {}
-  async create(createPostDto: CreatePostDto) {
-    console.log('createPostDto: ', createPostDto);
-    const post = await this.db.insert(posts).values(createPostDto).returning();
+
+  async create(userId: number, createPostDto: CreatePostDto) {
+    const post = await this.db
+      .insert(posts)
+      .values({ ...createPostDto, authorId: userId })
+      .returning({
+        id: posts.id,
+      });
     return post;
   }
 

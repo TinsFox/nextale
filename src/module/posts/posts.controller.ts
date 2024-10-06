@@ -6,30 +6,30 @@ import {
   Patch,
   Param,
   Delete,
-  Request,
   HttpStatus,
-  Response,
+  HttpCode,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { User } from '~/common/decorators/user.decorator';
+import { UserPayload } from '~/types/user.auth';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   async create(
     @Body() createPostDto: CreatePostDto,
-    @Request() req,
-    @Response() res,
+    @User() user: UserPayload,
   ) {
-    console.log('req.user: ', req.user);
-    const record = await this.postsService.create(createPostDto);
-    return res.status(HttpStatus.CREATED).json({
+    const record = await this.postsService.create(user.userId, createPostDto);
+    return {
       message: 'Post created successfully',
-      record,
-    });
+      id: record[0].id,
+    };
   }
 
   @Get()
