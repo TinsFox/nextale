@@ -6,24 +6,33 @@ import {
   Patch,
   Param,
   Delete,
+  Request,
+  HttpStatus,
+  Response,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { UseGuards } from '@nestjs/common';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+  async create(
+    @Body() createPostDto: CreatePostDto,
+    @Request() req,
+    @Response() res,
+  ) {
+    console.log('req.user: ', req.user);
+    const record = await this.postsService.create(createPostDto);
+    return res.status(HttpStatus.CREATED).json({
+      message: 'Post created successfully',
+      record,
+    });
   }
 
   @Get()
-  // @UseGuards(JwtAuthGuard)
   findAll() {
     return this.postsService.findAll();
   }

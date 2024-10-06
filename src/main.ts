@@ -3,7 +3,6 @@ import { AppModule } from '~/module/app/app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
 import { migrateDatabase } from '~/database/database.migrate';
-import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 
 import { isProduction } from './common/constants/env.constant';
@@ -16,7 +15,6 @@ async function bootstrap() {
     app.setGlobalPrefix(globalPrefix);
   }
 
-  app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
     .setTitle('NexTale')
     .setDescription('NexTale API description')

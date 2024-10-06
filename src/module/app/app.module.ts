@@ -9,7 +9,6 @@ import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from '~/common/filters/http-exception.filter';
-import { CatsModule } from '../cats/cats.module';
 import { PostsModule } from '../posts/posts.module';
 import { DrizzleModule } from '../database/database.module';
 
@@ -25,7 +24,6 @@ import { DrizzleModule } from '../database/database.module';
     AuthModule,
     UsersModule,
     DrizzleModule,
-    CatsModule,
     PostsModule,
   ],
   controllers: [AppController],

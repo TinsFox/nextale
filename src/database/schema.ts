@@ -9,6 +9,7 @@ import {
   text,
   pgEnum,
 } from 'drizzle-orm/pg-core';
+import { POST_STATUS } from '~/common/constants/post.constant';
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
@@ -25,12 +26,7 @@ export type User = typeof users.$inferSelect;
 export type CreateUser = typeof users.$inferInsert;
 
 // 定义文章状态枚举
-export const postStatusEnum = pgEnum('post_status', [
-  'draft',
-  'published',
-  'archived',
-  'under_review',
-]);
+export const postStatusEnum = pgEnum('post_status', POST_STATUS);
 
 export const posts = pgTable('posts', {
   id: serial('id').primaryKey(),
@@ -58,9 +54,8 @@ export const posts = pgTable('posts', {
   slug: varchar('slug', { length: 256 }),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
-  deletedAt: timestamp('deleted_at').defaultNow(),
-  isDeleted: boolean('is_deleted').default(false),
-  isPublished: boolean('is_published').default(false),
+  deletedAt: timestamp('deleted_at'),
+
   // 使用枚举定义文章状态
   status: postStatusEnum('status').default('draft'),
 });
