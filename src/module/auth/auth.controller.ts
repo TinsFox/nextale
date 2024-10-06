@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Post,
-  UseGuards,
-  Response,
-  Get,
-} from '@nestjs/common';
+import { Body, Controller, Post, Response, Get } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 
@@ -15,7 +8,9 @@ import { COOKIE_NAME } from '~/common/constants';
 import { LoginDto } from './dto/login-dto';
 
 import { Public } from '~/common/decorators/public.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

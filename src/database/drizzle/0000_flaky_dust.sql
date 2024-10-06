@@ -4,6 +4,13 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "categories" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"name" varchar(256),
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now()
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "posts" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"title" varchar(256),
@@ -18,14 +25,31 @@ CREATE TABLE IF NOT EXISTS "posts" (
 	"custom_created_at" timestamp,
 	"custom_updated_at" timestamp,
 	"related_posts" json DEFAULT '[]'::json,
-	"category" varchar(256),
+	"category_ids" json DEFAULT '[]'::json,
+	"tag_ids" json DEFAULT '[]'::json,
 	"slug" varchar(256),
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
-	"deleted_at" timestamp DEFAULT now(),
-	"is_deleted" boolean DEFAULT false,
-	"is_published" boolean DEFAULT false,
+	"deleted_at" timestamp,
 	"status" "post_status" DEFAULT 'draft'
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "tags" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"name" varchar(256),
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now()
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "users" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"name" varchar(256),
+	"email" varchar(256),
+	"username" varchar(256),
+	"password" varchar(256),
+	"roles" json DEFAULT '[]'::json,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
 DO $$ BEGIN

@@ -18,7 +18,7 @@ export class ValidationPipe implements PipeTransform<any> {
 
     if (errors.length > 0) {
       const formattedErrors = this.formatErrors(errors);
-      console.log(formattedErrors);
+
       throw new BadRequestException({
         message: JSON.stringify(formattedErrors),
       });

@@ -1,66 +1,45 @@
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '~/module/app/app.module';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { apiReference } from '@scalar/nestjs-api-reference';
+
 import { migrateDatabase } from '~/module/database/database.migrate';
 import cookieParser from 'cookie-parser';
 
-import { isProduction } from './common/constants/env.constant';
+import { globalPrefix, isProduction } from './common/constants/env.constant';
 import { ValidationPipe } from './common/pipe/validation.pipe';
+import { setupSwagger } from './common/middleware/swagger.middleware';
 
-const globalPrefix = 'api/v1';
+import { Logger } from '@nestjs/common';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
+const logger = new Logger('bootstrap');
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   if (isProduction) {
     app.setGlobalPrefix(globalPrefix);
   }
   app.useGlobalPipes(new ValidationPipe());
-  const config = new DocumentBuilder()
-    .setTitle('NexTale')
-    .setDescription('NexTale API description')
-    .setVersion('1.0')
-    .addTag('NexTale')
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
-
-  SwaggerModule.setup(
-    `${isProduction ? globalPrefix : ''}/api-docs`,
-    app,
-    document,
-  );
 
   app.use(cookieParser());
+  app.useLogger(new Logger());
 
   app.enableCors();
+  setupSwagger(app);
 
-  app.use(
-    `${isProduction ? globalPrefix : ''}/api-reference`,
-    apiReference({
-      spec: {
-        content: document,
-      },
-    }),
-  );
   await migrateDatabase();
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
   await app.listen(3000, '0.0.0.0', async () => {
     const url = await app.getUrl();
     const pid = process.pid;
-    console.log(`Process ID is ${pid}`);
-    console.log(`Server is running on ${url}`);
-    console.log(`Global Prefix is ${globalPrefix}`);
-    console.log(
-      `Scalar API Reference is running on ${url}/${
-        isProduction ? globalPrefix : ''
-      }api-reference`,
+    logger.log(`Process ID is ${pid}`);
+    logger.log(`Server is running on ${url}`);
+    logger.log(`Global Prefix is ${globalPrefix}`);
+    logger.log(
+      `Scalar document is running on ${url}/${globalPrefix}/api-reference`,
     );
-    console.log(
-      `Swagger document is running on ${url}/${
-        isProduction ? globalPrefix : ''
-      }api-docs`,
+    logger.log(
+      `Swagger document is running on ${url}/${globalPrefix}/api-docs`,
     );
   });
 }

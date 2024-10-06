@@ -36,7 +36,7 @@ export const posts = pgTable('posts', {
   coverImage: varchar('cover_image', { length: 256 }),
   tags: json('tags').$type<string[]>().default([]),
   // 是否开启版权注明
-  isCopyright: boolean('is_copyright').default(false),
+  isCopyright: boolean('is_copyright').default(true),
   // 置顶
   isTop: boolean('is_top').default(false),
   // 置顶顺序
@@ -50,7 +50,10 @@ export const posts = pgTable('posts', {
   // 关联文章
   relatedPosts: json('related_posts').$type<string[]>().default([]),
   // 分类
-  category: varchar('category', { length: 256 }),
+  categoryIds: json('category_ids').$type<number[]>().default([]),
+  // 标签
+  tagIds: json('tag_ids').$type<number[]>().default([]),
+
   slug: varchar('slug', { length: 256 }),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
@@ -63,7 +66,31 @@ export const posts = pgTable('posts', {
 export type Post = typeof posts.$inferSelect; // return type when queried
 export type CreatePost = typeof posts.$inferInsert; // insert type
 
+export const tags = pgTable('tags', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 256 }),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+  isDeleted: boolean('is_deleted').default(false),
+});
+
+export type Tag = typeof tags.$inferSelect; // return type when queried
+export type CreateTag = typeof tags.$inferInsert; // insert type
+
+export const categories = pgTable('categories', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 256 }),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+  isDeleted: boolean('is_deleted').default(false),
+});
+
+export type Category = typeof categories.$inferSelect; // return type when queried
+export type CreateCategory = typeof categories.$inferInsert; // insert type
+
 export const dbSchema = {
   users,
   posts,
+  tags,
+  categories,
 };

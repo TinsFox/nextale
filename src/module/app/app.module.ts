@@ -11,6 +11,10 @@ import { HttpExceptionFilter } from '~/common/filters/http-exception.filter';
 import { PostsModule } from '../posts/posts.module';
 import { DrizzleModule } from '../database/database.module';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { TagsModule } from '../tags/tags.module';
+import { ProjectsModule } from '../projects/projects.module';
+import { NotesModule } from '../notes/notes.module';
+import { PagesModule } from '../pages/pages.module';
 
 @Module({
   imports: [
@@ -24,6 +28,10 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
     UsersModule,
     DrizzleModule,
     PostsModule,
+    TagsModule,
+    ProjectsModule,
+    NotesModule,
+    PagesModule,
   ],
   controllers: [AppController],
   providers: [
