@@ -15,6 +15,7 @@ import { TagsModule } from '../tags/tags.module';
 import { ProjectsModule } from '../projects/projects.module';
 import { NotesModule } from '../notes/notes.module';
 import { PagesModule } from '../pages/pages.module';
+import { CategoriesModule } from '../categories/categories.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { PagesModule } from '../pages/pages.module';
     ProjectsModule,
     NotesModule,
     PagesModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [

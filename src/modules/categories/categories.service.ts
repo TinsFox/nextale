@@ -1,26 +1,54 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { DrizzleDB } from '../database/drizzle';
+import { DRIZZLE } from '../database/database.module';
+import { categories } from '~/database/schema';
+import { and, eq } from 'drizzle-orm';
 
 @Injectable()
 export class CategoriesService {
+  private readonly logger = new Logger(CategoriesService.name);
+
+  constructor(@Inject(DRIZZLE) private db: DrizzleDB) {}
+
   create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+    return this.db.insert(categories).values(createCategoryDto).returning({
+      id: categories.id,
+    });
   }
 
   findAll() {
-    return `This action returns all categories`;
+    return this.db.query.categories.findMany({
+      where: eq(categories.isDeleted, false),
+      columns: {
+        isDeleted: false,
+      },
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} category`;
+    return this.db.query.categories.findFirst({
+      where: and(eq(categories.id, id), eq(categories.isDeleted, false)),
+    });
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async update(id: number, updateCategoryDto: UpdateCategoryDto) {
+    return this.db
+      .update(categories)
+      .set(updateCategoryDto)
+      .where(eq(categories.id, id));
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: number) {
+    const result = await this.db
+      .update(categories)
+      .set({ isDeleted: true })
+      .where(and(eq(categories.id, id), eq(categories.isDeleted, false)))
+      .returning();
+    return {
+      message: 'Category deleted successfully',
+      id: result[0].id,
+    };
   }
 }

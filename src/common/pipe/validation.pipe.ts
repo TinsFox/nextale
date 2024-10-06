@@ -18,12 +18,11 @@ export class ValidationPipe implements PipeTransform<any> {
 
     if (errors.length > 0) {
       const formattedErrors = this.formatErrors(errors);
-
       throw new BadRequestException({
         message: JSON.stringify(formattedErrors),
       });
     }
-    return value;
+    return object; // 返回转换后的对象，而不是原始值
   }
 
   private toValidate(metatype: any): boolean {

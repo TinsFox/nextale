@@ -5,12 +5,12 @@ import { AppModule } from '~/modules/app/app.module';
 import { migrateDatabase } from '~/modules/database/database.migrate';
 import cookieParser from 'cookie-parser';
 
-import { globalPrefix, isProduction } from './common/constants/env.constant';
+import { globalPrefix, isProduction } from '~/common/constants/env.constant';
 import { ValidationPipe } from './common/pipe/validation.pipe';
-import { setupSwagger } from './common/middleware/swagger.middleware';
+import { setupSwagger } from '~/common/middleware/swagger.middleware';
 
 import { Logger } from '@nestjs/common';
-import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+import { LoggingInterceptor } from '~/common/interceptors/logging.interceptor';
 
 const logger = new Logger('bootstrap');
 async function bootstrap() {
@@ -18,6 +18,7 @@ async function bootstrap() {
   if (isProduction) {
     app.setGlobalPrefix(globalPrefix);
   }
+
   app.useGlobalPipes(new ValidationPipe());
 
   app.use(cookieParser());
