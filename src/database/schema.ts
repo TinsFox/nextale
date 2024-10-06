@@ -97,7 +97,7 @@ export const projects = pgTable('projects', {
   docsUrl: varchar('docs_url', { length: 256 }),
   previewUrl: varchar('preview_url', { length: 256 }),
   videoUrl: varchar('video_url', { length: 256 }),
-  summary: varchar('summary', { length: 256 }),
+  summary: text('summary'),
   previewImage: json('preview_image').$type<string[]>().default([]),
   readme: text('readme'),
   order: integer('order').default(0),
