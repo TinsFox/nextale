@@ -13,13 +13,14 @@ import { CreateUserDto } from './dto/create-user-dto';
 
 import { COOKIE_NAME } from '~/common/constants';
 import { LoginDto } from './dto/login-dto';
-import { LocalAuthGuard } from './local-auth.guard';
+
+import { Public } from '~/common/decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(LocalAuthGuard)
+  @Public()
   @Post('login')
   async login(@Body() signInDto: LoginDto, @Response() res: any) {
     const token = await this.authService.signIn(
@@ -30,6 +31,7 @@ export class AuthController {
     return res.json({ token, message: 'login success' });
   }
 
+  @Public()
   @Post('signup')
   signUp(@Body() signUpDto: CreateUserDto) {
     return this.authService.signUp(signUpDto);

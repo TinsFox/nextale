@@ -7,10 +7,11 @@ import configuration from '../../config/configuration';
 import { DatabaseModule } from '../../database/database.module';
 import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { HttpExceptionFilter } from '~/common/filters/http-exception.filter';
 import { PostsModule } from '../posts/posts.module';
 import { DrizzleModule } from '../database/database.module';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -32,6 +33,10 @@ import { DrizzleModule } from '../database/database.module';
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
     },
   ],
 })
