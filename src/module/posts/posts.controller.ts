@@ -27,6 +27,8 @@ export class PostsController {
     @Body() createPostDto: CreatePostDto,
     @User() user: UserPayload,
   ) {
+    console.log(user);
+    console.log(createPostDto);
     const record = await this.postsService.create(user.userId, createPostDto);
     return {
       message: 'Post created successfully',

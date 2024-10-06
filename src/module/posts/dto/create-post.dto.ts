@@ -21,7 +21,6 @@ export class CreatePostDto {
   content: string;
 
   @IsString()
-  @Length(1, 20)
   @IsOptional()
   coverImage?: string;
 
