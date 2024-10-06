@@ -34,13 +34,11 @@ async function bootstrap() {
     const pid = process.pid;
     logger.log(`Process ID is ${pid}`);
     logger.log(`Server is running on ${url}`);
-    logger.log(`Global Prefix is ${globalPrefix}`);
+    globalPrefix && logger.log(`Global Prefix is ${globalPrefix}`);
     logger.log(
-      `Scalar document is running on ${url}/${globalPrefix}/api-reference`,
+      `Scalar document is running on ${url}/${globalPrefix}api-reference`,
     );
-    logger.log(
-      `Swagger document is running on ${url}/${globalPrefix}/api-docs`,
-    );
+    logger.log(`Swagger document is running on ${url}/${globalPrefix}api-docs`);
   });
 }
 bootstrap();
