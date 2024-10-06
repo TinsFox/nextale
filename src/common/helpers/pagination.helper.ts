@@ -1,7 +1,7 @@
 import { count } from 'drizzle-orm';
 import { PaginationQueryDto } from '../dto/pagination-query.dto';
 import { PaginatedResult } from '../interfaces/paginated-result.interface';
-import { DrizzleDB } from '~/module/database/drizzle';
+import { DrizzleDB } from '~/modules/database/drizzle';
 import { dbSchema } from '~/database/schema';
 
 const defaultPaginationQuery: PaginationQueryDto = {
