@@ -114,6 +114,7 @@ export const projectsTable = pgTable('projects', {
   order: integer('order').default(0),
   coverImage: varchar('cover_image', { length: 256 }),
   status: projectStatusEnum('status').default('draft'),
+  isDeleted: boolean('is_deleted').default(false),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at')
     .notNull()
@@ -138,7 +139,7 @@ export const cloudFunctionsTable = pgTable('cloud_functions', {
   name: varchar('name', { length: 255 }).notNull(),
   url: varchar('url', { length: 255 }).notNull().unique(),
   code: text('code').notNull(),
-  method: json('method').$type<string[]>().default([]),
+  method: json('method').$type<string[]>().notNull().default([]),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at')
     .notNull()

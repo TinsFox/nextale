@@ -17,8 +17,10 @@ export class AuthService {
       throw new BadRequestException('Username or password is incorrect');
     }
     console.log(user);
-
-    const isMatch = await bcrypt.compare(pass, user.password);
+    if (!user.password) {
+      throw new BadRequestException('Invalid password');
+    }
+    const isMatch = bcrypt.compare(pass, user.password);
     if (!isMatch) {
       throw new BadRequestException('Invalid password');
     }
@@ -34,6 +36,9 @@ export class AuthService {
     const user = await this.usersService.findOne(username);
     if (!user) {
       throw new BadRequestException('username or password is incorrect');
+    }
+    if (!user.password) {
+      throw new BadRequestException('Invalid password');
     }
     const isMatch = await bcrypt.compare(pass, user.password);
     if (!isMatch) {

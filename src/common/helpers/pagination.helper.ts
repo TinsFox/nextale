@@ -4,7 +4,7 @@ import { PaginatedResult } from '../interfaces/paginated-result.interface';
 import { DrizzleDB } from '~/modules/database/drizzle';
 import { dbSchema } from '~/database/schema';
 
-const defaultPaginationQuery: PaginationQueryDto = {
+const defaultPaginationQuery = {
   page: 1,
   limit: 10,
 };

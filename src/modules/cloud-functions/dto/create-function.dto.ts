@@ -1,19 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsArray } from 'class-validator';
 
 export class CreateCloudFunctionDto {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Name of the cloud function',
+    example: 'Send Email',
+  })
   @IsString()
   @IsNotEmpty()
   name: string;
+
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   url: string;
+
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   code: string;
+
   @ApiProperty()
-  method: string;
+  @IsArray()
+  method: string[];
 }

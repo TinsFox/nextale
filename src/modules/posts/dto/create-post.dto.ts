@@ -46,11 +46,11 @@ export class CreatePostDto {
 
   @IsString()
   @IsOptional()
-  customCreatedAt?: string;
+  customCreatedAt?: Date;
 
   @IsString()
   @IsOptional()
-  customUpdatedAt?: string;
+  customUpdatedAt?: Date;
 
   @IsArray()
   @IsOptional()
