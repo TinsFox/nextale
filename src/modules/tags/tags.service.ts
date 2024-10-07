@@ -3,7 +3,7 @@ import { CreateTagDto } from './dto/create-tag.dto';
 import { UpdateTagDto } from './dto/update-tag.dto';
 import { DRIZZLE } from '../database/database.module';
 import { DrizzleDB } from '../database/drizzle';
-import { tags } from '~/database/schema';
+import { tagsTable } from '~/database/schema';
 import { and, eq } from 'drizzle-orm';
 
 @Injectable()
@@ -11,12 +11,12 @@ export class TagsService {
   constructor(@Inject(DRIZZLE) private db: DrizzleDB) {}
 
   create(createTagDto: CreateTagDto) {
-    return this.db.insert(tags).values(createTagDto);
+    return this.db.insert(tagsTable).values(createTagDto);
   }
 
   findAll() {
-    return this.db.query.tags.findMany({
-      where: eq(tags.isDeleted, false),
+    return this.db.query.tagsTable.findMany({
+      where: eq(tagsTable.isDeleted, false),
       columns: {
         isDeleted: false,
       },
@@ -24,16 +24,22 @@ export class TagsService {
   }
 
   findOne(id: number) {
-    return this.db.query.tags.findFirst({
-      where: and(eq(tags.id, id), eq(tags.isDeleted, false)),
+    return this.db.query.tagsTable.findFirst({
+      where: and(eq(tagsTable.id, id), eq(tagsTable.isDeleted, false)),
     });
   }
 
   update(id: number, updateTagDto: UpdateTagDto) {
-    return this.db.update(tags).set(updateTagDto).where(eq(tags.id, id));
+    return this.db
+      .update(tagsTable)
+      .set(updateTagDto)
+      .where(eq(tagsTable.id, id));
   }
 
   remove(id: number) {
-    return this.db.update(tags).set({ isDeleted: true }).where(eq(tags.id, id));
+    return this.db
+      .update(tagsTable)
+      .set({ isDeleted: true })
+      .where(eq(tagsTable.id, id));
   }
 }

@@ -1,26 +1,24 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { DrizzleDB } from '../database/drizzle';
 import { DRIZZLE } from '../database/database.module';
-import { categories } from '~/database/schema';
+import { categoriesTable } from '~/database/schema';
 import { and, eq } from 'drizzle-orm';
 
 @Injectable()
 export class CategoriesService {
-  private readonly logger = new Logger(CategoriesService.name);
-
   constructor(@Inject(DRIZZLE) private db: DrizzleDB) {}
 
   create(createCategoryDto: CreateCategoryDto) {
-    return this.db.insert(categories).values(createCategoryDto).returning({
-      id: categories.id,
+    return this.db.insert(categoriesTable).values(createCategoryDto).returning({
+      id: categoriesTable.id,
     });
   }
 
   findAll() {
-    return this.db.query.categories.findMany({
-      where: eq(categories.isDeleted, false),
+    return this.db.query.categoriesTable.findMany({
+      where: eq(categoriesTable.isDeleted, false),
       columns: {
         isDeleted: false,
       },
@@ -28,23 +26,28 @@ export class CategoriesService {
   }
 
   findOne(id: number) {
-    return this.db.query.categories.findFirst({
-      where: and(eq(categories.id, id), eq(categories.isDeleted, false)),
+    return this.db.query.categoriesTable.findFirst({
+      where: and(
+        eq(categoriesTable.id, id),
+        eq(categoriesTable.isDeleted, false),
+      ),
     });
   }
 
   async update(id: number, updateCategoryDto: UpdateCategoryDto) {
     return this.db
-      .update(categories)
+      .update(categoriesTable)
       .set(updateCategoryDto)
-      .where(eq(categories.id, id));
+      .where(eq(categoriesTable.id, id));
   }
 
   async remove(id: number) {
     const result = await this.db
-      .update(categories)
-      .set({ isDeleted: true })
-      .where(and(eq(categories.id, id), eq(categories.isDeleted, false)))
+      .update(categoriesTable)
+      .set({ isDeleted: true, updatedAt: new Date() })
+      .where(
+        and(eq(categoriesTable.id, id), eq(categoriesTable.isDeleted, false)),
+      )
       .returning();
     return {
       message: 'Category deleted successfully',

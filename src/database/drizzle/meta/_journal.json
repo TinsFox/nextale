@@ -50,6 +50,20 @@
       "when": 1728240807095,
       "tag": "0006_workable_fenris",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1728291585236,
+      "tag": "0007_mixed_ser_duncan",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1728291843594,
+      "tag": "0008_fuzzy_iron_lad",
+      "breakpoints": true
     }
   ]
 }

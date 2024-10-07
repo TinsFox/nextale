@@ -10,7 +10,8 @@ import {
 import { PagesService } from './pages.service';
 import { CreatePageDto } from './dto/create-page.dto';
 import { UpdatePageDto } from './dto/update-page.dto';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { IDParams } from '~/common/dto/id.dto';
 
 @ApiTags('Pages')
 @ApiResponse({ status: 201, description: 'Page created successfully' })
@@ -21,7 +22,6 @@ export class PagesController {
   constructor(private readonly pagesService: PagesService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a new page' })
   @ApiBody({ type: CreatePageDto })
   create(@Body() createPageDto: CreatePageDto) {
     return this.pagesService.create(createPageDto);
@@ -33,18 +33,18 @@ export class PagesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param() { id }: IDParams) {
     return this.pagesService.findOne(+id);
   }
 
   @Patch(':id')
   @ApiBody({ type: UpdatePageDto })
-  update(@Param('id') id: string, @Body() updatePageDto: UpdatePageDto) {
+  update(@Param() { id }: IDParams, @Body() updatePageDto: UpdatePageDto) {
     return this.pagesService.update(+id, updatePageDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param() { id }: IDParams) {
     return this.pagesService.remove(+id);
   }
 }

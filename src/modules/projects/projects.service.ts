@@ -3,7 +3,7 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { DRIZZLE } from '../database/database.module';
 import { DrizzleDB } from '../database/drizzle';
-import { projects } from '~/database/schema';
+import { projectsTable } from '~/database/schema';
 import { asc, eq } from 'drizzle-orm';
 
 @Injectable()
@@ -11,32 +11,32 @@ export class ProjectsService {
   constructor(@Inject(DRIZZLE) private db: DrizzleDB) {}
 
   create(createProjectDto: CreateProjectDto) {
-    return this.db.insert(projects).values(createProjectDto);
+    return this.db.insert(projectsTable).values(createProjectDto);
   }
 
   findAll() {
-    return this.db.query.projects.findMany({
-      orderBy: asc(projects.order),
+    return this.db.query.projectsTable.findMany({
+      orderBy: asc(projectsTable.order),
     });
   }
 
   findOne(id: number) {
-    return this.db.query.projects.findFirst({
-      where: eq(projects.id, id),
+    return this.db.query.projectsTable.findFirst({
+      where: eq(projectsTable.id, id),
     });
   }
 
   update(id: number, updateProjectDto: UpdateProjectDto) {
     return this.db
-      .update(projects)
+      .update(projectsTable)
       .set(updateProjectDto)
-      .where(eq(projects.id, id));
+      .where(eq(projectsTable.id, id));
   }
 
   remove(id: number) {
     return this.db
-      .update(projects)
+      .update(projectsTable)
       .set({ isDeleted: true })
-      .where(eq(projects.id, id));
+      .where(eq(projectsTable.id, id));
   }
 }

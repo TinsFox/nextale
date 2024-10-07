@@ -5,7 +5,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { PaginationQueryDto } from '~/common/dto/pagination-query.dto';
 import { PaginatedResult } from '~/common/interfaces/paginated-result.interface';
 import { paginateQuery } from '~/common/helpers/pagination.helper';
-import { posts } from '~/database/schema';
+import { postsTable } from '~/database/schema';
 import { DRIZZLE } from '../database/database.module';
 import { DrizzleDB } from '../database/drizzle';
 
@@ -15,10 +15,10 @@ export class PostsService {
 
   async create(userId: number, createPostDto: CreatePostDto) {
     const post = await this.db
-      .insert(posts)
+      .insert(postsTable)
       .values({ ...createPostDto, authorId: userId })
       .returning({
-        id: posts.id,
+        id: postsTable.id,
       });
     return post;
   }

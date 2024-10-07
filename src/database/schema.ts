@@ -12,7 +12,7 @@ import {
 import { POST_STATUS } from '~/common/constants/post.constant';
 import { PROJECT_STATUS } from '~/common/constants/project.constant';
 
-export const users = pgTable('users', {
+export const usersTable = pgTable('users', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 256 }),
   email: varchar('email', { length: 256 }),
@@ -20,20 +20,22 @@ export const users = pgTable('users', {
   password: varchar('password', { length: 256 }),
   roles: json('roles').$type<string[]>().default([]),
   createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .$onUpdate(() => new Date()),
 });
 
-export type User = typeof users.$inferSelect;
-export type CreateUser = typeof users.$inferInsert;
+export type SelectUser = typeof usersTable.$inferSelect;
+export type InsertUser = typeof usersTable.$inferInsert;
 
 // 定义文章状态枚举
 export const postStatusEnum = pgEnum('post_status', POST_STATUS);
 
-export const posts = pgTable('posts', {
+export const postsTable = pgTable('posts', {
   id: serial('id').primaryKey(),
   title: varchar('title', { length: 256 }),
   content: text('content'),
-  authorId: integer('author_id').references(() => users.id),
+  authorId: integer('author_id').references(() => usersTable.id),
   coverImage: varchar('cover_image', { length: 256 }),
   tags: json('tags').$type<string[]>().default([]),
   // 是否开启版权注明
@@ -57,41 +59,50 @@ export const posts = pgTable('posts', {
 
   slug: varchar('slug', { length: 256 }),
   createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .$onUpdate(() => new Date()),
   deletedAt: timestamp('deleted_at'),
 
   // 使用枚举定义文章状态
   status: postStatusEnum('status').default('draft'),
 });
 
-export type Post = typeof posts.$inferSelect; // return type when queried
-export type CreatePost = typeof posts.$inferInsert; // insert type
+export type Post = typeof postsTable.$inferSelect;
+export type CreatePost = typeof postsTable.$inferInsert;
 
-export const tags = pgTable('tags', {
+export type InsertPost = typeof postsTable.$inferInsert;
+export type SelectPost = typeof postsTable.$inferSelect;
+
+export const tagsTable = pgTable('tags', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 256 }),
   createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .$onUpdate(() => new Date()),
   isDeleted: boolean('is_deleted').default(false),
 });
 
-export type Tag = typeof tags.$inferSelect; // return type when queried
-export type CreateTag = typeof tags.$inferInsert; // insert type
+export type Tag = typeof tagsTable.$inferSelect;
+export type CreateTag = typeof tagsTable.$inferInsert;
 
-export const categories = pgTable('categories', {
+export const categoriesTable = pgTable('categories', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 256 }),
   createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .$onUpdate(() => new Date()),
   isDeleted: boolean('is_deleted').default(false),
 });
 
-export type Category = typeof categories.$inferSelect; // return type when queried
-export type CreateCategory = typeof categories.$inferInsert; // insert type
+export type Category = typeof categoriesTable.$inferSelect;
+export type CreateCategory = typeof categoriesTable.$inferInsert;
 
 export const projectStatusEnum = pgEnum('project_status', PROJECT_STATUS);
 
-export const projects = pgTable('projects', {
+export const projectsTable = pgTable('projects', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 256 }),
   docsUrl: varchar('docs_url', { length: 256 }),
@@ -104,33 +115,70 @@ export const projects = pgTable('projects', {
   coverImage: varchar('cover_image', { length: 256 }),
   status: projectStatusEnum('status').default('draft'),
   createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .$onUpdate(() => new Date()),
   techStack: json('tech_stack').$type<string[]>().default([]),
 });
 
-export type Project = typeof projects.$inferSelect;
-export type CreateProject = typeof projects.$inferInsert;
+export type Project = typeof projectsTable.$inferSelect;
+export type CreateProject = typeof projectsTable.$inferInsert;
 
 export const dbSchema = {
-  users,
-  posts,
-  tags,
-  categories,
+  users: usersTable,
+  posts: postsTable,
+  tags: tagsTable,
+  categories: categoriesTable,
 };
 
 const httpMethodEnum = pgEnum('http_method', ['GET', 'POST', 'PUT', 'DELETE']);
 
-export const cloudFunctions = pgTable('cloud_functions', {
+export const cloudFunctionsTable = pgTable('cloud_functions', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
   url: varchar('url', { length: 255 }).notNull().unique(),
   code: text('code').notNull(),
   method: json('method').$type<string[]>().default([]),
   createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .$onUpdate(() => new Date()),
   secret: varchar('secret', { length: 255 }),
   javascriptCode: text('javascript_code'),
 });
 
-export type CloudFunction = typeof cloudFunctions.$inferSelect;
-export type NewCloudFunction = typeof cloudFunctions.$inferInsert;
+export type CloudFunction = typeof cloudFunctionsTable.$inferSelect;
+export type NewCloudFunction = typeof cloudFunctionsTable.$inferInsert;
+
+export const menusTable = pgTable('menus', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  url: varchar('url', { length: 255 }).notNull().unique(),
+  order: integer('order').default(0),
+  icon: varchar('icon', { length: 255 }),
+  isDeleted: boolean('is_deleted').default(false),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
+export type Menu = typeof menusTable.$inferSelect;
+export type NewMenu = typeof menusTable.$inferInsert;
+
+export const pagesTable = pgTable('pages', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  url: varchar('url', { length: 255 }).notNull().unique(),
+  content: text('content'),
+  order: integer('order').notNull().default(0),
+  coverImage: varchar('cover_image', { length: 255 }),
+  isDeleted: boolean('is_deleted').notNull().default(false),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
+export type SelectPage = typeof pagesTable.$inferSelect;
+export type InsertPage = typeof pagesTable.$inferInsert;

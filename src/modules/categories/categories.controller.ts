@@ -37,17 +37,20 @@ export class CategoriesController {
   }
 
   @Get(':id')
-  findOne(@Param() id: IDParams) {
+  findOne(@Param() { id }: IDParams) {
     return this.categoriesService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param() id: IDParams, @Body() updateCategoryDto: UpdateCategoryDto) {
+  update(
+    @Param() { id }: IDParams,
+    @Body() updateCategoryDto: UpdateCategoryDto,
+  ) {
     return this.categoriesService.update(+id, updateCategoryDto);
   }
 
   @Delete(':id')
-  remove(@Param() id: IDParams) {
+  remove(@Param() { id }: IDParams) {
     return this.categoriesService.remove(+id);
   }
 }

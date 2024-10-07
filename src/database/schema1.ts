@@ -6,10 +6,10 @@ import {
   timestamp,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { posts, users } from './schema';
+import { postsTable, usersTable } from './schema';
 export const comments = pgTable('comments', {
   id: serial('id').primaryKey(),
-  postId: integer('post_id').references(() => posts.id),
+  postId: integer('post_id').references(() => postsTable.id),
   content: varchar('content', { length: 256 }),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
@@ -22,8 +22,8 @@ export type CreateComment = typeof comments.$inferInsert; // insert type
 
 export const likes = pgTable('likes', {
   id: serial('id').primaryKey(),
-  postId: integer('post_id').references(() => posts.id),
-  userId: integer('user_id').references(() => users.id),
+  postId: integer('post_id').references(() => postsTable.id),
+  userId: integer('user_id').references(() => usersTable.id),
   createdAt: timestamp('created_at').defaultNow(),
 });
 
@@ -32,8 +32,8 @@ export type CreateLike = typeof likes.$inferInsert; // insert type
 
 export const collects = pgTable('collects', {
   id: serial('id').primaryKey(),
-  postId: integer('post_id').references(() => posts.id),
-  userId: integer('user_id').references(() => users.id),
+  postId: integer('post_id').references(() => postsTable.id),
+  userId: integer('user_id').references(() => usersTable.id),
   createdAt: timestamp('created_at').defaultNow(),
 });
 

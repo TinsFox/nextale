@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreatePageDto } from './dto/create-page.dto';
 import { UpdatePageDto } from './dto/update-page.dto';
+import { DRIZZLE } from '../database/database.module';
+import { DrizzleDB } from '../database/drizzle';
+import { pagesTable } from '~/database/schema';
+import { and, eq } from 'drizzle-orm';
 
 @Injectable()
 export class PagesService {
+  constructor(@Inject(DRIZZLE) private db: DrizzleDB) {}
+
   create(createPageDto: CreatePageDto) {
-    return 'This action adds a new page';
+    return this.db.insert(pagesTable).values(createPageDto);
   }
 
   findAll() {
-    return `This action returns all pages`;
+    return this.db.query.pagesTable.findMany({
+      where: eq(pagesTable.isDeleted, false),
+      columns: {
+        isDeleted: false,
+      },
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} page`;
+    return this.db.query.pagesTable.findFirst({
+      where: and(eq(pagesTable.id, id), eq(pagesTable.isDeleted, false)),
+    });
   }
 
   update(id: number, updatePageDto: UpdatePageDto) {
-    return `This action updates a #${id} page`;
+    return this.db
+      .update(pagesTable)
+      .set(updatePageDto)
+      .where(eq(pagesTable.id, id));
   }
 
   remove(id: number) {
-    return `This action removes a #${id} page`;
+    return this.db
+      .update(pagesTable)
+      .set({
+        isDeleted: true,
+      })
+      .where(eq(pagesTable.id, id));
   }
 }

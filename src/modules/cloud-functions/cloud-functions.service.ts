@@ -13,7 +13,7 @@ export class CloudFunctionsService {
 
   async createCloudFunction(data: NewCloudFunction): Promise<CloudFunction> {
     const [cloudFunction] = await this.db
-      .insert(schema.cloudFunctions)
+      .insert(schema.cloudFunctionsTable)
       .values(data)
       .returning();
     // TODO
@@ -25,8 +25,8 @@ export class CloudFunctionsService {
   async getCloudFunction(url: string): Promise<CloudFunction | null> {
     const [cloudFunction] = await this.db
       .select()
-      .from(schema.cloudFunctions)
-      .where(eq(schema.cloudFunctions.url, url));
+      .from(schema.cloudFunctionsTable)
+      .where(eq(schema.cloudFunctionsTable.url, url));
     return cloudFunction || null;
   }
 
