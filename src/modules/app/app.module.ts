@@ -31,6 +31,7 @@ import { UPLOAD_DIR } from '~/config/multer-config';
     ServeStaticModule.forRoot({
       rootPath: UPLOAD_DIR,
       serveRoot: '/assets/',
+      exclude: ['/api/(.*)'],
     }),
     HealthModule,
     AuthModule,

@@ -24,7 +24,7 @@ export class PostsService {
   }
 
   async findAll(query: PaginationQueryDto): Promise<PaginatedResult<any>> {
-    return paginateQuery(this.db, 'posts', query);
+    return paginateQuery(this.db, postsTable, query);
   }
 
   findOne(id: number) {

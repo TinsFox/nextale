@@ -11,7 +11,13 @@ import {
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { ApiTags, ApiResponse, ApiExtraModels } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiResponse,
+  ApiExtraModels,
+  ApiBody,
+  ApiOperation,
+} from '@nestjs/swagger';
 import { IDParams } from '~/common/dto/id.dto';
 
 @ApiTags('Categories')
@@ -27,21 +33,27 @@ export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Post()
+  @ApiBody({ type: CreateCategoryDto })
+  @ApiOperation({ summary: 'Create a new category' })
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoriesService.create(createCategoryDto);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all categories' })
   findAll() {
     return this.categoriesService.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get a category by id' })
   findOne(@Param() { id }: IDParams) {
     return this.categoriesService.findOne(+id);
   }
 
   @Patch(':id')
+  @ApiBody({ type: UpdateCategoryDto })
+  @ApiOperation({ summary: 'Update a category by id' })
   update(
     @Param() { id }: IDParams,
     @Body() updateCategoryDto: UpdateCategoryDto,
@@ -50,6 +62,7 @@ export class CategoriesController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a category by id' })
   remove(@Param() { id }: IDParams) {
     return this.categoriesService.remove(+id);
   }

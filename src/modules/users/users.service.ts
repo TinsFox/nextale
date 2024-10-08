@@ -27,4 +27,13 @@ export class UsersService {
       password: hashedPassword,
     });
   }
+
+  async queryCurrentUser(id: number) {
+    return this.db.query.usersTable.findFirst({
+      where: eq(usersTable.id, id),
+      columns: {
+        password: false,
+      },
+    });
+  }
 }

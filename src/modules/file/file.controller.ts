@@ -10,7 +10,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FileService } from './file.service';
 import type { Express } from 'express';
 import { multerConfig } from '~/config/multer-config';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 export class SampleDto {
   name: string;
@@ -23,12 +23,15 @@ export class FileController {
 
   @UseInterceptors(FileInterceptor('file'))
   @Post()
+  @ApiOperation({ summary: 'Upload a file' })
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     return this.fileService.uploadFile(file);
   }
 
   @UseInterceptors(FileInterceptor('file'))
   @Post('pass-validation')
+  @ApiBody({ type: SampleDto })
+  @ApiOperation({ summary: 'Upload a file and pass validation' })
   uploadFileAndPassValidation(
     @Body() body: SampleDto,
     @UploadedFile(
@@ -50,6 +53,8 @@ export class FileController {
 
   @UseInterceptors(FileInterceptor('file'))
   @Post('fail-validation')
+  @ApiBody({ type: SampleDto })
+  @ApiOperation({ summary: 'Upload a file and fail validation' })
   uploadFileAndFailValidation(
     @Body() body: SampleDto,
     @UploadedFile(

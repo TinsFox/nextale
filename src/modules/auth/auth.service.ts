@@ -28,6 +28,7 @@ export class AuthService {
 
     return await this.jwtService.signAsync(payload);
   }
+
   async signUp(user: CreateUserDto) {
     return this.usersService.create(user);
   }

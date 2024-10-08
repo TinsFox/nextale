@@ -12,6 +12,7 @@ import { setupSwagger } from '~/common/middleware/swagger.middleware';
 import { Logger } from '@nestjs/common';
 import { LoggingInterceptor } from '~/common/interceptors/logging.interceptor';
 import { existsSync, mkdirSync } from 'fs';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 const logger = new Logger('bootstrap');
 
@@ -37,6 +38,7 @@ async function bootstrap() {
 
   await migrateDatabase();
   app.useGlobalInterceptors(new LoggingInterceptor());
+  app.useGlobalInterceptors(new TransformInterceptor());
 
   await prepare();
 
