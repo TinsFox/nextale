@@ -21,7 +21,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const call$ = next.handle();
     const request = context.switchToHttp().getRequest();
     const content = `${request.method} ${request.url}`;
-    this.logger.debug(`-> 收到请求 ${content} ${Date.now() - now}ms`);
+    this.logger.debug(`--> 收到请求 ${content} ${Date.now() - now}ms`);
     return call$.pipe(
       tap(() => {
         const response = context.switchToHttp().getResponse();
@@ -29,7 +29,7 @@ export class LoggingInterceptor implements NestInterceptor {
         const method = response.req.method;
         const url = response.req.originalUrl;
         this.logger.debug(
-          `<- 响应请求 ${method} ${url} ${statusCode} ${Date.now() - now}ms`,
+          `<--- 响应请求 ${method} ${url} ${statusCode} ${Date.now() - now}ms`,
         );
       }),
     );

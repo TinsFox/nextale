@@ -4,15 +4,23 @@ import { AppModule } from '~/modules/app/app.module';
 
 import { migrateDatabase } from '~/modules/database/database.migrate';
 import cookieParser from 'cookie-parser';
-
+import { UPLOAD_DIR } from '~/config/multer-config';
 import { globalPrefix, isProduction } from '~/common/constants/env.constant';
 import { ValidationPipe } from './common/pipe/validation.pipe';
 import { setupSwagger } from '~/common/middleware/swagger.middleware';
 
 import { Logger } from '@nestjs/common';
 import { LoggingInterceptor } from '~/common/interceptors/logging.interceptor';
+import { existsSync, mkdirSync } from 'fs';
 
 const logger = new Logger('bootstrap');
+
+async function prepare() {
+  if (!existsSync(UPLOAD_DIR)) {
+    mkdirSync(UPLOAD_DIR);
+  }
+}
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   if (isProduction) {
@@ -29,6 +37,8 @@ async function bootstrap() {
 
   await migrateDatabase();
   app.useGlobalInterceptors(new LoggingInterceptor());
+
+  await prepare();
 
   await app.listen(3000, '0.0.0.0', async () => {
     const url = await app.getUrl();

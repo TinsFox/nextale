@@ -17,6 +17,9 @@ import { NotesModule } from '../notes/notes.module';
 import { PagesModule } from '../pages/pages.module';
 import { CategoriesModule } from '../categories/categories.module';
 import { CloudFunctionsModule } from '../cloud-functions/cloud-functions.module';
+import { FileModule } from '../file/file.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { UPLOAD_DIR } from '~/config/multer-config';
 
 @Module({
   imports: [
@@ -24,6 +27,10 @@ import { CloudFunctionsModule } from '../cloud-functions/cloud-functions.module'
       isGlobal: true,
       load: [configuration],
       cache: true,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: UPLOAD_DIR,
+      serveRoot: '/assets/',
     }),
     HealthModule,
     AuthModule,
@@ -36,6 +43,7 @@ import { CloudFunctionsModule } from '../cloud-functions/cloud-functions.module'
     PagesModule,
     CategoriesModule,
     CloudFunctionsModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [
