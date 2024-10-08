@@ -31,8 +31,8 @@ export function setupSwagger(app: INestApplication) {
         in: 'header',
       },
       spec: {
-        // content: document,
-        url: `${globalPrefix}/openapi.json`,
+        content: document,
+        // url: `${globalPrefix}/openapi.json`,
       },
     }),
   );
