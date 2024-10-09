@@ -8,7 +8,9 @@ import { COOKIE_NAME } from '~/common/constants';
 import { LoginDto } from './dto/login-dto';
 
 import { Public } from '~/common/decorators/public.decorator';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+
+import { Response as ExpressResponse } from 'express';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -19,25 +21,35 @@ export class AuthController {
   @Post('login')
   @ApiBody({ type: LoginDto })
   @ApiOperation({ summary: 'Login' })
-  async login(@Body() signInDto: LoginDto, @Response() res: any) {
+  async login(
+    @Body() signInDto: LoginDto,
+    @Response() response: ExpressResponse,
+  ) {
     const token = await this.authService.signIn(
       signInDto.username,
       signInDto.password,
     );
-    res.cookie(COOKIE_NAME, token, { httpOnly: true, secure: true });
-    return res.json({ code: 200, token, message: 'login success' });
+    response.cookie(COOKIE_NAME, token, { httpOnly: true, secure: true });
+    const loginResponse = {
+      code: 200,
+      data: { token },
+      message: 'login success',
+    };
+    return response.json(loginResponse);
   }
 
   @Public()
   @Post('signup')
   @ApiBody({ type: CreateUserDto })
   @ApiOperation({ summary: 'Sign up' })
+  @ApiResponse({ type: CreateUserDto })
   signUp(@Body() signUpDto: CreateUserDto) {
     return this.authService.signUp(signUpDto);
   }
 
   @Get('logout')
   @ApiOperation({ summary: 'Logout' })
+  @ApiResponse({ type: Object })
   logout(@Response() res: any) {
     res.clearCookie(COOKIE_NAME);
     return res.json({ code: 200, message: 'logout success' });

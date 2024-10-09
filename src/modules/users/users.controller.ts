@@ -1,9 +1,10 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { User } from '~/common/decorators/user.decorator';
 import { UsersService } from './users.service';
 import { UserPayload } from '~/types/user.auth';
+import { UserProfile } from './entities/profile.entity';
 
 @ApiTags('Users')
 @Controller('users')
@@ -12,6 +13,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   @ApiOperation({ summary: 'Get the profile of the current user' })
+  @ApiResponse({ type: UserProfile })
   getProfile(@User() user: UserPayload) {
     return this.usersService.queryCurrentUser(user.userId);
   }
