@@ -9,6 +9,9 @@ export const env = createEnv({
     NEXT_PUBLIC_TIPTAP_APP_CONVERT_APP_ID: z.string().min(1),
     NEXT_PUBLIC_TIPTAP_APP_CONVERT_TOKEN: z.string().min(1),
   },
+  shared: {
+    NEXT_PUBLIC_API_URL: z.string().url(),
+  },
   runtimeEnv: {
     NEXT_PUBLIC_TIPTAP_APP_ID: process.env.NEXT_PUBLIC_TIPTAP_APP_ID,
     NEXT_PUBLIC_TIPTAP_TOKEN: process.env.NEXT_PUBLIC_TIPTAP_TOKEN,
@@ -16,5 +19,6 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_TIPTAP_APP_CONVERT_APP_ID,
     NEXT_PUBLIC_TIPTAP_APP_CONVERT_TOKEN:
       process.env.NEXT_PUBLIC_TIPTAP_APP_CONVERT_TOKEN,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   },
 })

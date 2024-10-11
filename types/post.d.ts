@@ -1,3 +1,4 @@
+import { Category } from "./category"
 export interface Post {
   id: number
   title: string
@@ -20,6 +21,24 @@ export interface Post {
   deletedAt: string
   status: string
 }
+
+export interface Post {
+  title: string
+  content: string
+  coverImage: string
+  tags: string[]
+  isCopyright: boolean
+  isTop: boolean
+  topOrder: number
+  summary: string
+  customCreatedAt: string
+  customUpdatedAt: string
+  relatedPosts: RelatedPosts[]
+  category: Category
+  slug: string
+  status: string
+}
+
 export interface RelatedPosts {
   id: number
   title: string
