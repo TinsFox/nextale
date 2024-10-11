@@ -29,6 +29,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { usePosts } from "@/hooks/query/use-posts"
+import { MultiSelect } from "@/components/multi-select"
 
 export default function PostPage({ params }: { params: { slug: string } }) {
   const { slug } = params
@@ -84,6 +86,9 @@ export default function PostPage({ params }: { params: { slug: string } }) {
 
   const pageTitle = slug === "create" ? "创建文章" : "编辑文章"
 
+  const { data: posts, isLoading: isLoadingPosts } = usePosts()
+  console.log("posts: ", posts)
+
   if (!post) {
     return <div>Loading...</div>
   }
@@ -110,7 +115,9 @@ export default function PostPage({ params }: { params: { slug: string } }) {
                   <Textarea
                     id="summary"
                     value={post.summary}
-                    onChange={(e) => setPost({ ...post, summary: e.target.value })}
+                    onChange={(e) =>
+                      setPost({ ...post, summary: e.target.value })
+                    }
                     rows={3}
                   />
                 </div>
@@ -180,7 +187,7 @@ export default function PostPage({ params }: { params: { slug: string } }) {
                   </div>
                 )}
                 <div>
-                  <Label htmlFor="customCreatedAt">创建日期</Label>
+                  <Label htmlFor="customCreatedAt">自定义创建日期</Label>
                   <DatePicker
                     value={new Date(post.customCreatedAt)}
                     onChange={(date: Date) =>
@@ -192,7 +199,7 @@ export default function PostPage({ params }: { params: { slug: string } }) {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="customUpdatedAt">更新日期</Label>
+                  <Label htmlFor="customUpdatedAt">自定义更新日期</Label>
                   <DatePicker
                     value={new Date(post.customUpdatedAt)}
                     onChange={(date: Date) =>
@@ -225,12 +232,27 @@ export default function PostPage({ params }: { params: { slug: string } }) {
                 </div>
                 <div>
                   <Label>相关文章</Label>
-                  <TagInput
-                    value={post.relatedPosts}
-                    onChange={(relatedPosts) =>
-                      setPost({ ...post, relatedPosts })
-                    }
-                  />
+                  {isLoadingPosts ? (
+                    <div>Loading posts...</div>
+                  ) : (
+                    <MultiSelect
+                      options={
+                        posts?.map((p) => ({
+                          value: p.slug,
+                          label: p.title,
+                        })) || []
+                      }
+                      value={post.relatedPosts}
+                      onValueChange={(selectedSlugs) => {
+                        console.log("selectedSlugs", selectedSlugs)
+                        setPost({ ...post, relatedPosts: selectedSlugs })
+                      }}
+                      placeholder="选择相关文章"
+                      variant="inverted"
+                      animation={2}
+                      maxCount={3}
+                    />
+                  )}
                 </div>
               </div>
             </SheetContent>
