@@ -10,10 +10,12 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 
 import { useUser } from "@/hooks/query/user-user"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export function UserDropdown() {
-  const user = useUser()
-  if (!user?.data) return null
+  const { user, isLoading } = useUser()
+  if (isLoading) return <Skeleton className="w-10 h-10" />
+  if (!user) return null
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -24,7 +26,7 @@ export function UserDropdown() {
             className="overflow-hidden rounded-full"
           >
             <Image
-              src={user?.data.avatar}
+              src={user.data.avatar}
               width={36}
               height={36}
               alt="Avatar"
@@ -32,13 +34,13 @@ export function UserDropdown() {
             />
           </Button>
           <h2 className="scroll-m-20">
-            {user?.data.name || user?.data.username}
+            {user.data.name || user.data.username}
           </h2>
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>
-          {user?.data.name || user?.data.username}
+          {user.data.name || user.data.username}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Settings</DropdownMenuItem>

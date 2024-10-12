@@ -6,6 +6,5 @@ export function useCategories() {
     queryKey: ["categories"],
     queryFn: () => getCategories(),
   })
-  console.log(data?.data)
   return { data: data?.data ?? [], isLoading }
 }

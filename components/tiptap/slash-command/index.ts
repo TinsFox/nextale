@@ -18,7 +18,6 @@ export const SlashCommand = Extension.create({
   name: extensionName,
   priority: 200,
   onCreate() {
-    console.log("SlashCommand extension created")
     popup = tippy("body", {
       interactive: true,
       trigger: "manual",

@@ -16,6 +16,15 @@ const nextConfig = {
       },
     ]
   },
+  async redirects() {
+    return [
+      {
+        source: "/dashboard",
+        destination: "/dashboard/posts",
+        permanent: true,
+      },
+    ]
+  },
   async headers() {
     return [
       {

@@ -22,6 +22,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataTable } from "./components/data-table"
 import { columns } from "./components/columns"
 import { fetchPosts } from "@/lib/api/post"
+import Link from "next/link"
 
 export const metadata = {
   title: "Posts",
@@ -32,7 +33,7 @@ export default async function PostListPage() {
   const posts = await fetchPosts()
 
   return (
-    <main className="flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+    <main className="flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 space-y-2">
       <h1 className="text-lg font-semibold md:text-2xl">文章列表</h1>
       <Tabs defaultValue="all">
         <div className="flex items-center">
@@ -70,16 +71,18 @@ export default async function PostListPage() {
                 Export
               </span>
             </Button>
-            <Button size="sm" className="h-7 gap-1">
-              <PlusCircle className="h-3.5 w-3.5" />
-              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                Add Post
-              </span>
-            </Button>
+            <Link href={"/dashboard/posts/create"}>
+              <Button size="sm" className="h-7 gap-1">
+                <PlusCircle className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  新文章
+                </span>
+              </Button>
+            </Link>
           </div>
         </div>
         <TabsContent value="all">
-          <Card className="container">
+          <Card className="">
             <CardHeader>
               <CardTitle>Posts</CardTitle>
               <CardDescription className="sr-only" />
