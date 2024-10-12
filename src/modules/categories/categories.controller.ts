@@ -19,6 +19,7 @@ import {
   ApiOperation,
 } from '@nestjs/swagger';
 import { IDParams } from '~/common/dto/id.dto';
+import { Public } from '~/common/decorators/public.decorator';
 
 @ApiTags('Categories')
 @ApiResponse({ status: HttpStatus.OK, description: 'OK' })
@@ -40,6 +41,7 @@ export class CategoriesController {
   }
 
   @Get()
+  @Public()
   @ApiOperation({ summary: 'Get all categories' })
   findAll() {
     return this.categoriesService.findAll();

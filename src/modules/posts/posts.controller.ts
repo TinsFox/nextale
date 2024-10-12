@@ -24,6 +24,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Public } from '~/common/decorators/public.decorator';
 
 @ApiTags('Posts')
 @ApiResponse({ status: 400, description: 'Bad Request' })
@@ -33,6 +34,7 @@ import {
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
+  @Public()
   @HttpCode(HttpStatus.CREATED)
   @Post()
   @ApiBody({ type: CreatePostDto })
@@ -41,7 +43,7 @@ export class PostsController {
     @Body() createPostDto: CreatePostDto,
     @User() user: UserPayload,
   ) {
-    const record = await this.postsService.create(user.userId, createPostDto);
+    const record = await this.postsService.create(1, createPostDto);
     return {
       message: 'Post created successfully',
       id: record[0].id,
@@ -49,6 +51,7 @@ export class PostsController {
   }
 
   @Get()
+  @Public()
   @ApiOperation({ summary: 'Get all posts' })
   @ApiQuery({
     name: 'page',
@@ -67,11 +70,11 @@ export class PostsController {
   findAll(@Query() query: PaginationQueryDto) {
     return this.postsService.findAll(query);
   }
-
+  @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Get a post by id' })
-  findOne(@Param('id') id: string) {
-    return this.postsService.findOne(+id);
+  findOne(@Param('id') slug: string) {
+    return this.postsService.findOne(slug);
   }
 
   @Patch(':id')

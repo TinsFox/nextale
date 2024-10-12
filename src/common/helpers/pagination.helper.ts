@@ -1,4 +1,4 @@
-import { count } from 'drizzle-orm';
+import { count, desc } from 'drizzle-orm';
 import { PaginationQueryDto } from '../dto/pagination-query.dto';
 import { PaginatedResult } from '../interfaces/paginated-result.interface';
 import { DrizzleDB } from '~/modules/database/drizzle';
@@ -20,7 +20,12 @@ export async function paginateQuery<T>(
 
   const offset = (page - 1) * limit;
 
-  const query = db.select().from(table).offset(offset).limit(limit);
+  const query = db
+    .select()
+    .from(table)
+    .offset(offset)
+    .limit(limit)
+    .orderBy(desc(table.createdAt));
 
   const totalQuery = db.select({ count: count() }).from(table);
 

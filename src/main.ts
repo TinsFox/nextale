@@ -24,6 +24,8 @@ async function prepare() {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
+
   if (isProduction) {
     app.setGlobalPrefix(globalPrefix);
   }
@@ -33,7 +35,6 @@ async function bootstrap() {
   app.use(cookieParser());
   app.useLogger(new Logger());
 
-  app.enableCors();
   setupSwagger(app);
 
   await migrateDatabase();
@@ -42,7 +43,7 @@ async function bootstrap() {
 
   await prepare();
 
-  await app.listen(3000, '0.0.0.0', async () => {
+  await app.listen(8080, '0.0.0.0', async () => {
     const url = await app.getUrl();
     const pid = process.pid;
     logger.log(`Process ID is ${pid}`);

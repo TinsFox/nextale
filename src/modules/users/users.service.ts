@@ -2,7 +2,7 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DRIZZLE } from '../database/database.module';
 import { DrizzleDB } from '../database/drizzle';
 import { eq } from 'drizzle-orm';
-import { SelectUser, usersTable } from '~/database/schema';
+import { SelectUser, socialLinksTable, usersTable } from '~/database/schema';
 import { CreateUserDto } from '../auth/dto/create-user-dto';
 import * as bcrypt from 'bcrypt';
 
@@ -35,5 +35,24 @@ export class UsersService {
         password: false,
       },
     });
+  }
+
+  async querySiteProfile() {
+    const socialLinks = await this.db.query.socialLinksTable.findMany();
+    const user = await this.db.query.usersTable.findFirst({
+      where: eq(usersTable.id, 1),
+      columns: {
+        password: false,
+        roles: false,
+        createdAt: false,
+        updatedAt: false,
+        email: false,
+        name: false,
+      },
+    });
+    return {
+      ...user,
+      socialLinks,
+    };
   }
 }

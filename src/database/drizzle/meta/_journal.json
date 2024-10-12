@@ -64,6 +64,20 @@
       "when": 1728291843594,
       "tag": "0008_fuzzy_iron_lad",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1728446634418,
+      "tag": "0009_special_bloodstorm",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1728447052515,
+      "tag": "0010_right_madame_web",
+      "breakpoints": true
     }
   ]
 }

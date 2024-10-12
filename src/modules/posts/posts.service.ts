@@ -1,13 +1,14 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PaginationQueryDto } from '~/common/dto/pagination-query.dto';
 import { PaginatedResult } from '~/common/interfaces/paginated-result.interface';
 import { paginateQuery } from '~/common/helpers/pagination.helper';
-import { postsTable } from '~/database/schema';
+import { postsTable, tagsTable } from '~/database/schema';
 import { DRIZZLE } from '../database/database.module';
 import { DrizzleDB } from '../database/drizzle';
+import { eq, inArray } from 'drizzle-orm';
 
 @Injectable()
 export class PostsService {
@@ -27,16 +28,30 @@ export class PostsService {
     return paginateQuery(this.db, postsTable, query);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(slug: string) {
+    const post = await this.db.query.postsTable.findFirst({
+      where: eq(postsTable.slug, slug),
+      columns: {
+        status: false,
+      },
+    });
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+    const relatedTags = await this.db.query.tagsTable.findMany({
+      where: inArray(tagsTable.id, post.tagIds ?? []),
+    });
+    return { ...post, tags: relatedTags };
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {
-    console.log('updatePostDto: ', updatePostDto);
-    return `This action updates a #${id} post`;
+    return this.db
+      .update(postsTable)
+      .set(updatePostDto)
+      .where(eq(postsTable.id, id));
   }
 
   remove(id: number) {
-    return `This action removes a #${id} post`;
+    return this.db.delete(postsTable).where(eq(postsTable.id, id));
   }
 }

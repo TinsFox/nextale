@@ -20,6 +20,7 @@ import { CloudFunctionsModule } from '../cloud-functions/cloud-functions.module'
 import { FileModule } from '../file/file.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { UPLOAD_DIR } from '~/config/multer-config';
+import { RedisModule } from '../redis/redis.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { UPLOAD_DIR } from '~/config/multer-config';
     CategoriesModule,
     CloudFunctionsModule,
     FileModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [

@@ -35,6 +35,7 @@
     "@nestjs/serve-static": "^4.0.2",
     "@nestjs/terminus": "^10.2.3",
     "@nestjs/throttler": "^6.2.1",
+    "@upstash/redis": "^1.34.2",
     "bcrypt": "^5.1.1",
     "cache-manager": "^6.1.0",
     "class-transformer": "^0.5.1",

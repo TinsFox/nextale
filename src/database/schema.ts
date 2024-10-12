@@ -18,6 +18,8 @@ export const usersTable = pgTable('users', {
   email: varchar('email', { length: 256 }),
   username: varchar('username', { length: 256 }),
   password: varchar('password', { length: 256 }),
+  avatar: varchar('avatar', { length: 256 }),
+  bio: text('bio'),
   roles: json('roles').$type<string[]>().default([]),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at')
@@ -183,3 +185,19 @@ export const pagesTable = pgTable('pages', {
 
 export type SelectPage = typeof pagesTable.$inferSelect;
 export type InsertPage = typeof pagesTable.$inferInsert;
+
+export const socialLinksTable = pgTable('social_links', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  url: varchar('url', { length: 255 }).notNull().unique(),
+  order: integer('order').default(0),
+  icon: varchar('icon', { length: 255 }),
+  isDeleted: boolean('is_deleted').default(false),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
+export type SocialLink = typeof socialLinksTable.$inferSelect;
+export type NewSocialLink = typeof socialLinksTable.$inferInsert;

@@ -1,3 +1,4 @@
+import { Public } from '~/common/decorators/public.decorator';
 import {
   Controller,
   Get,
@@ -24,6 +25,7 @@ export class ProjectsController {
     return this.projectsService.create(createProjectDto);
   }
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Get all projects' })
   findAll() {
