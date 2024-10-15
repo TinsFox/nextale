@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 import {
   Content,
   HTMLContent,
@@ -23,6 +23,8 @@ export function useTiptapEditor({
   onJSONContentChange,
   onHTMLContentChange,
 }: UseTiptapEditorProps) {
+  const [characters, setCharactersCount] = useState()
+
   const editor = usePrimitiveEditor({
     extensions: ExtensionKit,
     immediatelyRender: false,
@@ -30,9 +32,18 @@ export function useTiptapEditor({
     content: initialContent,
     autofocus: "start",
     onCreate(props) {
-      console.log("props: ", props)
+      const { editor } = props
       props.editor.commands.focus()
       props.editor.commands.setContent(testContent)
+      const charactersCount = editor.storage.characterCount.characters()
+      setCharactersCount(charactersCount)
+      props.editor.commands.focus("start")
+    },
+    onUpdate(props) {
+      console.log("onUpdate props: ", props)
+      const { editor } = props
+      const charactersCount = editor.storage.characterCount.characters()
+      setCharactersCount(charactersCount)
     },
     editorProps: {
       attributes: {
@@ -60,6 +71,8 @@ export function useTiptapEditor({
       const htmlContent = editor.getHTML()
       onJSONContentChange?.(jsonContent)
       onHTMLContentChange?.(htmlContent)
+      const charactersCount = editor.storage.characterCount.characters()
+      setCharactersCount(charactersCount)
     }
 
     editor.on("update", updateHandler)
@@ -73,5 +86,6 @@ export function useTiptapEditor({
     editor,
     getContent,
     handleSave,
+    charsCount: characters,
   }
 }
