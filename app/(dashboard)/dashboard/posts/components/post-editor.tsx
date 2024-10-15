@@ -1,40 +1,21 @@
 "use client"
+
 import { useEffect, useState, useTransition } from "react"
-import { TiptapEditor } from "@/components/tiptap"
-import { useTiptapEditor } from "@/components/tiptap/use-tiptap-editor"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-
-import { DatePicker } from "@/components/ui/date-picker"
-import { TagInput } from "@/components/ui/tag-input"
-import { Post } from "@/types/post"
-import { Category } from "@/types/category"
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
-import { Settings, FileText } from "lucide-react"
-
-import { isEmpty } from "lodash-es"
-
-import { Switch } from "@/components/ui/switch"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { usePosts } from "@/hooks/query/use-posts"
-import { MultiSelect } from "@/components/multi-select"
+import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { isEmpty } from "lodash-es"
+import { FileText, Settings, WandSparkles } from "lucide-react"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import * as z from "zod"
+
+import { Category } from "@/types/category"
+import { Post } from "@/types/post"
+import { createOrUpdatePost } from "@/lib/actions/post"
+import { useCategories } from "@/hooks/query/use-categories"
+import { usePosts } from "@/hooks/query/use-posts"
+import { Button } from "@/components/ui/button"
+import { DatePicker } from "@/components/ui/date-picker"
 import {
   Form,
   FormControl,
@@ -44,11 +25,29 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { useCategories } from "@/hooks/query/use-categories"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
-import { createOrUpdatePost } from "@/lib/actions/post"
+import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { Switch } from "@/components/ui/switch"
+import { TagInput } from "@/components/ui/tag-input"
+import { Textarea } from "@/components/ui/textarea"
 import Loading from "@/components/loading"
+import { MultiSelect } from "@/components/multi-select"
+import { TiptapEditor } from "@/components/tiptap"
+import { useTiptapEditor } from "@/components/tiptap/hooks/use-tiptap-editor"
 
 const postFormSchema = z.object({
   id: z.number().optional(),
@@ -128,6 +127,7 @@ export function PostEditor({
       document.removeEventListener("keydown", onKeyDown)
     }
   }, [form, startTransitionSaving])
+
   const { editor } = useTiptapEditor({
     initialContent: data?.content ? JSON.parse(data?.content) : "",
     onJSONContentChange: (content) => {
@@ -137,8 +137,9 @@ export function PostEditor({
   })
 
   const onSubmit = async (data: PostFormValues) => {
+    // if the form is not valid, return
+    return
     const content = form.getValues("content")
-
     if (isEmpty(content)) {
       toast.error("写点什么吧")
       return
@@ -153,11 +154,20 @@ export function PostEditor({
       toast.error("保存文章失败")
     }
   }
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLFormElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault()
+    }
+  }
 
   if (!editor) return <Loading />
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8"
+        onKeyPress={handleKeyPress}
+      >
         <main className="flex flex-col h-screen p-4">
           <div className="flex items-center justify-between p-4">
             <div className="flex">
@@ -482,7 +492,16 @@ export function PostEditor({
                 <FormItem>
                   <FormLabel>Slug</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <div className="flex items-center relative">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute left-0 top-1/2 -translate-y-1/2"
+                      >
+                        <WandSparkles className="h-4 w-4" />
+                      </Button>
+                      <Input {...field} className="pl-10" />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

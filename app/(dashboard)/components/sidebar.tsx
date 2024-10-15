@@ -1,9 +1,10 @@
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Home, List, NotebookTabs, Settings, Users } from "lucide-react"
 
-import { UserDropdown } from "./user-dropdown"
-import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
+
+import { UserDropdown } from "./user-dropdown"
 
 const navItems = [
   {
@@ -35,7 +36,7 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname()
-  console.log("pathname: ", pathname)
+
   const isActive = (path: string) => pathname === path
   return (
     <>

@@ -1,5 +1,7 @@
+import Link from "next/link"
 import { File, ListFilter, PlusCircle } from "lucide-react"
 
+import { fetchPosts } from "@/lib/api/post"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -17,16 +19,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DataTable } from "./components/data-table"
+
 import { columns } from "./components/columns"
-import { fetchPosts } from "@/lib/api/post"
-import Link from "next/link"
+import { DataTable } from "./components/data-table"
 
 export const metadata = {
-  title: "Posts",
-  description: "Manage your posts.",
+  title: "文章列表",
+  description: "文章列表",
 }
 
 export default async function PostListPage() {

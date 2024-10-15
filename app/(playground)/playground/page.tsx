@@ -1,8 +1,12 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { DayPicker } from "react-day-picker"
 import { useState } from "react"
+import { DayPicker } from "react-day-picker"
+
+import { Button } from "@/components/ui/button"
+import { TiptapEditor } from "@/components/tiptap"
+import { useTiptapEditor } from "@/components/tiptap/hooks/use-tiptap-editor"
+import { UserDropdown } from "@/app/(dashboard)/components/user-dropdown"
 
 const testData = {
   type: "doc",
@@ -14,9 +18,6 @@ const testData = {
     },
   ],
 }
-import { UserDropdown } from "@/app/(dashboard)/components/user-dropdown"
-import { useTiptapEditor } from "@/components/tiptap/use-tiptap-editor"
-import { TiptapEditor } from "@/components/tiptap"
 
 export default function TestPage() {
   const [selected, setSelected] = useState<Date>()

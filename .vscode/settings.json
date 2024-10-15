@@ -4,5 +4,6 @@
     ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
     ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
   ],
-  "cSpell.words": ["Tiptap"]
+  "cSpell.words": ["Tiptap"],
+  "stylua.targetReleaseVersion": "latest"
 }
