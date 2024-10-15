@@ -1,9 +1,11 @@
 "use client"
 
-import { AuthProvider } from "@/lib/auth-context"
 import Link from "next/link"
-import { Home, Bell } from "lucide-react"
+import { Bell, Home } from "lucide-react"
+
+import { AuthProvider } from "@/lib/auth-context"
 import { Button } from "@/components/ui/button"
+
 import { Sidebar } from "./components/sidebar"
 
 export default function DashboardLayout({

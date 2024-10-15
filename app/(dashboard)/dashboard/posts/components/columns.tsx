@@ -1,5 +1,12 @@
 "use client"
 
+import Link from "next/link"
+import { ColumnDef } from "@tanstack/react-table"
+import { formatDate } from "date-fns"
+import { MoreHorizontal } from "lucide-react"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,13 +15,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
-import { ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
-import Link from "next/link"
-import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
-import { formatDate } from "date-fns"
+
 // import { MDXRemote } from "next-mdx-remote/rsc"
 
 export interface IPost {
@@ -46,7 +48,11 @@ export const columns: ColumnDef<IPost>[] = [
     header: "标题",
     cell: ({ row }) => {
       const post = row.original
-      return <Link href={`/posts/${post.slug}`}>{post.title}</Link>
+      return (
+        <Link href={`/dashboard/posts/${post.slug || post.id}`} target="_blank">
+          <Button variant="link">{post.title}</Button>
+        </Link>
+      )
     },
   },
   {
@@ -143,8 +149,12 @@ export const columns: ColumnDef<IPost>[] = [
     header: "标签",
   },
   {
-    accessorKey: "slug",
-    header: "Slug",
+    accessorKey: "updatedAt",
+    header: "更新时间",
+    cell: ({ row }) => {
+      const post = row.original
+      return <div>{formatDate(post.updatedAt, "yyyy-MM-dd HH:mm:ss")}</div>
+    },
   },
   {
     accessorKey: "createdAt",
@@ -154,14 +164,7 @@ export const columns: ColumnDef<IPost>[] = [
       return <div>{formatDate(post.createdAt, "yyyy-MM-dd HH:mm:ss")}</div>
     },
   },
-  {
-    accessorKey: "updatedAt",
-    header: "更新时间",
-    cell: ({ row }) => {
-      const post = row.original
-      return <div>{formatDate(post.updatedAt, "yyyy-MM-dd HH:mm:ss")}</div>
-    },
-  },
+
   {
     id: "actions",
     header: "操作",

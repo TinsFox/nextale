@@ -35,6 +35,7 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname()
+  console.log("pathname: ", pathname)
   const isActive = (path: string) => pathname === path
   return (
     <>
@@ -45,8 +46,8 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-                isActive(item.href) && "bg-accent text-accent-foreground"
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground",
+                isActive(item.href) && "bg-muted text-accent-foreground"
               )}
             >
               <item.icon className="h-4 w-4" />
