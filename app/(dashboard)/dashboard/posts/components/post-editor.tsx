@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { isEmpty } from "lodash-es"
 import { FileText, Settings, WandSparkles } from "lucide-react"
 import { useForm } from "react-hook-form"
+import { useHotkeys } from "react-hotkeys-hook"
 import { toast } from "sonner"
 import * as z from "zod"
 
@@ -112,21 +113,18 @@ export function PostEditor({
       toast.error(JSON.stringify(form.formState.errors))
     }
   }, [form.formState.errors])
-  // listen to CMD + S and override the default behavior
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey && e.key === "s") || (e.ctrlKey && e.key === "s")) {
-        e.preventDefault()
-        startTransitionSaving(async () => {
-          form.handleSubmit(onSubmit)()
-        })
-      }
-    }
-    document.addEventListener("keydown", onKeyDown)
-    return () => {
-      document.removeEventListener("keydown", onKeyDown)
-    }
-  }, [form, startTransitionSaving])
+
+  // listen to CMD + S ctrl+enter and override the default behavior
+  const handleSave = async () => {
+    startTransitionSaving(async () => {
+      form.handleSubmit(onSubmit)()
+    })
+  }
+  useHotkeys("meta+s, ctrl+enter", handleSave, {
+    preventDefault: true,
+    enableOnContentEditable: true,
+    enableOnFormTags: true,
+  })
 
   const { editor } = useTiptapEditor({
     initialContent: data?.content ? JSON.parse(data?.content) : "",
@@ -137,8 +135,6 @@ export function PostEditor({
   })
 
   const onSubmit = async (data: PostFormValues) => {
-    // if the form is not valid, return
-    return
     const content = form.getValues("content")
     if (isEmpty(content)) {
       toast.error("写点什么吧")
@@ -147,8 +143,8 @@ export function PostEditor({
     try {
       await createOrUpdatePost({ ...data, content } as unknown as Post)
       toast.success("文章发布成功")
-      router.push(`/dashboard/posts`)
-      localStorage.removeItem("postContent")
+      // router.push(`/dashboard/posts`)
+      // localStorage.removeItem("postContent")
     } catch (error) {
       console.error("Error saving post:", error)
       toast.error("保存文章失败")
