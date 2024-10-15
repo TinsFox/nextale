@@ -129,7 +129,7 @@ export function PostEditor({
     }
   }, [form, startTransitionSaving])
   const { editor } = useTiptapEditor({
-    initialContent: JSON.parse(data.content) || "",
+    initialContent: data?.content ? JSON.parse(data?.content) : "",
     onJSONContentChange: (content) => {
       form.setValue("content", JSON.stringify(content))
       localStorage.setItem("postContent", JSON.stringify(content))
