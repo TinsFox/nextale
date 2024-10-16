@@ -33,11 +33,11 @@ export function useTiptapEditor({
     autofocus: "start",
     onCreate(props) {
       const { editor } = props
-      props.editor.commands.focus()
-      props.editor.commands.setContent(testContent)
+      editor.commands.focus()
+      editor.commands.setContent(testContent)
       const charactersCount = editor.storage.characterCount.characters()
       setCharactersCount(charactersCount)
-      props.editor.commands.focus("start")
+      editor.commands.focus("start")
     },
     onUpdate(props) {
       console.log("onUpdate props: ", props)

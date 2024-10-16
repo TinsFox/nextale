@@ -1,11 +1,8 @@
-// TODO: Implement your own API
+import { uploadImage } from "@/lib/api/file"
+
 export class API {
-  public static uploadImage = async (_file: File) => {
-    console.log("_file: ", _file)
-    console.log(
-      "Image upload is disabled in the demo... Please implement the API.uploadImage method in your project."
-    )
-    await new Promise((r) => setTimeout(r, 500))
-    return "/placeholder-image.jpg"
+  public static uploadImage = async (file: File) => {
+    const res = await uploadImage(file)
+    return res
   }
 }

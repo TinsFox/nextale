@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { isEmpty } from "lodash-es"
 import { FileText, Settings, WandSparkles } from "lucide-react"
-import { useForm } from "react-hook-form"
+import { useForm, UseFormReturn } from "react-hook-form"
 import { useHotkeys } from "react-hotkeys-hook"
 import { toast } from "sonner"
 import * as z from "zod"
@@ -15,6 +15,7 @@ import { Post } from "@/types/post"
 import { createOrUpdatePost } from "@/lib/actions/post"
 import { useCategories } from "@/hooks/query/use-categories"
 import { usePosts } from "@/hooks/query/use-posts"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DatePicker } from "@/components/ui/date-picker"
 import {
@@ -87,8 +88,6 @@ export function PostEditor({
   const [data, setData] = useState<Post>(post)
   const [isPendingSaving, startTransitionSaving] = useTransition()
 
-  const { data: posts, isLoading: isLoadingPosts } = usePosts()
-  const { data: categories, isLoading: isLoadingCategories } = useCategories()
   const form = useForm<PostFormValues>({
     resolver: zodResolver(postFormSchema),
     values: {
@@ -157,360 +156,369 @@ export function PostEditor({
   }
 
   if (!editor) return <Loading />
+
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8"
-        onKeyPress={handleKeyPress}
-      >
-        <main className="flex flex-col h-screen p-4">
-          <div className="flex items-center justify-between p-4">
-            <div className="flex">
+    <main className="flex flex-col h-screen p-8 space-y-4">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-4"
+          onKeyPress={handleKeyPress}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex gap-2">
               <h1 className="text-lg font-semibold md:text-2xl">{pageTitle}</h1>
-              <div className="rounded-lg bg-stone-100 px-2 py-1 text-sm text-stone-400 dark:bg-stone-800 dark:text-stone-500">
-                {isPendingSaving ? "Saving..." : "Saved"}
-              </div>
+              <Badge>{isPendingSaving ? "Saving..." : "Saved"}</Badge>
             </div>
             <div className="flex space-x-2">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" size="icon">
-                    <FileText className="h-4 w-4" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent>
-                  <SheetHeader>
-                    <SheetTitle>文章摘要和标签</SheetTitle>
-                    <SheetDescription>编辑文章的摘要和标签。</SheetDescription>
-                  </SheetHeader>
-                  <div className="grid gap-4 py-4">
-                    <FormField
-                      control={form.control}
-                      name="summary"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>摘要</FormLabel>
-                          <FormControl>
-                            <Textarea {...field} rows={3} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="tags"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>标签</FormLabel>
-                          <FormControl>
-                            <TagInput
-                              value={field.value}
-                              onChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </SheetContent>
-              </Sheet>
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" size="icon">
-                    <Settings className="h-4 w-4" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent>
-                  <SheetHeader>
-                    <SheetTitle>文章设置</SheetTitle>
-                    <SheetDescription>
-                      在这里调整文章的详细设置。
-                    </SheetDescription>
-                  </SheetHeader>
-                  <div className="grid gap-4 py-4">
-                    <FormField
-                      control={form.control}
-                      name="category"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>分类</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="选择分类" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {isLoadingCategories ? (
-                                <div>Loading categories...</div>
-                              ) : (
-                                categories?.map((c: Category) => (
-                                  <SelectItem
-                                    key={c.id}
-                                    value={c.id.toString()}
-                                  >
-                                    {c.name}
-                                  </SelectItem>
-                                ))
-                              )}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="status"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>状态</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="选择状态" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="draft">草稿</SelectItem>
-                              <SelectItem value="published">已发布</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="relatedPosts"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>相关文章</FormLabel>
-                          <FormControl>
-                            {isLoadingPosts ? (
-                              <div>Loading posts...</div>
-                            ) : (
-                              <MultiSelect
-                                options={
-                                  posts?.map((p: Post) => ({
-                                    value: p.slug,
-                                    label: p.title,
-                                  })) || []
-                                }
-                                value={field.value}
-                                onValueChange={field.onChange}
-                                placeholder="选择相关文章"
-                                variant="inverted"
-                                animation={2}
-                                maxCount={3}
-                              />
-                            )}
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="customCreatedAt"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>自定义发布时间</FormLabel>
-                          <FormControl>
-                            <DatePicker
-                              value={field.value}
-                              onChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="customUpdatedAt"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>自定义更新时间</FormLabel>
-                          <FormControl>
-                            <DatePicker
-                              value={field.value}
-                              onChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="isCopyright"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4">
-                          <FormControl>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <div className="space-y-1 leading-none">
-                            <FormLabel>版权保护</FormLabel>
-                            <FormDescription>
-                              启用此选项以保护文章版权
-                            </FormDescription>
-                          </div>
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="isTop"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4">
-                          <FormControl>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <div className="space-y-1 leading-none">
-                            <FormLabel>置顶</FormLabel>
-                            <FormDescription>将此文章置顶显示</FormDescription>
-                          </div>
-                        </FormItem>
-                      )}
-                    />
-                    {form.watch("isTop") && (
-                      <FormField
-                        control={form.control}
-                        name="topOrder"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>置顶顺序</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="number"
-                                {...field}
-                                onChange={(e) =>
-                                  field.onChange(parseInt(e.target.value))
-                                }
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    )}
-
-                    {slug !== "create" && (
-                      <>
-                        <FormField
-                          control={form.control}
-                          name="createdAt"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>发布时间</FormLabel>
-                              <FormControl>
-                                <DatePicker
-                                  value={field.value}
-                                  onChange={field.onChange}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="updatedAt"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>更新时间</FormLabel>
-                              <FormControl>
-                                <DatePicker
-                                  value={field.value}
-                                  onChange={field.onChange}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </>
-                    )}
-                  </div>
-                </SheetContent>
-              </Sheet>
+              <AdvancedForm form={form} />
+              <SettingForm form={form} slug={slug} />
               <Button type="submit">保存</Button>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <FormField
-              control={form.control}
-              name="id"
-              render={({ field }) => (
-                <FormItem hidden>
-                  <FormLabel>文章 ID</FormLabel>
+            <BasicForm form={form} />
+          </div>
+        </form>
+      </Form>
+      <div className="flex-1 overflow-hidden">
+        <div className="h-full overflow-auto rounded-lg border shadow-sm">
+          <TiptapEditor editor={editor} />
+        </div>
+      </div>
+    </main>
+  )
+}
+
+function BasicForm({ form }: { form: UseFormReturn<PostFormValues> }) {
+  return (
+    <>
+      <FormField
+        control={form.control}
+        name="id"
+        render={({ field }) => (
+          <FormItem hidden>
+            <FormLabel>文章 ID</FormLabel>
+            <FormControl>
+              <Input {...field}></Input>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="title"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>标题</FormLabel>
+            <FormControl>
+              <Input {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="slug"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Slug</FormLabel>
+            <FormControl>
+              <div className="flex items-center relative">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute left-0 top-1/2 -translate-y-1/2"
+                >
+                  <WandSparkles className="h-4 w-4" />
+                </Button>
+                <Input {...field} className="pl-10" />
+              </div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </>
+  )
+}
+
+function AdvancedForm({ form }: { form: UseFormReturn<PostFormValues> }) {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="outline" size="icon">
+          <FileText className="h-4 w-4" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>文章摘要和标签</SheetTitle>
+          <SheetDescription>编辑文章的摘要和标签。</SheetDescription>
+        </SheetHeader>
+        <div className="grid gap-4 py-4">
+          <FormField
+            control={form.control}
+            name="summary"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>摘要</FormLabel>
+                <FormControl>
+                  <Textarea {...field} rows={3} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="tags"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>标签</FormLabel>
+                <FormControl>
+                  <TagInput value={field.value} onChange={field.onChange} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      </SheetContent>
+    </Sheet>
+  )
+}
+
+function SettingForm({
+  form,
+  slug,
+}: {
+  form: UseFormReturn<PostFormValues>
+  slug: string
+}) {
+  const { data: posts, isLoading: isLoadingPosts } = usePosts()
+  const { data: categories, isLoading: isLoadingCategories } = useCategories()
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="outline" size="icon">
+          <Settings className="h-4 w-4" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>文章设置</SheetTitle>
+          <SheetDescription>在这里调整文章的详细设置。</SheetDescription>
+        </SheetHeader>
+        <div className="grid gap-4 py-4">
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>分类</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
-                    <Input {...field}></Input>
+                    <SelectTrigger>
+                      <SelectValue placeholder="选择分类" />
+                    </SelectTrigger>
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                  <SelectContent>
+                    {isLoadingCategories ? (
+                      <div>Loading categories...</div>
+                    ) : (
+                      categories?.map((c: Category) => (
+                        <SelectItem key={c.id} value={c.id.toString()}>
+                          {c.name}
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>状态</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="选择状态" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="draft">草稿</SelectItem>
+                    <SelectItem value="published">已发布</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="relatedPosts"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>相关文章</FormLabel>
+                <FormControl>
+                  {isLoadingPosts ? (
+                    <div>Loading posts...</div>
+                  ) : (
+                    <MultiSelect
+                      options={
+                        posts?.map((p: Post) => ({
+                          value: p.slug,
+                          label: p.title,
+                        })) || []
+                      }
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      placeholder="选择相关文章"
+                      variant="inverted"
+                      animation={2}
+                      maxCount={3}
+                    />
+                  )}
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="customCreatedAt"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>自定义发布时间</FormLabel>
+                <FormControl>
+                  <DatePicker value={field.value} onChange={field.onChange} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="customUpdatedAt"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>自定义更新时间</FormLabel>
+                <FormControl>
+                  <DatePicker value={field.value} onChange={field.onChange} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="isCopyright"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4">
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>版权保护</FormLabel>
+                  <FormDescription>启用此选项以保护文章版权</FormDescription>
+                </div>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="isTop"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4">
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>置顶</FormLabel>
+                  <FormDescription>将此文章置顶显示</FormDescription>
+                </div>
+              </FormItem>
+            )}
+          />
+          {form.watch("isTop") && (
             <FormField
               control={form.control}
-              name="title"
+              name="topOrder"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>标题</FormLabel>
+                  <FormLabel>置顶顺序</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      type="number"
+                      {...field}
+                      onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="slug"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Slug</FormLabel>
-                  <FormControl>
-                    <div className="flex items-center relative">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="absolute left-0 top-1/2 -translate-y-1/2"
-                      >
-                        <WandSparkles className="h-4 w-4" />
-                      </Button>
-                      <Input {...field} className="pl-10" />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="flex-1 overflow-hidden">
-            <div className="h-full overflow-auto rounded-lg border shadow-sm">
-              <TiptapEditor editor={editor} />
-            </div>
-          </div>
-        </main>
-      </form>
-    </Form>
+          )}
+
+          {slug !== "create" && (
+            <>
+              <FormField
+                control={form.control}
+                name="createdAt"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>发布时间</FormLabel>
+                    <FormControl>
+                      <DatePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="updatedAt"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>更新时间</FormLabel>
+                    <FormControl>
+                      <DatePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </>
+          )}
+        </div>
+      </SheetContent>
+    </Sheet>
   )
 }
