@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useTransition } from "react"
+import { useCallback, useEffect, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { isEmpty } from "lodash-es"
@@ -161,6 +161,7 @@ export function PostEditor({
       await createOrUpdatePost({ ...data, content } as unknown as Post)
       toast.success("文章发布成功")
       // router.push(`/dashboard/posts`)
+      router.refresh()
       // localStorage.removeItem("postContent")
     } catch (error) {
       console.error("Error saving post:", error)
@@ -172,7 +173,11 @@ export function PostEditor({
       event.preventDefault()
     }
   }
-
+  const handlePotentialClose = useCallback(() => {
+    if (window.innerWidth < 1024) {
+      leftSidebar.close()
+    }
+  }, [leftSidebar])
   if (!editor) return <Loading />
 
   return (
@@ -219,12 +224,12 @@ export function PostEditor({
         </form>
       </Form>
       <div className="flex-1 overflow-hidden flex border rounded-lg">
-        <div className="h-full overflow-auto shadow-sm flex-grow">
+        <div className="h-full overflow-auto shadow-sm flex-grow scroll-smooth">
           <TiptapEditor editor={editor} />
         </div>
         <div
           className={cn(
-            "w-0 duration-300 transition-all h-full p-6 overflow-auto",
+            "w-0 duration-300 transition-all h-full p-6 overflow-auto scroll-smooth",
             {
               "w-80 border-r border-r-neutral-200 dark:border-r-neutral-800":
                 leftSidebar.isOpen,
@@ -232,7 +237,7 @@ export function PostEditor({
             }
           )}
         >
-          <TableOfContents editor={editor} />
+          <TableOfContents editor={editor} onItemClick={handlePotentialClose} />
         </div>
       </div>
     </main>

@@ -1,4 +1,6 @@
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
+import { useAtom } from "jotai"
+import { atomWithStorage } from "jotai/utils"
 
 export type SidebarState = {
   isOpen: boolean
@@ -6,9 +8,9 @@ export type SidebarState = {
   close: () => void
   toggle: () => void
 }
-
+const tableSidebarAtom = atomWithStorage("table-sidebar", true)
 export const useSidebar = (): SidebarState => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useAtom(tableSidebarAtom)
   return useMemo(() => {
     return {
       isOpen,
@@ -16,5 +18,5 @@ export const useSidebar = (): SidebarState => {
       close: () => setIsOpen(false),
       toggle: () => setIsOpen((prev) => !prev),
     }
-  }, [isOpen])
+  }, [isOpen, setIsOpen])
 }

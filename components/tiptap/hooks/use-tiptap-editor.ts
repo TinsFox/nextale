@@ -34,7 +34,6 @@ export function useTiptapEditor({
     onCreate(props) {
       const { editor } = props
       editor.commands.focus()
-      editor.commands.setContent(testContent)
       const charactersCount = editor.storage.characterCount.characters()
       setCharactersCount(charactersCount)
       editor.commands.focus("start")
