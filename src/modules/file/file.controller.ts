@@ -3,13 +3,14 @@ import {
   Controller,
   ParseFilePipeBuilder,
   Post,
+  Req,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileService } from './file.service';
 import type { Express } from 'express';
-import { multerConfig } from '~/config/multer-config';
+import { Request } from 'express';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 export class SampleDto {
@@ -24,8 +25,11 @@ export class FileController {
   @UseInterceptors(FileInterceptor('file'))
   @Post()
   @ApiOperation({ summary: 'Upload a file' })
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
-    return this.fileService.uploadFile(file);
+  uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Req() request: Request,
+  ) {
+    return this.fileService.uploadFile(file, request);
   }
 
   @UseInterceptors(FileInterceptor('file'))
