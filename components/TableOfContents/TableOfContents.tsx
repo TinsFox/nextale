@@ -1,10 +1,10 @@
 "use client"
 
-import { Editor as CoreEditor } from "@tiptap/react"
 import { memo } from "react"
 import { TableOfContentsStorage } from "@tiptap-pro/extension-table-of-contents"
+import { Editor as CoreEditor, useEditorState } from "@tiptap/react"
+
 import { cn } from "@/lib/utils"
-import { useEditorState } from "@tiptap/react"
 
 export type TableOfContentsProps = {
   editor: CoreEditor
@@ -18,15 +18,16 @@ export const TableOfContents = memo(
       selector: (ctx) =>
         (ctx.editor.storage.tableOfContents as TableOfContentsStorage).content,
     })
+    console.log("content: ", content)
 
     return (
-      <>
+      <div className="flex flex-col">
         <div className="mb-2 text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">
           Table of contents
         </div>
         {content.length > 0 ? (
           <div className="flex flex-col gap-1">
-            {content.map((item: any) => (
+            {content.map((item) => (
               <a
                 key={item.id}
                 href={`#${item.id}`}
@@ -44,10 +45,10 @@ export const TableOfContents = memo(
           </div>
         ) : (
           <div className="text-sm text-neutral-500">
-            Start adding headlines to your document …
+            这里什么都没有，写点什么吧
           </div>
         )}
-      </>
+      </div>
     )
   }
 )

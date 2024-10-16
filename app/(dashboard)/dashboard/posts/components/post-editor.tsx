@@ -4,7 +4,13 @@ import { useEffect, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { isEmpty } from "lodash-es"
-import { FileText, Settings, WandSparkles } from "lucide-react"
+import {
+  FileText,
+  PanelLeft,
+  PanelLeftClose,
+  Settings,
+  WandSparkles,
+} from "lucide-react"
 import { useForm, UseFormReturn } from "react-hook-form"
 import { useHotkeys } from "react-hotkeys-hook"
 import { toast } from "sonner"
@@ -13,8 +19,10 @@ import * as z from "zod"
 import { Category } from "@/types/category"
 import { Post } from "@/types/post"
 import { createOrUpdatePost } from "@/lib/actions/post"
+import { cn } from "@/lib/utils"
 import { useCategories } from "@/hooks/query/use-categories"
 import { usePosts } from "@/hooks/query/use-posts"
+import { useSidebar } from "@/hooks/use-sidebar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DatePicker } from "@/components/ui/date-picker"
@@ -46,9 +54,18 @@ import {
 import { Switch } from "@/components/ui/switch"
 import { TagInput } from "@/components/ui/tag-input"
 import { Textarea } from "@/components/ui/textarea"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import Loading from "@/components/loading"
 import { MultiSelect } from "@/components/multi-select"
+import { TableOfContents } from "@/components/TableOfContents"
 import { TiptapEditor } from "@/components/tiptap"
+import { Icon } from "@/components/tiptap/components/icon"
+import { Toolbar } from "@/components/tiptap/components/toolbar"
 import { useTiptapEditor } from "@/components/tiptap/hooks/use-tiptap-editor"
 
 const postFormSchema = z.object({
@@ -124,6 +141,7 @@ export function PostEditor({
     enableOnContentEditable: true,
     enableOnFormTags: true,
   })
+  const leftSidebar = useSidebar()
 
   const { editor } = useTiptapEditor({
     initialContent: data?.content ? JSON.parse(data?.content) : "",
@@ -171,6 +189,25 @@ export function PostEditor({
               <Badge>{isPendingSaving ? "Saving..." : "Saved"}</Badge>
             </div>
             <div className="flex space-x-2">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    type="button"
+                    onClick={leftSidebar.toggle}
+                  >
+                    {leftSidebar.isOpen ? (
+                      <PanelLeftClose className="h-4 w-4" />
+                    ) : (
+                      <PanelLeft className="h-4 w-4" />
+                    )}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{leftSidebar.isOpen ? "Close sidebar" : "Open sidebar"}</p>
+                </TooltipContent>
+              </Tooltip>
               <AdvancedForm form={form} />
               <SettingForm form={form} slug={slug} />
               <Button type="submit">保存</Button>
@@ -181,9 +218,21 @@ export function PostEditor({
           </div>
         </form>
       </Form>
-      <div className="flex-1 overflow-hidden">
-        <div className="h-full overflow-auto rounded-lg border shadow-sm">
+      <div className="flex-1 overflow-hidden flex border rounded-lg">
+        <div className="h-full overflow-auto shadow-sm flex-grow">
           <TiptapEditor editor={editor} />
+        </div>
+        <div
+          className={cn(
+            "w-0 duration-300 transition-all h-full p-6 overflow-auto",
+            {
+              "w-80 border-r border-r-neutral-200 dark:border-r-neutral-800":
+                leftSidebar.isOpen,
+              "border-r-transparent": !leftSidebar.isOpen,
+            }
+          )}
+        >
+          <TableOfContents editor={editor} />
         </div>
       </div>
     </main>
