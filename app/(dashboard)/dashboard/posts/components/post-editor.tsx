@@ -229,15 +229,20 @@ export function PostEditor({
         </div>
         <div
           className={cn(
-            "w-0 duration-300 transition-all h-full p-6 overflow-auto scroll-smooth",
+            "duration-300 transition-all h-full p-6 overflow-auto scroll-smooth",
             {
               "w-80 border-r border-r-neutral-200 dark:border-r-neutral-800":
                 leftSidebar.isOpen,
-              "border-r-transparent": !leftSidebar.isOpen,
+              "w-0 p-0 border-r-transparent": !leftSidebar.isOpen,
             }
           )}
         >
-          <TableOfContents editor={editor} onItemClick={handlePotentialClose} />
+          {leftSidebar.isOpen && (
+            <TableOfContents
+              editor={editor}
+              onItemClick={handlePotentialClose}
+            />
+          )}
         </div>
       </div>
     </main>
