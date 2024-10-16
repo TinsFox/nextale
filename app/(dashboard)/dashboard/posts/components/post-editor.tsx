@@ -20,11 +20,11 @@ import * as z from "zod"
 import { Category } from "@/types/category"
 import { Post } from "@/types/post"
 import { createOrUpdatePost } from "@/lib/actions/post"
+import { seoSlugGenerator } from "@/lib/actions/seo-slug-generator"
 import { cn } from "@/lib/utils"
 import { useCategories } from "@/hooks/query/use-categories"
 import { usePosts } from "@/hooks/query/use-posts"
 import { useSidebar } from "@/hooks/use-sidebar"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DatePicker } from "@/components/ui/date-picker"
 import {
@@ -296,6 +296,15 @@ function BasicForm({ form }: { form: UseFormReturn<PostFormValues> }) {
                   variant="ghost"
                   size="icon"
                   className="absolute left-0 top-1/2 -translate-y-1/2"
+                  type="button"
+                  onClick={() => {
+                    const title = form.getValues("title")
+                    console.log("title: ", title)
+                    seoSlugGenerator(title).then((slug) => {
+                      console.log("slug: ", slug)
+                      form.setValue("slug", slug)
+                    })
+                  }}
                 >
                   <WandSparkles className="h-4 w-4" />
                 </Button>
