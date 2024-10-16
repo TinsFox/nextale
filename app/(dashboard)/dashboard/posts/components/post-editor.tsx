@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { ReloadIcon } from "@radix-ui/react-icons"
 import { isEmpty } from "lodash-es"
 import {
   FileText,
@@ -57,15 +58,12 @@ import { Textarea } from "@/components/ui/textarea"
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import Loading from "@/components/loading"
 import { MultiSelect } from "@/components/multi-select"
 import { TableOfContents } from "@/components/TableOfContents"
 import { TiptapEditor } from "@/components/tiptap"
-import { Icon } from "@/components/tiptap/components/icon"
-import { Toolbar } from "@/components/tiptap/components/toolbar"
 import { useTiptapEditor } from "@/components/tiptap/hooks/use-tiptap-editor"
 
 const postFormSchema = z.object({
@@ -102,24 +100,24 @@ export function PostEditor({
   post: Post
 }) {
   const router = useRouter()
-  const [data, setData] = useState<Post>(post)
+
   const [isPendingSaving, startTransitionSaving] = useTransition()
 
   const form = useForm<PostFormValues>({
     resolver: zodResolver(postFormSchema),
     values: {
-      ...data,
-      customCreatedAt: data?.customCreatedAt
-        ? new Date(data?.customCreatedAt)
+      ...post,
+      customCreatedAt: post?.customCreatedAt
+        ? new Date(post?.customCreatedAt)
         : undefined,
-      customUpdatedAt: data?.customUpdatedAt
-        ? new Date(data?.customUpdatedAt)
+      customUpdatedAt: post?.customUpdatedAt
+        ? new Date(post?.customUpdatedAt)
         : undefined,
-      createdAt: data?.customCreatedAt
-        ? new Date(data?.customCreatedAt)
+      createdAt: post?.customCreatedAt
+        ? new Date(post?.customCreatedAt)
         : undefined,
-      updatedAt: data?.customUpdatedAt
-        ? new Date(data?.customUpdatedAt)
+      updatedAt: post?.customUpdatedAt
+        ? new Date(post?.customUpdatedAt)
         : undefined,
     },
   })
@@ -144,7 +142,7 @@ export function PostEditor({
   const leftSidebar = useSidebar()
 
   const { editor } = useTiptapEditor({
-    initialContent: data?.content ? JSON.parse(data?.content) : "",
+    initialContent: post?.content ? JSON.parse(post?.content) : "",
     onJSONContentChange: (content) => {
       form.setValue("content", JSON.stringify(content))
       localStorage.setItem("postContent", JSON.stringify(content))
@@ -191,7 +189,6 @@ export function PostEditor({
           <div className="flex items-center justify-between">
             <div className="flex gap-2">
               <h1 className="text-lg font-semibold md:text-2xl">{pageTitle}</h1>
-              <Badge>{isPendingSaving ? "Saving..." : "Saved"}</Badge>
             </div>
             <div className="flex space-x-2">
               <Tooltip>
@@ -215,7 +212,16 @@ export function PostEditor({
               </Tooltip>
               <AdvancedForm form={form} />
               <SettingForm form={form} slug={slug} />
-              <Button type="submit">保存</Button>
+              <Button
+                type="submit"
+                className="space-x-2"
+                disabled={isPendingSaving}
+              >
+                {isPendingSaving && (
+                  <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                保存
+              </Button>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
