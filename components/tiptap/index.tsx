@@ -19,27 +19,36 @@ interface TiptapEditorProps {
   editor: Editor | null
   className?: string
   style?: React.CSSProperties
+  wrapperClassName?: string
 }
 
-export const TiptapEditor = ({ editor, className }: TiptapEditorProps) => {
+export const TiptapEditor = ({
+  editor,
+  className,
+  wrapperClassName,
+}: TiptapEditorProps) => {
   const menuContainerRef = useRef(null)
   if (!editor) {
     return null
   }
 
   return (
-    <div className="flex h-full px-12" ref={menuContainerRef}>
+    <div className={cn("flex h-full", wrapperClassName)} ref={menuContainerRef}>
       <EditorContent
         editor={editor}
         className={cn("h-full w-full", className)}
       />
-      <ContentItemMenu editor={editor} />
-      <LinkMenu editor={editor} appendTo={menuContainerRef} />
-      <TextMenu editor={editor} />
-      <ColumnsMenu editor={editor} appendTo={menuContainerRef} />
-      <TableRowMenu editor={editor} appendTo={menuContainerRef} />
-      <TableColumnMenu editor={editor} appendTo={menuContainerRef} />
-      <ImageBlockMenu editor={editor} appendTo={menuContainerRef} />
+      {editor.isEditable && (
+        <>
+          <ContentItemMenu editor={editor} />
+          <LinkMenu editor={editor} appendTo={menuContainerRef} />
+          <TextMenu editor={editor} />
+          <ColumnsMenu editor={editor} appendTo={menuContainerRef} />
+          <TableRowMenu editor={editor} appendTo={menuContainerRef} />
+          <TableColumnMenu editor={editor} appendTo={menuContainerRef} />
+          <ImageBlockMenu editor={editor} appendTo={menuContainerRef} />
+        </>
+      )}
     </div>
   )
 }

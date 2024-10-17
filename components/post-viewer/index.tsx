@@ -1,16 +1,30 @@
-import { MDXRemote } from "next-mdx-remote/rsc"
-import Image from "next/image"
-import { format } from "date-fns"
+"use client"
 
 import { Suspense } from "react"
+import Image from "next/image"
+import { format } from "date-fns"
 import { Calendar } from "lucide-react"
+
 import { Post, RelatedPosts } from "@/types/post"
+import { TiptapEditor } from "@/components/tiptap"
+
+import { Loading } from "../loading"
+import { useTiptapEditor } from "../tiptap/hooks/use-tiptap-editor"
 
 export interface PostViewerProps {
   post: Post
 }
 
 export function PostViewer({ post }: PostViewerProps) {
+  const { editor } = useTiptapEditor({
+    initialContent: post?.content ? JSON.parse(post?.content) : "",
+    options: {
+      autofocus: "start",
+      editable: false,
+    },
+  })
+
+  if (!editor) return <Loading />
   return (
     <>
       <div className="mb-8">
@@ -48,7 +62,7 @@ export function PostViewer({ post }: PostViewerProps) {
       </div>
       <article className="prose prose-sm md:prose-base lg:prose-lg max-w-none">
         <Suspense fallback={<>Loading...</>}>
-          <MDXRemote source={post.content} />
+          <TiptapEditor editor={editor} />
         </Suspense>
         {post.isCopyright && (
           <div className="mt-8 p-4 bg-gray-100 rounded-lg">

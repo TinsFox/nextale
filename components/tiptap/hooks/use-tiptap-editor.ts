@@ -4,11 +4,10 @@ import {
   HTMLContent,
   JSONContent,
   Editor as PrimitiveEditor,
+  UseEditorOptions,
   useEditor as usePrimitiveEditor,
 } from "@tiptap/react"
 import { cx } from "class-variance-authority"
-
-import { testContent } from "@/lib/data/initialContent"
 
 import { ExtensionKit } from "../extensions/extension-kit"
 
@@ -16,16 +15,19 @@ interface UseTiptapEditorProps {
   initialContent: Content
   onJSONContentChange?: (content: JSONContent) => void
   onHTMLContentChange?: (content: HTMLContent) => void
+  options?: UseEditorOptions
 }
 
 export function useTiptapEditor({
   initialContent = null,
   onJSONContentChange,
   onHTMLContentChange,
+  options,
 }: UseTiptapEditorProps) {
   const [characters, setCharactersCount] = useState()
 
   const editor = usePrimitiveEditor({
+    ...options,
     extensions: ExtensionKit,
     immediatelyRender: false,
     shouldRerenderOnTransaction: false,

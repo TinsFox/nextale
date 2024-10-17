@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import localFont from "next/font/local"
+import { ViewTransitions } from "next-view-transitions"
 
 import "./styles/globals.css"
 
@@ -30,17 +31,19 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh-CN">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <TooltipProvider>
-          <Providers>
-            {children}
-            <Toaster />
-          </Providers>
-        </TooltipProvider>
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="zh-CN">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <TooltipProvider>
+            <Providers>
+              {children}
+              <Toaster />
+            </Providers>
+          </TooltipProvider>
+        </body>
+      </html>
+    </ViewTransitions>
   )
 }

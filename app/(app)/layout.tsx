@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
+import { appConfig } from "@/app.config"
 
 import { Header } from "@/components/header"
-import { appConfig } from "@/app.config"
 
 export const metadata: Metadata = {
   title: appConfig.title,
@@ -14,7 +14,7 @@ export default function AppLayout({
   children: React.ReactNode
 }>) {
   return (
-    <div className="container min-h-screen flex flex-col mx-auto">
+    <div className="container min-h-screen flex flex-col mx-auto relative">
       <Header />
       {children}
     </div>

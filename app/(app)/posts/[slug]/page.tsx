@@ -28,7 +28,7 @@ export default async function PostPage({
   }
 
   return (
-    <main className="container mx-auto px-4 py-8">
+    <main className="container mx-auto px-4 py-8 max-w-3xl">
       <PostViewer post={post.data} />
     </main>
   )

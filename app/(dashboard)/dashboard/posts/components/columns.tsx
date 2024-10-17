@@ -49,7 +49,7 @@ export const columns: ColumnDef<IPost>[] = [
     cell: ({ row }) => {
       const post = row.original
       return (
-        <Link href={`/dashboard/posts/${post.slug || post.id}`} target="_blank">
+        <Link href={`/dashboard/posts/${post.id}`} target="_blank">
           <Button variant="link">{post.title}</Button>
         </Link>
       )

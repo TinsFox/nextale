@@ -10,7 +10,7 @@ const navItems = [
 export function Header() {
   return (
     <motion.header
-      className="p-4 flex justify-between items-center"
+      className="p-4 flex justify-between items-center sticky top-0 z-50 bg-white"
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}

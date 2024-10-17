@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState, useTransition } from "react"
+import { useCallback, useEffect, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ReloadIcon } from "@radix-ui/react-icons"
@@ -231,7 +231,7 @@ export function PostEditor({
       </Form>
       <div className="flex-1 overflow-hidden flex border rounded-lg">
         <div className="h-full overflow-auto shadow-sm flex-grow scroll-smooth">
-          <TiptapEditor editor={editor} />
+          <TiptapEditor editor={editor} wrapperClassName="px-12" />
         </div>
         <div
           className={cn(
