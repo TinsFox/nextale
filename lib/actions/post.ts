@@ -1,11 +1,13 @@
 "use server"
 
-import { Post } from "@/types/post"
 import { revalidatePath } from "next/cache"
 import { cookies } from "next/headers"
 
+import { Post } from "@/types/post"
+
 export async function createOrUpdatePost(post: Post) {
-  const cookieStore = cookies()
+  console.log("post: ", post)
+  const cookieStore = await cookies()
   const token = cookieStore.get("token")
 
   if (!token) {
@@ -44,6 +46,7 @@ export async function createOrUpdatePost(post: Post) {
 }
 
 export async function revalidatePost(slug: string | number) {
+  return
   revalidatePath("/posts")
   revalidatePath(`/posts/${slug}`)
 

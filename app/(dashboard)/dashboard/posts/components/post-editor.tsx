@@ -69,14 +69,14 @@ import { useTiptapEditor } from "@/components/tiptap/hooks/use-tiptap-editor"
 const postFormSchema = z.object({
   id: z.number().optional(),
   title: z.string().min(1, { message: "标题不能为空" }),
-  slug: z.string().min(1, { message: "Slug 不能为空" }),
+  slug: z.string().optional(),
   content: z.string(),
   coverImage: z.string().optional(),
-  tags: z.array(z.string()),
-  isCopyright: z.boolean(),
-  isTop: z.boolean(),
+  tags: z.array(z.string()).optional(),
+  isCopyright: z.boolean().optional(),
+  isTop: z.boolean().optional(),
   topOrder: z.number().optional(),
-  summary: z.string(),
+  summary: z.string().optional(),
   customCreatedAt: z.date().optional(),
   customUpdatedAt: z.date().optional(),
   createdAt: z.date().optional(),
@@ -156,6 +156,7 @@ export function PostEditor({
       return
     }
     try {
+      console.log({ ...data, content })
       await createOrUpdatePost({ ...data, content } as unknown as Post)
       toast.success("文章发布成功")
       // router.push(`/dashboard/posts`)

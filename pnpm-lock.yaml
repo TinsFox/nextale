@@ -113,6 +113,12 @@ importers:
       '@tippyjs/react':
         specifier: ^4.2.6
         version: 4.2.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tiptap-pro/extension-details':
+        specifier: ^2.11.9
+        version: 2.11.9(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))(@tiptap/pm@2.8.0)
+      '@tiptap-pro/extension-details-content':
+        specifier: ^2.11.9
+        version: 2.11.9(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))(@tiptap/pm@2.8.0)
       '@tiptap-pro/extension-details-summary':
         specifier: ^2.11.9
         version: 2.11.9(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))
@@ -180,6 +186,9 @@ importers:
         specifier: ^2.8.0
         version: 2.8.0(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))
       '@tiptap/extension-heading':
+        specifier: ^2.8.0
+        version: 2.8.0(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))
+      '@tiptap/extension-highlight':
         specifier: ^2.8.0
         version: 2.8.0(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))
       '@tiptap/extension-horizontal-rule':
@@ -1890,10 +1899,22 @@ packages:
       react: '>=16.8'
       react-dom: '>=16.8'
 
+  '@tiptap-pro/extension-details-content@2.11.9':
+    resolution: {integrity: sha512-GpEv7Vv8F+cTij70qJ8ReYnOSPdy/bQlfOJJG6ERDKOJJH73QgFmN296heKleoyLlSXafDJ70+av+Ts/oRBhQw==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+      '@tiptap/pm': ^2.0.0
+
   '@tiptap-pro/extension-details-summary@2.11.9':
     resolution: {integrity: sha512-imk370qHrYVFmMSxLX/F9xCeA2V6dJiWFj9CyfJQIBeypYhzf8O5nBCiP/4CbNG59YlI6HNtaHFV6QXXG1y9+A==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
+
+  '@tiptap-pro/extension-details@2.11.9':
+    resolution: {integrity: sha512-W2jZHJdnA9DvgKnNtyidu3hbNfUrVvokSCZ6PZupkqHXh642pWaBXPF039o9ggcGhbyZrBf4AllrxJREUr/ZFA==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+      '@tiptap/pm': ^2.0.0
 
   '@tiptap-pro/extension-drag-handle-react@2.11.9':
     resolution: {integrity: sha512-JuCM0Cdl6accMR42e8Psrye9COEgpcQDHNc0bKLQCKIag2x6RiHMQ8eusvenWfDEt3UJNV4HutwFQuJONrknwQ==}
@@ -6814,9 +6835,19 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       tippy.js: 6.3.7
 
+  '@tiptap-pro/extension-details-content@2.11.9(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))(@tiptap/pm@2.8.0)':
+    dependencies:
+      '@tiptap/core': 2.8.0(@tiptap/pm@2.8.0)
+      '@tiptap/pm': 2.8.0
+
   '@tiptap-pro/extension-details-summary@2.11.9(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))':
     dependencies:
       '@tiptap/core': 2.8.0(@tiptap/pm@2.8.0)
+
+  '@tiptap-pro/extension-details@2.11.9(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))(@tiptap/pm@2.8.0)':
+    dependencies:
+      '@tiptap/core': 2.8.0(@tiptap/pm@2.8.0)
+      '@tiptap/pm': 2.8.0
 
   '@tiptap-pro/extension-drag-handle-react@2.11.9(@tiptap-pro/extension-drag-handle@2.11.9(@tiptap-pro/extension-node-range@2.11.9(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))(@tiptap/pm@2.8.0))(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))(@tiptap/extension-collaboration@2.8.0(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))(@tiptap/pm@2.8.0)(y-prosemirror@1.2.12(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.34.3)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)))(@tiptap/pm@2.8.0)(y-prosemirror@1.2.12(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.34.3)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)))(@tiptap/pm@2.8.0)(@tiptap/react@2.8.0(@tiptap/core@2.8.0(@tiptap/pm@2.8.0))(@tiptap/pm@2.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
