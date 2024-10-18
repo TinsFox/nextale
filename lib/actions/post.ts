@@ -6,7 +6,6 @@ import { cookies } from "next/headers"
 import { Post } from "@/types/post"
 
 export async function createOrUpdatePost(post: Post) {
-  console.log("post: ", post)
   const cookieStore = await cookies()
   const token = cookieStore.get("token")
 

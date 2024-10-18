@@ -41,7 +41,6 @@ export function useTiptapEditor({
       editor.commands.focus("start")
     },
     onUpdate(props) {
-      console.log("onUpdate props: ", props)
       const { editor } = props
       const charactersCount = editor.storage.characterCount.characters()
       setCharactersCount(charactersCount)

@@ -18,8 +18,8 @@ export const TableOfContents = memo(
       selector: (ctx) =>
         (ctx.editor.storage.tableOfContents as TableOfContentsStorage).content,
     })
-    console.log("content: ", content)
 
+    if (!content.length) return null
     return (
       <div className="flex flex-col">
         <div className="mb-2 text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">
