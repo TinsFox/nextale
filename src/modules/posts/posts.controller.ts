@@ -34,7 +34,6 @@ import { Public } from '~/common/decorators/public.decorator';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @Public()
   @HttpCode(HttpStatus.CREATED)
   @Post()
   @ApiBody({ type: CreatePostDto })
@@ -43,7 +42,7 @@ export class PostsController {
     @Body() createPostDto: CreatePostDto,
     @User() user: UserPayload,
   ) {
-    const record = await this.postsService.create(1, createPostDto);
+    const record = await this.postsService.create(user.userId, createPostDto);
     return {
       message: 'Post created successfully',
       id: record[0].id,
@@ -70,10 +69,12 @@ export class PostsController {
   findAll(@Query() query: PaginationQueryDto) {
     return this.postsService.findAll(query);
   }
+
   @Public()
   @Get(':id')
-  @ApiOperation({ summary: 'Get a post by id' })
-  findOne(@Param('id') slug: string) {
+  @ApiOperation({ summary: 'Get a post by id or slug' })
+  findOne(@Param('id') slug: string, @User() user: UserPayload) {
+    console.error('user: ', user);
     return this.postsService.findOne(slug);
   }
 

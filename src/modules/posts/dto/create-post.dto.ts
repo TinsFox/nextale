@@ -7,7 +7,6 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  Length,
 } from 'class-validator';
 import { PostStatus, PostStatusEnum } from '~/common/constants/post.constant';
 
@@ -23,6 +22,7 @@ export class CreatePostDto {
   @IsString()
   @ApiProperty({
     example: 'This is the content of my first post',
+    required: true,
   })
   content: string;
 
@@ -30,13 +30,15 @@ export class CreatePostDto {
   @IsOptional()
   @ApiProperty({
     example: 'https://example.com/cover-image.jpg',
+    required: false,
   })
-  coverImage?: string;
+  coverImage: string;
 
   @IsArray()
   @IsOptional()
   @ApiProperty({
     example: ['tag1', 'tag2', 'tag3'],
+    required: false,
   })
   tags?: string[];
 
@@ -44,6 +46,7 @@ export class CreatePostDto {
   @IsOptional()
   @ApiProperty({
     example: true,
+    required: false,
   })
   isCopyright?: boolean;
 
@@ -51,6 +54,7 @@ export class CreatePostDto {
   @IsOptional()
   @ApiProperty({
     example: true,
+    required: false,
   })
   isTop?: boolean;
 
@@ -58,6 +62,7 @@ export class CreatePostDto {
   @IsOptional()
   @ApiProperty({
     example: 1,
+    required: false,
   })
   topOrder?: number;
 
@@ -65,6 +70,7 @@ export class CreatePostDto {
   @IsOptional()
   @ApiProperty({
     example: 'This is the summary of my first post',
+    required: false,
   })
   summary?: string;
 
@@ -72,6 +78,7 @@ export class CreatePostDto {
   @IsOptional()
   @ApiProperty({
     example: '2024-01-01',
+    required: false,
   })
   customCreatedAt?: Date;
 
@@ -79,6 +86,7 @@ export class CreatePostDto {
   @IsOptional()
   @ApiProperty({
     example: '2024-01-01',
+    required: false,
   })
   customUpdatedAt?: Date;
 
@@ -86,6 +94,7 @@ export class CreatePostDto {
   @IsOptional()
   @ApiProperty({
     example: ['post1', 'post2', 'post3'],
+    required: false,
   })
   relatedPosts?: string[];
 
@@ -93,6 +102,7 @@ export class CreatePostDto {
   @IsOptional()
   @ApiProperty({
     example: 'My first category',
+    required: false,
   })
   category?: string;
 
@@ -100,6 +110,7 @@ export class CreatePostDto {
   @IsOptional()
   @ApiProperty({
     example: 'my-first-post',
+    required: false,
   })
   slug?: string;
 

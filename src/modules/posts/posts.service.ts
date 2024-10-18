@@ -8,7 +8,7 @@ import { paginateQuery } from '~/common/helpers/pagination.helper';
 import { postsTable, tagsTable } from '~/database/schema';
 import { DRIZZLE } from '../database/database.module';
 import { DrizzleDB } from '../database/drizzle';
-import { eq, inArray } from 'drizzle-orm';
+import { eq, inArray, or } from 'drizzle-orm';
 
 @Injectable()
 export class PostsService {
@@ -30,7 +30,7 @@ export class PostsService {
 
   async findOne(slug: string) {
     const post = await this.db.query.postsTable.findFirst({
-      where: eq(postsTable.slug, slug),
+      where: or(eq(postsTable.slug, slug), eq(postsTable.id, parseInt(slug))),
       columns: {
         status: false,
       },
