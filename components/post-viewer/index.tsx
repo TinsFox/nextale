@@ -6,29 +6,19 @@ import { format } from "date-fns"
 import { Calendar } from "lucide-react"
 
 import { Post, RelatedPosts } from "@/types/post"
-import { TiptapEditor } from "@/components/tiptap"
 
-import { Loading } from "../loading"
-import { useTiptapEditor } from "../tiptap/hooks/use-tiptap-editor"
+import { ShadcnTiptap } from "../shadcn-tiptap"
 
 export interface PostViewerProps {
   post: Post
 }
 
 export function PostViewer({ post }: PostViewerProps) {
-  const { editor } = useTiptapEditor({
-    initialContent: post?.content ? JSON.parse(post?.content) : "",
-    options: {
-      autofocus: "start",
-      editable: false,
-    },
-  })
-
-  if (!editor) return <Loading />
+  if (!post) return <div>Post not found</div>
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-4">{post.title}</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-4">{post?.title}</h1>
         <div className="flex flex-wrap items-center text-gray-600 mb-4">
           <Calendar className="w-4 h-4 mr-2" />
           <time
@@ -62,7 +52,7 @@ export function PostViewer({ post }: PostViewerProps) {
       </div>
       <article className="prose prose-sm md:prose-base lg:prose-lg max-w-none">
         <Suspense fallback={<>Loading...</>}>
-          <TiptapEditor editor={editor} />
+          <ShadcnTiptap content={post.content} />
         </Suspense>
         {post.isCopyright && (
           <div className="mt-8 p-4 bg-gray-100 rounded-lg">

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback } from "react"
+import React, { useCallback, type JSX } from "react";
 import Tippy from "@tippyjs/react/headless"
 import { Placement, Props } from "tippy.js"
 

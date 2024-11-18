@@ -1,6 +1,8 @@
-import { Post } from "@/types/post"
-import { fetcher } from "./fetcher"
 import { env } from "@/env"
+
+import { Post } from "@/types/post"
+
+import { fetcher } from "./fetcher"
 
 export const fetchPosts = async () => {
   const res = await fetch(`${env.NEXT_PUBLIC_API_URL}/posts`, {
@@ -15,7 +17,7 @@ export const fetchPosts = async () => {
 }
 
 export async function fetchPostDetail(slug: string) {
-  const post = await fetch(`${env.NEXT_PUBLIC_API_URL}/posts/${slug}`)
+  const post = await fetch(`${env.NEXT_PUBLIC_API_URL}/posts/s/${slug}`)
   return post.json()
 }
 

@@ -4,6 +4,7 @@
     ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
     ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
   ],
-  "cSpell.words": ["Tiptap"],
-  "stylua.targetReleaseVersion": "latest"
+  "cSpell.words": ["Nextale", "Tiptap"],
+  "stylua.targetReleaseVersion": "latest",
+  "alt-editor.name": "webstorm"
 }

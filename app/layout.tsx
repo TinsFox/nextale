@@ -38,7 +38,7 @@ export default function RootLayout({
         >
           <TooltipProvider>
             <Providers>
-              {children}
+              <>{children}</>
               <Toaster />
             </Providers>
           </TooltipProvider>

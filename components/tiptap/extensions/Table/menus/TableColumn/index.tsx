@@ -1,4 +1,4 @@
-import React, { useCallback } from "react"
+import React, { useCallback, type JSX } from "react";
 import { BubbleMenu as BaseBubbleMenu } from "@tiptap/react"
 
 import { Icon } from "@/components/ui/Icon"

@@ -5,25 +5,21 @@ async function fetchPost(slug: string) {
   return post.json()
 }
 
-export async function generateMetadata(
-  props: {
-    params: Promise<{ slug: string }>
-  }
-) {
-  const params = await props.params;
+export async function generateMetadata(props: {
+  params: Promise<{ slug: string }>
+}) {
+  const params = await props.params
   const post = await fetchPost(params.slug)
   return {
-    title: post.title,
-    description: post.summary,
+    title: post.data.title,
+    description: post.data.summary,
   }
 }
 
-export default async function PostPage(
-  props: {
-    params: Promise<{ slug: string }>
-  }
-) {
-  const params = await props.params;
+export default async function PostPage(props: {
+  params: Promise<{ slug: string }>
+}) {
+  const params = await props.params
   const post = await fetchPost(params.slug)
   if (!post) {
     return <div>Post not found</div>

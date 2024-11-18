@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useTransition } from "react"
+import { useEffect, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ReloadIcon } from "@radix-ui/react-icons"
@@ -11,7 +11,6 @@ import { useHotkeys } from "react-hotkeys-hook"
 import { toast } from "sonner"
 
 import { IPost, postFormSchema } from "@/lib/schema/post.schema"
-import { cn } from "@/lib/utils"
 import { useSidebar } from "@/hooks/use-sidebar"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
@@ -20,17 +19,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import Loading from "@/components/loading"
-import { TableOfContents } from "@/components/TableOfContents"
-import { TiptapEditor } from "@/components/tiptap"
-import { useTiptapEditor } from "@/components/tiptap/hooks/use-tiptap-editor"
+import { ShadcnTiptap } from "@/components/shadcn-tiptap"
 
 import { AdvancedForm } from "./advanced-form"
 import { BasicForm } from "./basic-form"
 import { SettingForm } from "./setting-form"
 
 const defaultValues: IPost = {
-  id: undefined,
+  id: 0,
   title: "",
   slug: "",
   customCreatedAt: undefined,
@@ -64,22 +60,34 @@ export function PostEditor({
   const form = useForm<IPost>({
     resolver: zodResolver(postFormSchema),
     defaultValues,
-    values: {
-      ...post,
-      customCreatedAt: post?.customCreatedAt
-        ? new Date(post?.customCreatedAt)
-        : undefined,
-      customUpdatedAt: post?.customUpdatedAt
-        ? new Date(post?.customUpdatedAt)
-        : undefined,
-      createdAt: post?.customCreatedAt
-        ? new Date(post?.customCreatedAt)
-        : undefined,
-      updatedAt: post?.customUpdatedAt
-        ? new Date(post?.customUpdatedAt)
-        : undefined,
-    },
   })
+
+  useEffect(() => {
+    if (!post) return
+    Object.keys(post).forEach((key) => {
+      const value = post[key as keyof IPost]
+      const formKey = key as keyof IPost
+      const isDate = [
+        "customCreatedAt",
+        "customUpdatedAt",
+        "createdAt",
+        "updatedAt",
+      ].includes(key)
+      if (isDate) {
+        console.log(`${key}: ${value}`)
+        if (value !== undefined && value !== null) {
+          form.setValue(formKey, new Date(value.toString()))
+        }
+      } else {
+        if (value === undefined || value === null) {
+          form.setValue(formKey, "")
+        } else {
+          form.setValue(formKey, value)
+        }
+      }
+    })
+  }, [post])
+
   useEffect(() => {
     if (form.formState.errors && !isEmpty(form.formState.errors)) {
       console.log("form.formState.errors: ", form.formState.errors)
@@ -100,14 +108,6 @@ export function PostEditor({
   })
   const leftSidebar = useSidebar()
 
-  const { editor } = useTiptapEditor({
-    initialContent: post?.content ? JSON.parse(post?.content) : "",
-    onJSONContentChange: (content) => {
-      form.setValue("content", JSON.stringify(content))
-      localStorage.setItem("postContent", JSON.stringify(content))
-    },
-  })
-
   const onSubmit = async (data: IPost) => {
     const content = form.getValues("content")
     if (isEmpty(content)) {
@@ -116,22 +116,18 @@ export function PostEditor({
     }
     try {
       console.log({ ...data, content })
-      return
-      const res = await fetch(`/api/posts`, {
-        method: "POST",
+      const url = slug === "create" ? "/api/posts" : `/api/posts/${slug}`
+      const res = await fetch(url, {
+        method: slug === "create" ? "POST" : "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ ...data, content }),
         credentials: "include",
       })
-      // const data = await res.json()
       console.log("res: ", res)
-      // await createOrUpdatePost({ ...data, content } as unknown as Post)
-      toast.success("文章发布成功")
-      // router.push(`/dashboard/posts`)
+      toast.success(`${slug === "create" ? "创建" : "更新"}文章成功`)
       router.refresh()
-      // localStorage.removeItem("postContent")
     } catch (error) {
       console.error("Error saving post:", error)
       toast.error("保存文章失败")
@@ -142,12 +138,6 @@ export function PostEditor({
       event.preventDefault()
     }
   }
-  const handlePotentialClose = useCallback(() => {
-    if (window.innerWidth < 1024) {
-      leftSidebar.close()
-    }
-  }, [leftSidebar])
-  if (!editor) return <Loading />
 
   return (
     <main className="flex flex-col h-screen p-8 space-y-4">
@@ -201,25 +191,17 @@ export function PostEditor({
         </form>
       </Form>
       <div className="flex-1 overflow-hidden flex border rounded-lg">
-        <div className="h-full overflow-auto shadow-sm flex-grow scroll-smooth">
-          <TiptapEditor editor={editor} wrapperClassName="px-12" />
+        <div className="h-full overflow-auto shadow-sm flex-grow scroll-smooth max-w-2xl">
+          <ShadcnTiptap
+            content={post?.content}
+            editable={true}
+            onContentChange={(content) => {
+              form.setValue("content", content)
+            }}
+          />
         </div>
-        <div
-          className={cn(
-            "duration-300 transition-all h-full p-6 overflow-auto scroll-smooth",
-            {
-              "w-80 border-r border-r-neutral-200 dark:border-r-neutral-800":
-                leftSidebar.isOpen,
-              "w-0 p-0 border-r-transparent": !leftSidebar.isOpen,
-            }
-          )}
-        >
-          {leftSidebar.isOpen && (
-            <TableOfContents
-              editor={editor}
-              onItemClick={handlePotentialClose}
-            />
-          )}
+        <div className="flex-1 overflow-auto shadow-sm flex-grow scroll-smooth max-w-2xl">
+          Preview
         </div>
       </div>
     </main>
