@@ -7,6 +7,7 @@ import { Calendar } from "lucide-react"
 
 import { Post, RelatedPosts } from "@/types/post"
 
+import { Copyright } from "../copyright"
 import { ShadcnTiptap } from "../shadcn-tiptap"
 
 export interface PostViewerProps {
@@ -54,14 +55,7 @@ export function PostViewer({ post }: PostViewerProps) {
         <Suspense fallback={<>Loading...</>}>
           <ShadcnTiptap content={post.content} />
         </Suspense>
-        {post.isCopyright && (
-          <div className="mt-8 p-4 bg-gray-100 rounded-lg">
-            <p className="text-sm text-gray-600">
-              © {new Date().getFullYear()} All rights reserved. This content is
-              copyrighted.
-            </p>
-          </div>
-        )}
+        {post.isCopyright && <Copyright />}
 
         {post.relatedPosts?.length > 0 && (
           <section className="mt-12">
