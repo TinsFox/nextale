@@ -7,8 +7,11 @@ export default async function PostPage(props: {
 }) {
   const params = await props.params
   const { slug } = params
-
   const pageTitle = slug === "create" ? "创建文章" : "编辑文章"
+  if (slug === "create") {
+    return <PostEditor slug={slug} pageTitle={pageTitle} />
+  }
+
   const post = await fetchPostDetail(slug)
 
   if (!post && slug !== "create") {

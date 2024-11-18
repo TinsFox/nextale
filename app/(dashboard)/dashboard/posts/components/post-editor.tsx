@@ -51,7 +51,7 @@ export function PostEditor({
 }: {
   slug: string
   pageTitle: string
-  post: IPost
+  post?: IPost
 }) {
   const router = useRouter()
 
