@@ -27,7 +27,7 @@ export function PostViewer({ post }: PostViewerProps) {
           >
             {format(
               new Date(post.customCreatedAt || post.createdAt),
-              "MMMM d, yyyy"
+              "MM/dd/yyyy"
             )}
           </time>
           {post.tags?.length > 0 &&
