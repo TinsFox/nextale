@@ -18,6 +18,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -25,8 +30,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-
-// import { MDXRemote } from "next-mdx-remote/rsc"
 
 export interface IPost {
   id: number
@@ -60,59 +63,96 @@ const POST_STATUS = {
 export const columns: ColumnDef<IPost>[] = [
   {
     accessorKey: "title",
-    header: "标题",
+    header: () => <div className="w-[80px]">标题</div>,
     cell: ({ row }) => {
       const post = row.original
       return (
-        <div className="flex items-center gap-2 group">
-          <div className="invisible group-hover:visible gap-2 flex">
-            <Link href={`/dashboard/posts/${post.id}`} target="_blank">
-              <FilePenLine className="size-4" />
-            </Link>
-            <Link href={`/posts/${post.slug}`} target="_blank">
-              <Eye className="size-4" />
-            </Link>
+        <div className="flex gap-4 py-4">
+          <div className="flex-1 min-w-0 max-w-52">
+            <div className="flex items-center gap-2 group">
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <Button variant="link">
+                    <h3 className="font-medium text-base truncate">
+                      {post.title}
+                    </h3>
+                  </Button>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-[120px] h-[80px]" side="top">
+                  <div className="size-full">
+                    {post.coverImage ? (
+                      <img
+                        src={post.coverImage}
+                        alt={post.title}
+                        className="w-full h-full object-cover rounded-md"
+                      />
+                    ) : (
+                      <div className="bg-muted rounded-md flex items-center justify-center size-full">
+                        No Image
+                      </div>
+                    )}
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+
+              <div className="invisible group-hover:visible flex gap-2">
+                <Link href={`/dashboard/posts/${post.id}`} target="_blank">
+                  <FilePenLine className="size-4 text-muted-foreground hover:text-primary" />
+                </Link>
+                <Link href={`/posts/${post.slug}`} target="_blank">
+                  <Eye className="size-4 text-muted-foreground hover:text-primary" />
+                </Link>
+              </div>
+            </div>
+
+            {/* 摘要和内容预览 */}
+            {post.summary && (
+              <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                {post.summary}
+              </p>
+            )}
+
+            {/* 底部信息栏 */}
+            <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+              <div className="flex gap-1 flex-col">
+                <div>
+                  创建于
+                  {formatDate(
+                    post.customCreatedAt || post.createdAt,
+                    "yyyy-MM-dd HH:mm"
+                  )}
+                </div>
+                <div>
+                  更新于
+                  {formatDate(
+                    post.customUpdatedAt || post.updatedAt,
+                    "yyyy-MM-dd HH:mm"
+                  )}
+                </div>
+              </div>
+              <div className="flex gap-1">
+                {post.tags?.length > 0 ? (
+                  post.tags.slice(0, 2).map((tag) => (
+                    <Badge key={tag.id} variant="secondary" className="text-xs">
+                      {tag.name}
+                    </Badge>
+                  ))
+                ) : (
+                  <Badge variant="secondary" className="text-xs">
+                    No tags
+                  </Badge>
+                )}
+              </div>
+            </div>
           </div>
-          <p>{post.title}</p>
         </div>
-      )
-    },
-  },
-  {
-    accessorKey: "content",
-    header: "内容",
-    cell: ({ row }) => {
-      const post = row.original
-      return (
-        <div className="line-clamp-3 max-w-sm">
-          {/* FIXME */}
-          {/* <MDXRemote source={post.content} /> */}
-          123
-        </div>
-      )
-    },
-  },
-  {
-    accessorKey: "coverImage",
-    header: "封面",
-    cell: ({ row }) => {
-      const post = row.original
-      return (
-        post.coverImage && (
-          <img
-            src={post.coverImage}
-            alt={post.title}
-            width={100}
-            height={100}
-          />
-        )
       )
     },
   },
   {
     accessorKey: "status",
     header: "状态",
-    cell: ({ row, table }) => {
+    cell: ({ row }) => {
       const post = row.original
       const handleStatusChange = async (newStatus: string) => {
         try {
@@ -128,7 +168,6 @@ export const columns: ColumnDef<IPost>[] = [
             throw new Error("Failed to update status")
           }
 
-          // 刷新表格数据
           revalidatePost(post.slug)
           toast.success("状态更新成功")
         } catch (error) {
@@ -139,7 +178,7 @@ export const columns: ColumnDef<IPost>[] = [
 
       return (
         <Select value={post.status} onValueChange={handleStatusChange}>
-          <SelectTrigger className="w-[120px]">
+          <SelectTrigger className="w-[100px] text-center">
             <SelectValue>
               {post.status === POST_STATUS.DRAFT && "草稿"}
               {post.status === POST_STATUS.PUBLISHED && "已发布"}
@@ -156,67 +195,22 @@ export const columns: ColumnDef<IPost>[] = [
     },
   },
   {
-    accessorKey: "tags",
-    header: "标签",
-    cell: ({ row }) => {
-      const post = row.original
-      return (
-        <div className="flex flex-wrap gap-2">
-          {/* {post.tags.length > 0 ? (
-            post.tags.map((tag) => <Badge key={tag.id}>{tag.name}</Badge>)
-          ) : (
-            <Badge>No tags</Badge>
-          )} */}
-          <Badge>No tags</Badge>
-        </div>
-      )
-    },
-  },
-  {
     accessorKey: "isTop",
     header: "置顶",
     cell: ({ row }) => {
       const post = row.original
-      return <Switch checked={post.isTop} />
+      return (
+        <div className="flex items-center gap-2">
+          <Switch checked={post.isTop} />
+          {post.isTop && (
+            <span className="text-xs text-muted-foreground">
+              {post.topOrder}
+            </span>
+          )}
+        </div>
+      )
     },
   },
-  {
-    accessorKey: "topOrder",
-    header: "置顶顺序",
-  },
-  {
-    accessorKey: "summary",
-    header: "摘要",
-  },
-  {
-    accessorKey: "relatedPosts",
-    header: "相关文章",
-  },
-  {
-    accessorKey: "categoryIds",
-    header: "分类",
-  },
-  {
-    accessorKey: "tagIds",
-    header: "标签",
-  },
-  {
-    accessorKey: "updatedAt",
-    header: "更新时间",
-    cell: ({ row }) => {
-      const post = row.original
-      return <div>{formatDate(post.updatedAt, "yyyy-MM-dd HH:mm:ss")}</div>
-    },
-  },
-  {
-    accessorKey: "createdAt",
-    header: "创建时间",
-    cell: ({ row }) => {
-      const post = row.original
-      return <div>{formatDate(post.createdAt, "yyyy-MM-dd HH:mm:ss")}</div>
-    },
-  },
-
   {
     id: "actions",
     header: "操作",
