@@ -4,7 +4,9 @@ import Link from "next/link"
 import { ColumnDef } from "@tanstack/react-table"
 import { formatDate } from "date-fns"
 import { Eye, FilePenLine, MoreHorizontal } from "lucide-react"
+import { toast } from "sonner"
 
+import { revalidatePost } from "@/lib/actions/post"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,6 +17,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 
 // import { MDXRemote } from "next-mdx-remote/rsc"
@@ -41,6 +50,12 @@ export interface IPost {
   deletedAt: string
   status: string
 }
+
+const POST_STATUS = {
+  DRAFT: "draft",
+  PUBLISHED: "published",
+  ARCHIVED: "archived",
+} as const
 
 export const columns: ColumnDef<IPost>[] = [
   {
@@ -97,10 +112,47 @@ export const columns: ColumnDef<IPost>[] = [
   {
     accessorKey: "status",
     header: "状态",
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
       const post = row.original
+      const handleStatusChange = async (newStatus: string) => {
+        try {
+          const response = await fetch(`/api/posts/${post.id}/status`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ status: newStatus }),
+          })
 
-      return <Badge>{post.status}</Badge>
+          if (!response.ok) {
+            throw new Error("Failed to update status")
+          }
+
+          // 刷新表格数据
+          revalidatePost(post.slug)
+          toast.success("状态更新成功")
+        } catch (error) {
+          toast.error("状态更新失败")
+          console.error(error)
+        }
+      }
+
+      return (
+        <Select value={post.status} onValueChange={handleStatusChange}>
+          <SelectTrigger className="w-[120px]">
+            <SelectValue>
+              {post.status === POST_STATUS.DRAFT && "草稿"}
+              {post.status === POST_STATUS.PUBLISHED && "已发布"}
+              {post.status === POST_STATUS.ARCHIVED && "已归档"}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={POST_STATUS.DRAFT}>草稿</SelectItem>
+            <SelectItem value={POST_STATUS.PUBLISHED}>已发布</SelectItem>
+            <SelectItem value={POST_STATUS.ARCHIVED}>已归档</SelectItem>
+          </SelectContent>
+        </Select>
+      )
     },
   },
   {
@@ -118,14 +170,6 @@ export const columns: ColumnDef<IPost>[] = [
           <Badge>No tags</Badge>
         </div>
       )
-    },
-  },
-  {
-    accessorKey: "isCopyright",
-    header: "版权",
-    cell: ({ row }) => {
-      const post = row.original
-      return <Switch checked={post.isCopyright} />
     },
   },
   {

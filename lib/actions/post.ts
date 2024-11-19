@@ -45,7 +45,6 @@ export async function createOrUpdatePost(post: Post) {
 }
 
 export async function revalidatePost(slug: string | number) {
-  return
   revalidatePath("/posts")
   revalidatePath(`/posts/${slug}`)
 
