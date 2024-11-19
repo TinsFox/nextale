@@ -6,6 +6,7 @@ import { format } from "date-fns"
 import { Calendar } from "lucide-react"
 
 import { Post, RelatedPosts } from "@/types/post"
+import NotFoundPost from "@/app/not-found"
 
 import { Copyright } from "../copyright"
 import { ShadcnTiptap } from "../shadcn-tiptap"
@@ -15,7 +16,7 @@ export interface PostViewerProps {
 }
 
 export function PostViewer({ post }: PostViewerProps) {
-  if (!post) return <div>Post not found</div>
+  if (!post) return <NotFoundPost />
   return (
     <>
       <div className="mb-8">
@@ -51,7 +52,7 @@ export function PostViewer({ post }: PostViewerProps) {
           />
         )}
       </div>
-      <article className="prose prose-sm md:prose-base lg:prose-lg max-w-none">
+      <article className="max-w-none">
         <Suspense fallback={<>Loading...</>}>
           <ShadcnTiptap content={post.content} />
         </Suspense>

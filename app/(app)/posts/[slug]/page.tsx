@@ -1,4 +1,5 @@
 import { PostViewer } from "@/components/post-viewer"
+import NotFoundPost from "@/app/not-found"
 
 async function fetchPost(slug: string) {
   const post = await fetch(`http://localhost:8080/posts/${slug}`)
@@ -10,6 +11,13 @@ export async function generateMetadata(props: {
 }) {
   const params = await props.params
   const post = await fetchPost(params.slug)
+  console.log("post: ", post)
+  if (post.statusCode === 404) {
+    return {
+      title: "Post not found",
+      description: "Post not found",
+    }
+  }
   return {
     title: post.data.title,
     description: post.data.summary,
@@ -22,7 +30,7 @@ export default async function PostPage(props: {
   const params = await props.params
   const post = await fetchPost(params.slug)
   if (!post) {
-    return <div>Post not found</div>
+    return <NotFoundPost />
   }
 
   return (
