@@ -8,7 +8,7 @@ import { paginateQuery } from '~/common/helpers/pagination.helper';
 import { postsTable, tagsTable } from '~/database/schema';
 import { DRIZZLE } from '../database/database.module';
 import { DrizzleDB } from '../database/drizzle';
-import { eq, inArray, or } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 
 @Injectable()
 export class PostsService {
@@ -28,9 +28,25 @@ export class PostsService {
     return paginateQuery(this.db, postsTable, query);
   }
 
-  async findOne(slug: string) {
+  async findOneBySlug(slug: string) {
     const post = await this.db.query.postsTable.findFirst({
-      where: or(eq(postsTable.slug, slug), eq(postsTable.id, parseInt(slug))),
+      where: and(eq(postsTable.slug, slug), eq(postsTable.status, 'published')),
+      columns: {
+        status: false,
+      },
+    });
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+    const relatedTags = await this.db.query.tagsTable.findMany({
+      where: inArray(tagsTable.id, post.tagIds ?? []),
+    });
+    return { ...post, tags: relatedTags };
+  }
+
+  async findOneById(id: number) {
+    const post = await this.db.query.postsTable.findFirst({
+      where: eq(postsTable.id, id),
       columns: {
         status: false,
       },
@@ -45,9 +61,19 @@ export class PostsService {
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {
+    console.log('updatePostDto: ', updatePostDto);
     return this.db
       .update(postsTable)
-      .set(updatePostDto)
+      .set({
+        title: updatePostDto.title,
+        content: updatePostDto.content,
+        coverImage: updatePostDto.coverImage,
+        tagIds: updatePostDto.tags?.map((tag) => +tag),
+        status: updatePostDto.status,
+        slug: updatePostDto.slug,
+        isTop: updatePostDto.isTop,
+        updatedAt: new Date(),
+      })
       .where(eq(postsTable.id, id));
   }
 

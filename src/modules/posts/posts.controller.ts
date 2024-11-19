@@ -9,6 +9,11 @@ import {
   HttpStatus,
   HttpCode,
   Query,
+  BadRequestException,
+  NotFoundException,
+  ForbiddenException,
+  UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -25,6 +30,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Public } from '~/common/decorators/public.decorator';
+import { PostStatus } from './types/post.types';
 
 @ApiTags('Posts')
 @ApiResponse({ status: 400, description: 'Bad Request' })
@@ -71,11 +77,17 @@ export class PostsController {
   }
 
   @Public()
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a post by id or slug' })
-  findOne(@Param('id') slug: string, @User() user: UserPayload) {
-    console.error('user: ', user);
-    return this.postsService.findOne(slug);
+  @Get(':slug')
+  @ApiOperation({ summary: 'Get a post by slug' })
+  findOneBySlug(@Param('slug') slug: string) {
+    return this.postsService.findOneBySlug(slug);
+  }
+
+  @Public()
+  @Get('/s/:id')
+  @ApiOperation({ summary: 'Get a post by id' })
+  findOneById(@Param('id') id: string) {
+    return this.postsService.findOneById(+id);
   }
 
   @Patch(':id')
@@ -89,5 +101,36 @@ export class PostsController {
   @ApiOperation({ summary: 'Delete a post by id' })
   remove(@Param('id') id: string) {
     return this.postsService.remove(+id);
+  }
+
+  @Patch(':id/status')
+  @ApiOperation({ summary: 'Update a post status by id' })
+  async updateStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('status') status: PostStatus,
+    @User() user: UserPayload,
+  ) {
+    // 验证状态值是否有效
+    const validStatuses: PostStatus[] = ['draft', 'published', 'archived'];
+    if (!validStatuses.includes(status)) {
+      throw new BadRequestException('Invalid status value');
+    }
+
+    const post = await this.postsService.findOneById(id);
+
+    // 检查文章是否存在
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
+    // 检查用户是否有权限修改这篇文章
+    if (post.authorId !== user.userId) {
+      throw new ForbiddenException(
+        'You do not have permission to update this post',
+      );
+    }
+
+    // 更新文章状态
+    return this.postsService.update(id, { status });
   }
 }

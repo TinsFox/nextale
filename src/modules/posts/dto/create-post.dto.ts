@@ -74,7 +74,6 @@ export class CreatePostDto {
   })
   summary?: string;
 
-  @IsString()
   @IsOptional()
   @ApiProperty({
     example: '2024-01-01',
@@ -82,7 +81,6 @@ export class CreatePostDto {
   })
   customCreatedAt?: Date;
 
-  @IsString()
   @IsOptional()
   @ApiProperty({
     example: '2024-01-01',

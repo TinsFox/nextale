@@ -2,7 +2,7 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DRIZZLE } from '../database/database.module';
 import { DrizzleDB } from '../database/drizzle';
 import { eq } from 'drizzle-orm';
-import { SelectUser, socialLinksTable, usersTable } from '~/database/schema';
+import { SelectUser, usersTable } from '~/database/schema';
 import { CreateUserDto } from '../auth/dto/create-user-dto';
 import * as bcrypt from 'bcrypt';
 
