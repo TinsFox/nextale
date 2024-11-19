@@ -3,16 +3,18 @@ import tippy from "tippy.js"
 
 import { EmojiList } from "./emoji-list"
 
-export default {
+export const suggestion = {
   items: ({ editor, query }: { editor: Editor; query: string }) => {
     return editor.storage.emoji.emojis
-      .filter(({ shortcodes, tags }) => {
-        return (
-          shortcodes.find((shortcode) =>
-            shortcode.startsWith(query.toLowerCase())
-          ) || tags.find((tag) => tag.startsWith(query.toLowerCase()))
-        )
-      })
+      .filter(
+        ({ shortcodes, tags }: { shortcodes: string[]; tags: string[] }) => {
+          return (
+            shortcodes.find((shortcode) =>
+              shortcode.startsWith(query.toLowerCase())
+            ) || tags.find((tag) => tag.startsWith(query.toLowerCase()))
+          )
+        }
+      )
       .slice(0, 5)
   },
 
@@ -20,10 +22,10 @@ export default {
 
   render: () => {
     let component: ReactRenderer
-    let popup
+    let popup: any
 
     return {
-      onStart: (props) => {
+      onStart: (props: any) => {
         component = new ReactRenderer(EmojiList, {
           props,
           editor: props.editor,
@@ -40,7 +42,7 @@ export default {
         })
       },
 
-      onUpdate(props) {
+      onUpdate(props: any) {
         component.updateProps(props)
 
         popup[0].setProps({
@@ -48,7 +50,7 @@ export default {
         })
       },
 
-      onKeyDown(props) {
+      onKeyDown(props: any) {
         if (props.event.key === "Escape") {
           popup[0].hide()
           component.destroy()
@@ -56,7 +58,16 @@ export default {
           return true
         }
 
-        return component.ref?.onKeyDown(props)
+        if (
+          component.ref &&
+          component.ref &&
+          typeof component.ref === "object" &&
+          "onKeyDown" in component.ref &&
+          typeof component.ref.onKeyDown === "function"
+        ) {
+          return component.ref.onKeyDown(props)
+        }
+        return false
       },
 
       onExit() {

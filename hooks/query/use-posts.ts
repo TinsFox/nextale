@@ -1,24 +1,27 @@
 import { useQuery } from "@tanstack/react-query"
+
 import { Post } from "@/types/post"
 
-async function fetchPosts(): Promise<Post[]> {
+async function fetchPosts(): Promise<{
+  data: Post[]
+}> {
   // 这里应该是你的实际 API 调用
   const response = await fetch("/api/posts")
   if (!response.ok) {
     throw new Error("Failed to fetch posts")
   }
-  return response.json()
+  const result = await response.json()
+  return result.data
 }
 
 export function usePosts() {
-  const { data, isLoading } = useQuery<Post[], Error>({
+  const { data, isLoading } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts,
   })
 
   return {
-    // TODO: 这里需要优化
-    data: data?.data.data,
+    data: data?.data,
     isLoading,
   }
 }

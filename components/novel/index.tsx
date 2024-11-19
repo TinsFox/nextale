@@ -1,33 +1,32 @@
 "use client"
 
+import { useState } from "react"
+import hljs from "highlight.js"
 import {
   EditorCommand,
   EditorCommandEmpty,
   EditorCommandItem,
   EditorCommandList,
   EditorContent,
-  type EditorInstance,
   EditorRoot,
-  type JSONContent,
   useEditor,
+  type EditorInstance,
+  type JSONContent,
 } from "novel"
-import { ImageResizer, handleCommandNavigation } from "novel/extensions"
-import { useCallback, useRef, useState } from "react"
-import { useDebouncedCallback } from "use-debounce"
-import { defaultExtensions } from "./extensions"
-import { ColorSelector } from "./selectors/color-selector"
-import { LinkSelector } from "./selectors/link-selector"
-import { NodeSelector } from "./selectors/node-selector"
-import { MathSelector } from "./selectors/math-selector"
-import { Separator } from "./ui/separator"
-
+import { handleCommandNavigation, ImageResizer } from "novel/extensions"
 import { handleImageDrop, handleImagePaste } from "novel/plugins"
+import { useDebouncedCallback } from "use-debounce"
+
+import { defaultExtensions } from "./extensions"
 import GenerativeMenuSwitch from "./generative/generative-menu-switch"
 import { uploadFn } from "./image-upload"
+import { ColorSelector } from "./selectors/color-selector"
+import { LinkSelector } from "./selectors/link-selector"
+import { MathSelector } from "./selectors/math-selector"
+import { NodeSelector } from "./selectors/node-selector"
 import { TextButtons } from "./selectors/text-buttons"
 import { slashCommand, suggestionItems } from "./slash-command"
-
-import hljs from "highlight.js"
+import { Separator } from "./ui/separator"
 
 const extensions = [...defaultExtensions, slashCommand]
 
@@ -47,8 +46,6 @@ export const NovelEditor = ({
 }: NovelEditorProps) => {
   const [saveStatus, setSaveStatus] = useState("Saved")
   const [charsCount, setCharsCount] = useState()
-  const importRef = useRef(null)
-  const [isLoading, setIsLoading] = useState(false)
 
   const [openNode, setOpenNode] = useState(false)
   const [openColor, setOpenColor] = useState(false)
@@ -77,31 +74,8 @@ export const NovelEditor = ({
     },
     500
   )
-  const handleImportFilePick = useCallback(
-    (e) => {
-      const file = e.target.files[0]
 
-      importRef.current.value = ""
-
-      if (!file) {
-        return
-      }
-
-      setIsLoading(true)
-      editor
-        .chain()
-        .import({
-          file,
-          onImport(context) {
-            context.setEditorContent()
-            setIsLoading(false)
-          },
-        })
-        .run()
-    },
-    [editor]
-  )
-  if (!initialContent) return null
+  if (!initialContent || !editor) return null
 
   return (
     <div className="relative w-full max-w-screen-lg">

@@ -1,29 +1,38 @@
-import { EditorBubble, useEditor } from "novel";
-import { removeAIHighlight } from "novel/extensions";
-import {} from "novel/plugins";
-import { Fragment, type ReactNode, useEffect } from "react";
-import { Button } from "../ui/button";
-import Magic from "../ui/icons/magic";
-import { AISelector } from "./ai-selector";
+import { EditorBubble, useEditor } from "novel"
+import { removeAIHighlight } from "novel/extensions"
+
+import "novel/plugins"
+
+import { Fragment, useEffect, type ReactNode } from "react"
+
+import { Button } from "../ui/button"
+import Magic from "../ui/icons/magic"
+import { AISelector } from "./ai-selector"
 
 interface GenerativeMenuSwitchProps {
-  children: ReactNode;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  children: ReactNode
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
-const GenerativeMenuSwitch = ({ children, open, onOpenChange }: GenerativeMenuSwitchProps) => {
-  const { editor } = useEditor();
+const GenerativeMenuSwitch = ({
+  children,
+  open,
+  onOpenChange,
+}: GenerativeMenuSwitchProps) => {
+  const { editor } = useEditor()
 
   useEffect(() => {
-    if (!open) removeAIHighlight(editor);
-  }, [open]);
+    if (!editor) return
+    if (!open) removeAIHighlight(editor)
+  }, [open, editor])
+  if (!editor) return null
   return (
     <EditorBubble
       tippyOptions={{
         placement: open ? "bottom-start" : "top",
         onHidden: () => {
-          onOpenChange(false);
-          editor.chain().unsetHighlight().run();
+          onOpenChange(false)
+          editor.chain().unsetHighlight().run()
         },
       }}
       className="flex w-fit max-w-[90vw] overflow-hidden rounded-md border border-muted bg-background shadow-xl"
@@ -44,7 +53,7 @@ const GenerativeMenuSwitch = ({ children, open, onOpenChange }: GenerativeMenuSw
         </Fragment>
       )}
     </EditorBubble>
-  );
-};
+  )
+}
 
-export default GenerativeMenuSwitch;
+export default GenerativeMenuSwitch

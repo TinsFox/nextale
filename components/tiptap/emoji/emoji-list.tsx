@@ -7,7 +7,12 @@ import React, {
   useState,
 } from "react"
 
-export const EmojiList = forwardRef((props, ref) => {
+interface EmojiListProps {
+  items: { name: string; fallbackImage?: string; emoji?: string }[]
+  command: (arg: { name: string }) => void
+}
+
+export const EmojiList = forwardRef((props: EmojiListProps, ref) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   const selectItem = (index: number) => {
@@ -34,32 +39,28 @@ export const EmojiList = forwardRef((props, ref) => {
 
   useEffect(() => setSelectedIndex(0), [props.items])
 
-  useImperativeHandle(
-    ref,
-    () => {
-      return {
-        onKeyDown: (x: { event: KeyboardEvent }) => {
-          if (x.event.key === "ArrowUp") {
-            upHandler()
-            return true
-          }
+  useImperativeHandle(ref, () => {
+    return {
+      onKeyDown: (x: { event: KeyboardEvent }) => {
+        if (x.event.key === "ArrowUp") {
+          upHandler()
+          return true
+        }
 
-          if (x.event.key === "ArrowDown") {
-            downHandler()
-            return true
-          }
+        if (x.event.key === "ArrowDown") {
+          downHandler()
+          return true
+        }
 
-          if (x.event.key === "Enter") {
-            enterHandler()
-            return true
-          }
+        if (x.event.key === "Enter") {
+          enterHandler()
+          return true
+        }
 
-          return false
-        },
-      }
-    },
-    [upHandler, downHandler, enterHandler]
-  )
+        return false
+      },
+    }
+  }, [upHandler, downHandler, enterHandler])
 
   return (
     <div className="dropdown-menu">
@@ -69,12 +70,8 @@ export const EmojiList = forwardRef((props, ref) => {
           key={index}
           onClick={() => selectItem(index)}
         >
-          {item.fallbackImage ? (
-            <img src={item.fallbackImage} align="absmiddle" />
-          ) : (
-            item.emoji
-          )}
-          :{item.name}:
+          {item.fallbackImage ? <img src={item.fallbackImage} /> : item.emoji}:
+          {item.name}:
         </button>
       ))}
     </div>

@@ -1,8 +1,6 @@
 import { Editor } from "@tiptap/react"
 
 import {
-  AiImage,
-  AiWriter,
   CodeBlock,
   Figcaption,
   HorizontalRule,
@@ -43,8 +41,6 @@ export const isCustomNodeSelected = (editor: Editor, node: HTMLElement) => {
     CodeBlock.name,
     ImageBlock.name,
     Link.name,
-    AiWriter.name,
-    AiImage.name,
     Figcaption.name,
     TableOfContentsNode.name,
   ]

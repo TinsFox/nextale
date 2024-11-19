@@ -28,7 +28,9 @@ const LinkToolbar = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const handleSubmit = (e: FormEvent) => {
       e.preventDefault()
       const url = getUrlFromString(link)
-      url && editor?.chain().focus().setLink({ href: url }).run()
+      if (url) {
+        editor?.chain().focus().setLink({ href: url }).run()
+      }
     }
 
     React.useEffect(() => {

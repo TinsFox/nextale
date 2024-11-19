@@ -6,7 +6,6 @@ import { Icon } from "../../components/icon"
 import { ColorPicker } from "../../components/panels/color-picker"
 import { Surface } from "../../components/surface"
 import { Toolbar } from "../../components/toolbar"
-import { AIDropdown } from "./components/AI-dropdown"
 import { ContentTypePicker } from "./components/content-type-picker"
 import { EditLinkPopover } from "./components/edit-link-popover"
 import { FontFamilyPicker } from "./components/font-family-picker"
@@ -61,17 +60,6 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
       updateDelay={100}
     >
       <Toolbar.Wrapper>
-        <AIDropdown
-          onCompleteSentence={commands.onCompleteSentence}
-          onEmojify={commands.onEmojify}
-          onFixSpelling={commands.onFixSpelling}
-          onMakeLonger={commands.onMakeLonger}
-          onMakeShorter={commands.onMakeShorter}
-          onSimplify={commands.onSimplify}
-          onTldr={commands.onTldr}
-          onTone={commands.onTone}
-          onTranslate={commands.onTranslate}
-        />
         <Toolbar.Divider />
         <MemoContentTypePicker options={blockOptions} />
         <MemoFontFamilyPicker

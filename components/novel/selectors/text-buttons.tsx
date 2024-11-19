@@ -1,5 +1,3 @@
-import { Button } from "../ui/button"
-import { cn } from "@/lib/utils"
 import {
   BoldIcon,
   CodeIcon,
@@ -8,6 +6,10 @@ import {
   UnderlineIcon,
 } from "lucide-react"
 import { EditorBubbleItem, useEditor } from "novel"
+
+import { cn } from "@/lib/utils"
+
+import { Button } from "../ui/button"
 import type { SelectorItem } from "./node-selector"
 
 export const TextButtons = () => {
@@ -16,32 +18,34 @@ export const TextButtons = () => {
   const items: SelectorItem[] = [
     {
       name: "bold",
-      isActive: (editor) => editor.isActive("bold"),
-      command: (editor) => editor.chain().focus().toggleBold().run(),
+      isActive: (editor) => {
+        return editor ? editor.isActive("bold") : false
+      },
+      command: (editor) => editor?.chain().focus().toggleBold().run(),
       icon: BoldIcon,
     },
     {
       name: "italic",
-      isActive: (editor) => editor.isActive("italic"),
-      command: (editor) => editor.chain().focus().toggleItalic().run(),
+      isActive: (editor) => (editor ? editor.isActive("italic") : false),
+      command: (editor) => editor?.chain().focus().toggleItalic().run(),
       icon: ItalicIcon,
     },
     {
       name: "underline",
-      isActive: (editor) => editor.isActive("underline"),
-      command: (editor) => editor.chain().focus().toggleUnderline().run(),
+      isActive: (editor) => (editor ? editor.isActive("underline") : false),
+      command: (editor) => editor?.chain().focus().toggleUnderline().run(),
       icon: UnderlineIcon,
     },
     {
       name: "strike",
-      isActive: (editor) => editor.isActive("strike"),
-      command: (editor) => editor.chain().focus().toggleStrike().run(),
+      isActive: (editor) => (editor ? editor.isActive("strike") : false),
+      command: (editor) => editor?.chain().focus().toggleStrike().run(),
       icon: StrikethroughIcon,
     },
     {
       name: "code",
-      isActive: (editor) => editor.isActive("code"),
-      command: (editor) => editor.chain().focus().toggleCode().run(),
+      isActive: (editor) => (editor ? editor.isActive("code") : false),
+      command: (editor) => editor?.chain().focus().toggleCode().run(),
       icon: CodeIcon,
     },
   ]

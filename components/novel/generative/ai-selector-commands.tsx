@@ -1,7 +1,14 @@
-import { ArrowDownWideNarrow, CheckCheck, RefreshCcwDot, StepForward, WrapText } from "lucide-react";
-import { useEditor } from "novel";
-import { getPrevText } from "novel/utils";
-import { CommandGroup, CommandItem, CommandSeparator } from "../ui/command";
+import {
+  ArrowDownWideNarrow,
+  CheckCheck,
+  RefreshCcwDot,
+  StepForward,
+  WrapText,
+} from "lucide-react"
+import { useEditor } from "novel"
+import { getPrevText } from "novel/utils"
+
+import { CommandGroup, CommandItem, CommandSeparator } from "../ui/command"
 
 const options = [
   {
@@ -25,14 +32,14 @@ const options = [
     label: "Make longer",
     icon: WrapText,
   },
-];
+]
 
 interface AISelectorCommandsProps {
-  onSelect: (value: string, option: string) => void;
+  onSelect: (value: string, option: string) => void
 }
 
 const AISelectorCommands = ({ onSelect }: AISelectorCommandsProps) => {
-  const { editor } = useEditor();
+  const { editor } = useEditor()
 
   return (
     <>
@@ -40,9 +47,12 @@ const AISelectorCommands = ({ onSelect }: AISelectorCommandsProps) => {
         {options.map((option) => (
           <CommandItem
             onSelect={(value) => {
-              const slice = editor.state.selection.content();
-              const text = editor.storage.markdown.serializer.serialize(slice.content);
-              onSelect(text, value);
+              const slice = editor?.state.selection.content()
+              if (!slice) return
+              const text = editor?.storage.markdown.serializer.serialize(
+                slice.content
+              )
+              onSelect(text, value)
             }}
             className="flex gap-2 px-4"
             key={option.value}
@@ -57,10 +67,10 @@ const AISelectorCommands = ({ onSelect }: AISelectorCommandsProps) => {
       <CommandGroup heading="Use AI to do more">
         <CommandItem
           onSelect={() => {
-            const pos = editor.state.selection.from;
-
-            const text = getPrevText(editor, pos);
-            onSelect(text, "continue");
+            const pos = editor?.state.selection.from
+            if (!pos) return
+            const text = getPrevText(editor, pos)
+            onSelect(text, "continue")
           }}
           value="continue"
           className="gap-2 px-4"
@@ -70,7 +80,7 @@ const AISelectorCommands = ({ onSelect }: AISelectorCommandsProps) => {
         </CommandItem>
       </CommandGroup>
     </>
-  );
-};
+  )
+}
 
-export default AISelectorCommands;
+export default AISelectorCommands

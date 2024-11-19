@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/tooltip"
 import { useToolbar } from "@/components/shadcn-tiptap/toolbars/toolbar-provider"
 
-type TextStylingExtensions =
+export type TextStylingExtensions =
   | Extension<ColorOptions, any>
   | Extension<HighlightOptions, any>
 

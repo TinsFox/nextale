@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { ColumnDef } from "@tanstack/react-table"
 import { formatDate } from "date-fns"
-import { MoreHorizontal } from "lucide-react"
+import { Eye, FilePenLine, MoreHorizontal } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -49,9 +49,17 @@ export const columns: ColumnDef<IPost>[] = [
     cell: ({ row }) => {
       const post = row.original
       return (
-        <Link href={`/dashboard/posts/${post.id}`} target="_blank">
-          <Button variant="link">{post.title}</Button>
-        </Link>
+        <div className="flex items-center gap-2 group">
+          <div className="invisible group-hover:visible gap-2 flex">
+            <Link href={`/dashboard/posts/${post.id}`} target="_blank">
+              <FilePenLine className="size-4" />
+            </Link>
+            <Link href={`/posts/${post.slug}`} target="_blank">
+              <Eye className="size-4" />
+            </Link>
+          </div>
+          <p>{post.title}</p>
+        </div>
       )
     },
   },
