@@ -69,14 +69,12 @@ export const columns: ColumnDef<IPost>[] = [
       return (
         <div className="flex gap-4 py-4">
           <div className="flex-1 min-w-0 max-w-52">
-            <div className="flex items-center gap-2 group">
+            <div className="flex items-center gap-2 ">
               <HoverCard>
                 <HoverCardTrigger asChild>
-                  <Button variant="link">
-                    <h3 className="font-medium text-base truncate">
-                      {post.title}
-                    </h3>
-                  </Button>
+                  <h3 className="font-medium text-base truncate">
+                    {post.title}
+                  </h3>
                 </HoverCardTrigger>
                 <HoverCardContent className="w-[120px] h-[80px]" side="top">
                   <div className="size-full">

@@ -9,7 +9,7 @@ import { Post, RelatedPosts } from "@/types/post"
 import NotFoundPost from "@/app/not-found"
 
 import { Copyright } from "../copyright"
-import { ShadcnTiptap } from "../shadcn-tiptap"
+import { MinimalTiptapEditor } from "../minimal-tiptap"
 
 export interface PostViewerProps {
   post: Post
@@ -54,7 +54,12 @@ export function PostViewer({ post }: PostViewerProps) {
       </div>
       <article className="max-w-none">
         <Suspense fallback={<>Loading...</>}>
-          <ShadcnTiptap content={post.content} />
+          <MinimalTiptapEditor
+            content={post.content}
+            editable={false}
+            immediatelyRender={false}
+            className="border-none"
+          />
         </Suspense>
         {post.isCopyright && <Copyright />}
 

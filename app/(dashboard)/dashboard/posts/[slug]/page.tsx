@@ -14,6 +14,9 @@ export default async function PostPage(props: {
 
   const post = await fetchPostDetail(slug)
 
+  if (post.statusCode === 404) {
+    return <div>Post not found</div>
+  }
   if (!post && slug !== "create") {
     return <div>Loading...</div>
   }

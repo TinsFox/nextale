@@ -8,7 +8,6 @@ interface SeoSlug {
   seo_friendly: boolean
 }
 export async function seoSlugGenerator(title: string) {
-  console.log("title: ", title)
   const openai = new OpenAI({
     apiKey: env.OPENAI_API_KEY,
     baseURL: env.OPENAI_BASE_URL,
@@ -29,8 +28,6 @@ export async function seoSlugGenerator(title: string) {
         },
       ],
     })
-
-    console.log("response: ", response)
 
     if (!response.choices[0].message.content) {
       return ""

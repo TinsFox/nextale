@@ -45,7 +45,7 @@ export function SettingForm({
   slug: string
 }) {
   const { data: posts, isLoading: isLoadingPosts } = usePosts()
-  console.log("posts: ", posts)
+
   const { data: categories, isLoading: isLoadingCategories } = useCategories()
   return (
     <Sheet>

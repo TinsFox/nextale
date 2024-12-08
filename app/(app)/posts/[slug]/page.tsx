@@ -11,7 +11,7 @@ export async function generateMetadata(props: {
 }) {
   const params = await props.params
   const post = await fetchPost(params.slug)
-  console.log("post: ", post)
+
   if (post.statusCode === 404) {
     return {
       title: "Post not found",
