@@ -18,7 +18,6 @@ export class CreatePostDto {
   })
   title: string;
 
-  @IsNotEmpty()
   @IsString()
   @ApiProperty({
     example: 'This is the content of my first post',
