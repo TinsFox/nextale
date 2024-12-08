@@ -1,3 +1,4 @@
+import { Metadata } from "next"
 import { cookies } from "next/headers"
 
 import {
@@ -15,6 +16,11 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
+
+export const metadata: Metadata = {
+  title: { default: "Dashboard", template: "%s | Nextale" },
+  description: "Nextale admin dashboard",
+}
 
 export default async function DashboardLayout({
   children,

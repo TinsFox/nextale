@@ -4,7 +4,7 @@ import { appConfig } from "@/app.config"
 import { Header } from "@/components/header"
 
 export const metadata: Metadata = {
-  title: appConfig.title,
+  title: { default: appConfig.title, template: "%s | Nextale" },
   description: appConfig.description,
 }
 

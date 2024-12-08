@@ -4,14 +4,6 @@ import { File, ListFilter, PlusCircle } from "lucide-react"
 import { fetchPosts } from "@/lib/api/post"
 import { Button } from "@/components/ui/button"
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,

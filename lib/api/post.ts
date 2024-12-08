@@ -2,6 +2,8 @@ import { env } from "@/env"
 
 import { Post } from "@/types/post"
 
+import { APIResponse } from "../api-fetch"
+import { IPost } from "../schema/post.schema"
 import { fetcher } from "./fetcher"
 
 export const fetchPosts = async () => {
@@ -18,7 +20,8 @@ export const fetchPosts = async () => {
 
 export async function fetchPostDetail(slug: string) {
   const post = await fetch(`${env.NEXT_PUBLIC_API_URL}/posts/s/${slug}`)
-  return post.json()
+  const res = (await post.json()) as APIResponse<IPost>
+  return res.data
 }
 
 // 发布文章
