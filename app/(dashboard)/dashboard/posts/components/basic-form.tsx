@@ -1,5 +1,6 @@
 "use client"
 
+import { env } from "@/env"
 import { WandSparkles } from "lucide-react"
 import { UseFormReturn } from "react-hook-form"
 
@@ -31,42 +32,37 @@ export function BasicForm({ form }: { form: UseFormReturn<IPost> }) {
           </FormItem>
         )}
       />
-      <FormField
-        control={form.control}
-        name="title"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>标题</FormLabel>
-            <FormControl>
-              <Input {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+
       <FormField
         control={form.control}
         name="slug"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Slug</FormLabel>
             <FormControl>
-              <div className="flex items-center relative">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute left-0 top-1/2 -translate-y-1/2"
-                  type="button"
-                  onClick={() => {
-                    const title = form.getValues("title")
-                    seoSlugGenerator(title).then((slug) => {
-                      form.setValue("slug", slug)
-                    })
-                  }}
-                >
-                  <WandSparkles className="h-4 w-4" />
-                </Button>
-                <Input {...field} className="pl-10" />
+              <div className="flex items-end w-full justify-start group">
+                <p className="text-sm text-muted-foreground">
+                  {`${env.NEXT_PUBLIC_URL}/posts/`}
+                </p>
+                <div className="flex items-center gap-2 relative ">
+                  <Input
+                    {...field}
+                    className="flex-1 w-full focus-visible:ring-0 shadow-none border-b border border-t-0 border-l-0 border-r-0 rounded-none focus-visible:border-primary hover:z-[1] peer"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 opacity-0 transition-opacity peer-hover:opacity-100 peer-focus:opacity-100"
+                    type="button"
+                    onClick={() => {
+                      const title = form.getValues("title")
+                      seoSlugGenerator(title).then((slug) => {
+                        form.setValue("slug", slug)
+                      })
+                    }}
+                  >
+                    <WandSparkles className="size-4" />
+                  </Button>
+                </div>
               </div>
             </FormControl>
             <FormMessage />

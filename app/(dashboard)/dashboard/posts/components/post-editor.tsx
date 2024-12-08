@@ -21,6 +21,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 import {
   Tooltip,
   TooltipContent,
@@ -51,15 +52,7 @@ const defaultValues: IPost = {
   relatedPosts: [],
   isCopyright: true,
 }
-export function PostEditor({
-  slug,
-  pageTitle,
-  post,
-}: {
-  slug: string
-  pageTitle: string
-  post?: IPost
-}) {
+export function PostEditor({ slug, post }: { slug: string; post?: IPost }) {
   const router = useRouter()
 
   const [isPendingSaving, startTransitionSaving] = useTransition()
@@ -143,92 +136,110 @@ export function PostEditor({
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4"
-        onKeyPress={handleKeyPress}
-      >
-        <div className="flex flex-col h-screen p-8 ">
-          <div>
-            <div className="flex items-center justify-between">
-              <div className="flex gap-2">
-                <h1 className="text-lg font-semibold md:text-2xl">
-                  {pageTitle}
-                </h1>
-              </div>
-              <div className="flex space-x-2">
-                <Tooltip>
-                  <TooltipTrigger asChild>
+    <div className="w-full flex justify-center">
+      <div className="max-w-screen-lg w-full">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4"
+            onKeyPress={handleKeyPress}
+          >
+            <div className="flex flex-col h-screen p-8 space-y-4">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between gap-x-2">
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="起个标题吧~"
+                            className="focus-visible:ring-0 text-lg font-semibold md:text-2xl w-full border-none border-b focus:border-none focus-visible:border-b focus-visible:border-primary"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="flex space-x-2">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          type="button"
+                          onClick={leftSidebar.toggle}
+                        >
+                          {leftSidebar.isOpen ? (
+                            <PanelLeftClose className="h-4 w-4" />
+                          ) : (
+                            <PanelLeft className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>
+                          {leftSidebar.isOpen
+                            ? "Close sidebar"
+                            : "Open sidebar"}
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                    <AdvancedForm form={form} />
+                    <SettingForm form={form} slug={slug} />
                     <Button
-                      variant="outline"
-                      size="icon"
-                      type="button"
-                      onClick={leftSidebar.toggle}
+                      type="submit"
+                      className="space-x-2"
+                      disabled={isPendingSaving}
                     >
-                      {leftSidebar.isOpen ? (
-                        <PanelLeftClose className="h-4 w-4" />
-                      ) : (
-                        <PanelLeft className="h-4 w-4" />
+                      {isPendingSaving && (
+                        <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
                       )}
+                      保存
                     </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>
-                      {leftSidebar.isOpen ? "Close sidebar" : "Open sidebar"}
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-                <AdvancedForm form={form} />
-                <SettingForm form={form} slug={slug} />
-                <Button
-                  type="submit"
-                  className="space-x-2"
-                  disabled={isPendingSaving}
-                >
-                  {isPendingSaving && (
-                    <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <BasicForm form={form} />
+                </div>
+              </div>
+              <div className="rounded-lg">
+                <FormField
+                  control={form.control}
+                  name="content"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <MinimalTiptapEditor
+                          {...field}
+                          immediatelyRender={false}
+                          throttleDelay={0}
+                          className={cn(
+                            "min-h-56 w-full rounded-xl h-full overflow-auto shadow-sm flex-grow scroll-smooth",
+                            {
+                              "border-destructive focus-within:border-destructive":
+                                form.formState.errors.content,
+                            }
+                          )}
+                          editorContentClassName="overflow-auto h-full flex grow"
+                          output="html"
+                          placeholder="Type your post here..."
+                          editable={true}
+                          editorClassName="focus:outline-none px-5 py-4 h-full grow"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                  保存
-                </Button>
+                />
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <BasicForm form={form} />
-            </div>
-          </div>
-          <div className=" rounded-lg">
-            <FormField
-              control={form.control}
-              name="content"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <MinimalTiptapEditor
-                      {...field}
-                      immediatelyRender={false}
-                      throttleDelay={0}
-                      className={cn(
-                        "min-h-56 w-full rounded-xl h-full overflow-auto shadow-sm flex-grow scroll-smooth",
-                        {
-                          "border-destructive focus-within:border-destructive":
-                            form.formState.errors.content,
-                        }
-                      )}
-                      editorContentClassName="overflow-auto h-full flex grow"
-                      output="html"
-                      placeholder="Type your description here..."
-                      editable={true}
-                      editorClassName="focus:outline-none px-5 py-4 h-full grow"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-      </form>
-    </Form>
+          </form>
+        </Form>
+      </div>
+    </div>
   )
 }

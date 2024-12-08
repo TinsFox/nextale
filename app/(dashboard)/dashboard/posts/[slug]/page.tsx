@@ -7,9 +7,9 @@ export default async function PostPage(props: {
 }) {
   const params = await props.params
   const { slug } = params
-  const pageTitle = slug === "create" ? "创建文章" : "编辑文章"
+
   if (slug === "create") {
-    return <PostEditor slug={slug} pageTitle={pageTitle} />
+    return <PostEditor slug={slug} />
   }
 
   const post = await fetchPostDetail(slug)
@@ -21,5 +21,5 @@ export default async function PostPage(props: {
     return <div>Loading...</div>
   }
 
-  return <PostEditor slug={slug} pageTitle={pageTitle} post={post.data} />
+  return <PostEditor slug={slug} post={post.data} />
 }

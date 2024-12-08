@@ -175,20 +175,22 @@ export const columns: ColumnDef<IPost>[] = [
       }
 
       return (
-        <Select value={post.status} onValueChange={handleStatusChange}>
-          <SelectTrigger className="w-[100px] text-center">
-            <SelectValue>
-              {post.status === POST_STATUS.DRAFT && "草稿"}
-              {post.status === POST_STATUS.PUBLISHED && "已发布"}
-              {post.status === POST_STATUS.ARCHIVED && "已归档"}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={POST_STATUS.DRAFT}>草稿</SelectItem>
-            <SelectItem value={POST_STATUS.PUBLISHED}>已发布</SelectItem>
-            <SelectItem value={POST_STATUS.ARCHIVED}>已归档</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-2 justify-center">
+          <Select value={post.status} onValueChange={handleStatusChange}>
+            <SelectTrigger className="w-[100px] text-center">
+              <SelectValue>
+                {post.status === POST_STATUS.DRAFT && "草稿"}
+                {post.status === POST_STATUS.PUBLISHED && "已发布"}
+                {post.status === POST_STATUS.ARCHIVED && "已归档"}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={POST_STATUS.DRAFT}>草稿</SelectItem>
+              <SelectItem value={POST_STATUS.PUBLISHED}>已发布</SelectItem>
+              <SelectItem value={POST_STATUS.ARCHIVED}>已归档</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       )
     },
   },
@@ -198,7 +200,7 @@ export const columns: ColumnDef<IPost>[] = [
     cell: ({ row }) => {
       const post = row.original
       return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-center">
           <Switch checked={post.isTop} />
           {post.isTop && (
             <span className="text-xs text-muted-foreground">
@@ -215,22 +217,24 @@ export const columns: ColumnDef<IPost>[] = [
     cell: ({ row }) => {
       const post = row.original
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`./posts/${post.slug || post.id}`}>编辑</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>删除</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-2 justify-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link href={`./posts/${post.slug || post.id}`}>编辑</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>删除</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       )
     },
   },

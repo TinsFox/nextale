@@ -11,6 +11,7 @@ export const env = createEnv({
   },
   shared: {
     NEXT_PUBLIC_API_URL: z.string().url(),
+    NEXT_PUBLIC_URL: z.string().url(),
     OPENAI_BASE_URL: z.string().url().optional(),
     OPENAI_API_KEY: z.string().min(1).optional(),
     OPENAI_MODEL: z.string().min(1).optional(),
@@ -23,6 +24,7 @@ export const env = createEnv({
     NEXT_PUBLIC_TIPTAP_APP_CONVERT_TOKEN:
       process.env.NEXT_PUBLIC_TIPTAP_APP_CONVERT_TOKEN,
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
     OPENAI_BASE_URL: process.env.OPENAI_BASE_URL,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     OPENAI_MODEL: process.env.OPENAI_MODEL,
