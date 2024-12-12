@@ -75,6 +75,26 @@ export class PostsController {
     return this.postsService.findAll(query);
   }
 
+  @Get('/s')
+  @Public()
+  @ApiOperation({ summary: 'Get all posts' })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number',
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Number of posts per page',
+    example: 10,
+  })
+  findAllForAdmin(@Query() query: PaginationQueryDto) {
+    return this.postsService.findAll(query);
+  }
   @Public()
   @Get(':slug')
   @ApiOperation({ summary: 'Get a post by slug' })

@@ -8,7 +8,7 @@ import { paginateQuery } from '~/common/helpers/pagination.helper';
 import { postsTable, tagsTable } from '~/database/schema';
 import { DRIZZLE } from '../database/database.module';
 import { DrizzleDB } from '../database/drizzle';
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, count, eq, inArray, desc } from 'drizzle-orm';
 
 @Injectable()
 export class PostsService {
@@ -24,10 +24,40 @@ export class PostsService {
     return post;
   }
 
-  async findAll(query: PaginationQueryDto): Promise<PaginatedResult<any>> {
+  async findAllForAdmin(
+    query: PaginationQueryDto,
+  ): Promise<PaginatedResult<any>> {
     return paginateQuery(this.db, postsTable, query);
   }
 
+  async findAll(query: PaginationQueryDto): Promise<PaginatedResult<any>> {
+    const { page = 1, limit = 10 } = query;
+
+    const offset = (page - 1) * limit;
+    const dbQuery = this.db
+      .select()
+      .from(postsTable)
+      .where(eq(postsTable.status, 'published'))
+      .offset(offset)
+      .limit(limit)
+      .orderBy(desc(postsTable.createdAt));
+
+    const totalQuery = this.db.select({ count: count() }).from(postsTable);
+
+    const [data, [{ count: total }]] = await Promise.all([dbQuery, totalQuery]);
+
+    return {
+      data,
+      meta: {
+        pagination: {
+          total: Number(total),
+          page,
+          pageSize: limit,
+          pageCount: Math.ceil(Number(total) / limit),
+        },
+      },
+    };
+  }
   async findOneBySlug(slug: string) {
     const post = await this.db.query.postsTable.findFirst({
       where: and(eq(postsTable.slug, slug), eq(postsTable.status, 'published')),
