@@ -7,7 +7,7 @@ import { IPost } from "../schema/post.schema"
 import { fetcher } from "./fetcher"
 
 export const fetchPosts = async () => {
-  const res = await fetch(`${env.NEXT_PUBLIC_API_URL}/posts`, {
+  const res = await fetch(`${env.NEXT_PUBLIC_API_URL}/posts/s`, {
     next: {
       tags: ["posts"],
     },

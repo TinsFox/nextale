@@ -25,8 +25,10 @@ export default async function Posts() {
   const posts = await fetchPosts()
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">博客文章</h1>
+    <div>
+      <div className="mb-4">
+        <h1 className="text-3xl font-bold">博客文章</h1>
+      </div>
       <PostList posts={posts.data.data} />
     </div>
   )

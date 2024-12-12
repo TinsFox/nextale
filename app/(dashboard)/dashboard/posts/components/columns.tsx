@@ -128,19 +128,6 @@ export const columns: ColumnDef<IPost>[] = [
                   )}
                 </div>
               </div>
-              <div className="flex gap-1">
-                {post.tags?.length > 0 ? (
-                  post.tags.slice(0, 2).map((tag) => (
-                    <Badge key={tag.id} variant="secondary" className="text-xs">
-                      {tag.name}
-                    </Badge>
-                  ))
-                ) : (
-                  <Badge variant="secondary" className="text-xs">
-                    No tags
-                  </Badge>
-                )}
-              </div>
             </div>
           </div>
         </div>
