@@ -26,6 +26,7 @@ export const appConfig: IAppConfig = {
     },
     user: {
       username: "TinsFox",
+      avatar: "https://avatars.githubusercontent.com/u/33956589?v=4",
       socialIds: {
         github: "TinsFox",
         twitter: "TinsFox",
@@ -53,6 +54,7 @@ export interface IAppConfig {
     }
     user: {
       username: string
+      avatar: string
       socialIds: {
         github: string
         twitter: string

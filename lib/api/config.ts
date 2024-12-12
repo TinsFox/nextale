@@ -9,7 +9,6 @@ export async function getSiteConfig() {
   const configJSON = JSON.parse(fetchedData.data.value) as IAppConfig
   const { theme, navItems } = configJSON
   return {
-    code: fetchedData.code,
     theme,
     navItems,
   }

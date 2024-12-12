@@ -85,7 +85,7 @@ export default function AppLayout({
   children: React.ReactNode
 }>) {
   return (
-    <div className="container min-h-screen flex flex-col mx-auto relative">
+    <div className="min-h-screen flex flex-col relative mx-auto">
       <Header />
       {children}
     </div>
