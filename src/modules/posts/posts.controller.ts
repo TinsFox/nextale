@@ -12,7 +12,6 @@ import {
   BadRequestException,
   NotFoundException,
   ForbiddenException,
-  UseGuards,
   ParseIntPipe,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';

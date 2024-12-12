@@ -201,3 +201,18 @@ export const socialLinksTable = pgTable('social_links', {
 
 export type SocialLink = typeof socialLinksTable.$inferSelect;
 export type NewSocialLink = typeof socialLinksTable.$inferInsert;
+
+export const settingsTable = pgTable('settings', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  value: text('value').notNull(),
+  type: varchar('type', { length: 255 }).notNull(),
+  isDeleted: boolean('is_deleted').notNull().default(false),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
+export type Setting = typeof settingsTable.$inferSelect;
+export type NewSetting = typeof settingsTable.$inferInsert;

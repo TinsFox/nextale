@@ -21,7 +21,7 @@ import { FileModule } from '../file/file.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { UPLOAD_DIR } from '~/config/multer-config';
 import { RedisModule } from '../redis/redis.module';
-
+import { SettingsModule } from '../settings/settings.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -47,6 +47,7 @@ import { RedisModule } from '../redis/redis.module';
     CloudFunctionsModule,
     FileModule,
     RedisModule,
+    SettingsModule,
   ],
   controllers: [AppController],
   providers: [
