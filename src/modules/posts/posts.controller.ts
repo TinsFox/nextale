@@ -76,8 +76,7 @@ export class PostsController {
   }
 
   @Get('/s')
-  @Public()
-  @ApiOperation({ summary: 'Get all posts' })
+  @ApiOperation({ summary: 'Get all posts for admin' })
   @ApiQuery({
     name: 'page',
     required: false,
@@ -93,7 +92,7 @@ export class PostsController {
     example: 10,
   })
   findAllForAdmin(@Query() query: PaginationQueryDto) {
-    return this.postsService.findAll(query);
+    return this.postsService.findAllForAdmin(query);
   }
   @Public()
   @Get(':slug')

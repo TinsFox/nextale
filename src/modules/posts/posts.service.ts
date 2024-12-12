@@ -47,7 +47,7 @@ export class PostsService {
     const [data, [{ count: total }]] = await Promise.all([dbQuery, totalQuery]);
 
     return {
-      data,
+      records: data,
       meta: {
         pagination: {
           total: Number(total),

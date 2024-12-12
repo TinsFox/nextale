@@ -1,5 +1,5 @@
 export interface PaginatedResult<T> {
-  data: T[];
+  records: T[];
   meta: {
     pagination: {
       page: number;

@@ -32,7 +32,7 @@ export async function paginateQuery<T>(
   const [data, [{ count: total }]] = await Promise.all([query, totalQuery]);
 
   return {
-    data: data as T[],
+    records: data as T[],
     meta: {
       pagination: {
         total: Number(total),
