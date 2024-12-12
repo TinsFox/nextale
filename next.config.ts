@@ -1,5 +1,8 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next"
+
+import { env } from "./env"
+
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
@@ -12,7 +15,7 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:8080/:path*", // 指向你的后端服务器
+        destination: `${env.NEXT_PUBLIC_API_URL}/:path*`,
       },
     ]
   },

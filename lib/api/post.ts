@@ -24,7 +24,6 @@ export async function fetchPostDetail(slug: string) {
   return res.data
 }
 
-// 发布文章
 export async function publishPost(post: Post) {
   return await fetcher(`/api/posts`, {
     method: "POST",
