@@ -1,6 +1,6 @@
 export const appConfig = {
-  title: "Aiden",
-  description: "Aiden's blog",
+  title: "TinsFox",
+  description: "TinsFox's blog",
   navItems: [
     { name: "首页", href: "/" },
     { name: "文稿", href: "/posts" },
