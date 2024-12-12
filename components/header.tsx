@@ -1,13 +1,11 @@
 import Link from "next/link"
 import * as motion from "framer-motion/client"
 
-const navItems = [
-  { name: "首页", href: "/" },
-  { name: "文稿", href: "/posts" },
-  { name: "项目", href: "/projects" },
-]
+import { getSiteConfig } from "@/lib/api/config"
 
-export function Header() {
+export async function Header() {
+  const { navItems } = await getSiteConfig()
+
   return (
     <motion.header
       className="p-4 flex justify-between items-center sticky top-0 z-50 bg-white"
