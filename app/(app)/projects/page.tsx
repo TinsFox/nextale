@@ -1,40 +1,37 @@
-import BlurFade from "@/components/magicui/blur-fade"
-
-import { ProjectCard } from "@/components/project-card"
+import { featuredProjects } from "@/lib/api/projects"
 import { Icons } from "@/components/icons"
-const BLUR_FADE_DELAY = 0.04
+import BlurFade from "@/components/magicui/blur-fade"
+import { ProjectCard } from "@/components/project-card"
 
-async function featuredProjects() {
-  const data = await fetch("http://localhost:8080/projects")
-  const projects = await data.json()
-  return projects
-}
+const BLUR_FADE_DELAY = 0.04
 
 export default async function Projects() {
   const projects = await featuredProjects()
+  console.log('projects: ', projects);
 
   return (
-    <section id="projects">
-      <div className="space-y-12 w-full py-12">
+    <section id="projects" className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="space-y-8 sm:space-y-12 w-full py-8 sm:py-12">
         <BlurFade delay={BLUR_FADE_DELAY * 11}>
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center max-w-3xl mx-auto">
+            <div className="space-y-3">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tighter">
                 Check out my latest work
               </h2>
-              <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+              <p className="text-sm sm:text-base text-muted-foreground md:text-lg/relaxed lg:text-xl/relaxed max-w-2xl mx-auto">
                 I&apos;ve worked on a variety of projects, from simple websites
                 to complex web applications. Here are a few of my favorites.
               </p>
             </div>
           </div>
         </BlurFade>
-        {/*  */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 mx-auto lg:grid-cols-3 max-w-[1200px]">
+
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-[1200px] mx-auto">
           {projects.data.map((project: Project, id: number) => (
             <BlurFade
               key={project.name}
               delay={BLUR_FADE_DELAY * 12 + id * 0.05}
+              className="w-full"
             >
               <ProjectCard
                 href={project.previewUrl}
