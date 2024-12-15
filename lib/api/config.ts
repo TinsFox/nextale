@@ -29,17 +29,13 @@ export interface IApiResponse<T> {
 }
 
 export interface IApiPaginationResponse<T> {
-  code: number
-  data: {
-    records: T
-    meta: {
-      pagination: {
-        total: number
-        page: number
-        pageSize: number
-        pageCount: number
-      }
+  records: T[]
+  meta: {
+    pagination: {
+      total: number
+      page: number
+      pageSize: number
+      pageCount: number
     }
   }
-  message: string
 }

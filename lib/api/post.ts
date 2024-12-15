@@ -2,20 +2,23 @@ import { env } from "@/env"
 
 import { Post } from "@/types/post"
 
-import { APIResponse } from "../api-fetch"
+import { apiFetch, APIResponse } from "../api-fetch"
 import { IPost } from "../schema/post.schema"
+import { IApiPaginationResponse } from "./config"
 import { fetcher } from "./fetcher"
 
 export const fetchPosts = async () => {
-  const res = await fetch(`${env.NEXT_PUBLIC_API_URL}/posts/s`, {
-    next: {
-      tags: ["posts"],
-    },
-  })
-  if (!res.ok) {
+  const res = await apiFetch<{
+    code: number
+    data: IApiPaginationResponse<IPost>
+    message: string
+  }>(`${env.NEXT_PUBLIC_API_URL}/posts`)
+
+  if (res.code !== 200) {
     throw new Error("Failed to fetch posts")
   }
-  return res.json()
+  console.log("res: ", res.data)
+  return res.data
 }
 
 export async function fetchPostDetail(slug: string) {
