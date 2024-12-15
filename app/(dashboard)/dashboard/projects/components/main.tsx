@@ -13,7 +13,7 @@ import { toast } from "sonner"
 
 export function ProjectMain() {
   const { data: projects, isLoading } = useProjects()
-  console.log('projects: ', projects);
+
   const [open, setOpen] = useState(false)
   const [editingProject, setEditingProject] = useState<IProject | null>(null)
 

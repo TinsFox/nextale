@@ -8,7 +8,7 @@ const BLUR_FADE_DELAY = 0.04
 
 export default async function Projects() {
   const projects = await featuredProjects()
-  console.log('projects: ', projects);
+
 
   return (
     <section id="projects" className="container mx-auto px-4 sm:px-6 lg:px-8">

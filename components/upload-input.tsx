@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Upload, Loader2, X } from "lucide-react"
 import Image from "next/image"
-import { uploadFile } from "@/lib/api/upload"
+import { uploadToObjectStorage } from "@/lib/api/upload"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
@@ -67,7 +67,8 @@ export function UploadInput({
 
     try {
       setLoading(true)
-      const url = await uploadFile(file)
+
+      const url = await uploadToObjectStorage(file)
       onChange(url)
       toast.success("上传成功")
     } catch (error) {
