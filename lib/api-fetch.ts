@@ -60,3 +60,19 @@ export interface APIResponse<T> {
   data: T
   message: string
 }
+
+export interface Pagination {
+  total: number
+  page: number
+  pageSize: number
+  pageCount: number
+}
+
+export interface PaginatedData<T> {
+  records: T[]
+  meta: {
+    pagination: Pagination
+  }
+}
+
+export type PaginatedResponse<T> = APIResponse<PaginatedData<T>>

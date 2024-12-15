@@ -2,6 +2,7 @@ import { featuredProjects } from "@/lib/api/projects"
 import { Icons } from "@/components/icons"
 import BlurFade from "@/components/magicui/blur-fade"
 import { ProjectCard } from "@/components/project-card"
+import { IProject } from "@/lib/schema/projects"
 
 const BLUR_FADE_DELAY = 0.04
 
@@ -16,21 +17,20 @@ export default async function Projects() {
           <div className="flex flex-col items-center justify-center space-y-4 text-center max-w-3xl mx-auto">
             <div className="space-y-3">
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tighter">
-                Check out my latest work
+                我的项目
               </h2>
               <p className="text-sm sm:text-base text-muted-foreground md:text-lg/relaxed lg:text-xl/relaxed max-w-2xl mx-auto">
-                I&apos;ve worked on a variety of projects, from simple websites
-                to complex web applications. Here are a few of my favorites.
+                一些我做过的项目
               </p>
             </div>
           </div>
         </BlurFade>
 
         <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-[1200px] mx-auto">
-          {projects.data.map((project: Project, id: number) => (
+          {projects.data.map((project: IProject, index: number) => (
             <BlurFade
-              key={project.name}
-              delay={BLUR_FADE_DELAY * 12 + id * 0.05}
+              key={project.id}
+              delay={BLUR_FADE_DELAY * 12 + index * 0.05}
               className="w-full"
             >
               <ProjectCard
@@ -57,20 +57,5 @@ export default async function Projects() {
     </section>
   )
 }
-export interface Project {
-  id: number
-  name: string
-  docsUrl: string
-  previewUrl: string
-  videoUrl: string
-  summary: string
-  previewImage: string[]
-  readme: string
-  order: number
-  coverImage: string
-  status: string
-  isDeleted: boolean
-  createdAt: string
-  updatedAt: string
-  techStack: any[]
-}
+
+

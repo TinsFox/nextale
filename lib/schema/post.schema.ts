@@ -1,10 +1,5 @@
 import * as z from "zod"
-
-export const statusSchema = z
-  .enum(["draft", "published", "archived", "under_review"])
-  .default("draft")
-
-export type Status = z.infer<typeof statusSchema>
+import { statusSchema } from "./shared.schema"
 
 export const postFormSchema = z.object({
   id: z.number().optional(),
@@ -25,4 +20,5 @@ export const postFormSchema = z.object({
   category: z.string().optional(),
   status: statusSchema,
 })
+
 export type IPost = z.infer<typeof postFormSchema>
