@@ -16,7 +16,7 @@ import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 @ApiTags('Projects')
 @Controller('projects')
 export class ProjectsController {
-  constructor(private readonly projectsService: ProjectsService) {}
+  constructor(private readonly projectsService: ProjectsService) { }
 
   @Post()
   @ApiBody({ type: CreateProjectDto })
@@ -30,6 +30,13 @@ export class ProjectsController {
   @ApiOperation({ summary: 'Get all projects' })
   findAll() {
     return this.projectsService.findAll();
+  }
+
+  @Get('/s')
+  @Public()
+  @ApiOperation({ summary: 'Get all projects form admin' })
+  findAllWithAdmin() {
+    return this.projectsService.findAllWithAdmin();
   }
 
   @Get(':id')

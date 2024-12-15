@@ -8,13 +8,20 @@ import { asc, eq } from 'drizzle-orm';
 
 @Injectable()
 export class ProjectsService {
-  constructor(@Inject(DRIZZLE) private db: DrizzleDB) {}
+  constructor(@Inject(DRIZZLE) private db: DrizzleDB) { }
 
   create(createProjectDto: CreateProjectDto) {
     return this.db.insert(projectsTable).values(createProjectDto);
   }
 
   findAll() {
+    return this.db.query.projectsTable.findMany({
+      orderBy: asc(projectsTable.order),
+      where: eq(projectsTable.status, 'published'),
+    });
+  }
+
+  findAllWithAdmin() {
     return this.db.query.projectsTable.findMany({
       orderBy: asc(projectsTable.order),
     });
