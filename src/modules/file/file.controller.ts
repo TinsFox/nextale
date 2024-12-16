@@ -17,7 +17,7 @@ export class SampleDto {
   name: string;
 }
 
-@ApiTags('file')
+@ApiTags('File')
 @Controller('file')
 export class FileController {
   constructor(private readonly fileService: FileService) {}
@@ -74,5 +74,11 @@ export class FileController {
       body,
       file: file.buffer.toString(),
     };
+  }
+
+  @Post('s3/presign')
+  @ApiOperation({ summary: 'Get presigned url for s3 upload' })
+  getPresignedUrl(@Body() body: { fileName: string; contentType: string }) {
+    return this.fileService.getPresignedUrl(body.fileName, body.contentType);
   }
 }
