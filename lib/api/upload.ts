@@ -1,4 +1,4 @@
-import { apiFetch } from "@/lib/api-fetch"
+import { apiFetch, APIResponse } from "@/lib/api-fetch"
 
 export async function uploadFile(file: File) {
   const formData = new FormData()
@@ -25,25 +25,31 @@ export async function uploadToObjectStorage(
     ? `${options.path}/${timestamp}-${fileName}`
     : `${timestamp}-${fileName}`
 
-  const presignedUrl: { url: string; publicUrl: string } = await apiFetch("/api/storage/presign", {
+  const presignedUrl = await apiFetch<
+    APIResponse<{ presignedUrl: string; publicUrl: string }>
+  >("/api/file/s3/presign", {
     method: "POST",
     body: JSON.stringify({
       fileName: key,
       contentType: options?.contentType || file.type,
-    })
+    }),
   })
+  if (presignedUrl.code !== 200) {
+    throw new Error(presignedUrl.message)
+  }
+  console.log("presignedUrl: ", presignedUrl)
 
-  const response = await fetch(presignedUrl.url, {
-    method: 'PUT',
+  const response = await fetch(presignedUrl.data.presignedUrl, {
+    method: "PUT",
     body: file,
     headers: {
-      "Content-Type": options?.contentType || file.type
-    }
-  });
+      "Content-Type": options?.contentType || file.type,
+    },
+  })
 
   if (!response.ok) {
     throw new Error("Failed to upload file")
   }
 
-  return presignedUrl.publicUrl
+  return presignedUrl.data.publicUrl
 }

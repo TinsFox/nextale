@@ -3,10 +3,10 @@ import { z } from "zod"
 
 export const env = createEnv({
   server: {
-    S3_ACCESS_KEY_ID: z.string(),
-    S3_SECRET_ACCESS_KEY: z.string(),
-    S3_BUCKET: z.string(),
-    S3_ENDPOINT: z.string(),
+    S3_ACCESS_KEY_ID: z.string().optional(),
+    S3_SECRET_ACCESS_KEY: z.string().optional(),
+    S3_BUCKET: z.string().optional(),
+    S3_ENDPOINT: z.string().optional(),
     S3_PUBLIC_DOMAIN: z.string().optional(),
   },
   client: {

@@ -1,9 +1,11 @@
 "use client"
+
 import { ColumnDef } from "@tanstack/react-table"
+import { MoreHorizontal, Pencil, Trash } from "lucide-react"
+
 import { IProject } from "@/lib/schema/projects"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { MoreHorizontal, Pencil, Trash } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +25,10 @@ interface ColumnProps {
   onDelete: (id: number) => void
 }
 
-export const createColumns = ({ onEdit, onDelete }: ColumnProps): ColumnDef<IProject>[] => [
+export const createColumns = ({
+  onEdit,
+  onDelete,
+}: ColumnProps): ColumnDef<IProject>[] => [
   {
     accessorKey: "name",
     header: "项目名称",
@@ -96,11 +101,6 @@ export const createColumns = ({ onEdit, onDelete }: ColumnProps): ColumnDef<IPro
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>操作</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(project.id.toString())}
-            >
-              复制项目ID
-            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onEdit(project)}>
               <Pencil className="mr-2 h-4 w-4" />
               编辑
