@@ -1,27 +1,18 @@
 "use client"
-import { useState } from "react"
-import { useProjects } from "@/hooks/query/use-projects"
-import { createColumns } from "./columns"
-import { DataTable } from "./data-table"
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
-import { ProjectDialog } from "./project-dialog"
-import { IProject } from "@/lib/schema/projects"
+
+import Link from "next/link"
+import { Loader2, Plus } from "lucide-react"
+import { toast } from "sonner"
 
 import { deleteProject } from "@/lib/api/admin/projects"
-import { toast } from "sonner"
+import { useProjects } from "@/hooks/query/use-projects"
+import { buttonVariants } from "@/components/ui/button"
+
+import { createColumns } from "./columns"
+import { DataTable } from "./data-table"
 
 export function ProjectMain() {
   const { data: projects, isLoading } = useProjects()
-
-  const [open, setOpen] = useState(false)
-  const [editingProject, setEditingProject] = useState<IProject | null>(null)
-
-
-  const handleEdit = (project: IProject) => {
-    setEditingProject(project)
-    setOpen(true)
-  }
 
   const handleDelete = async (id: number) => {
     try {
@@ -33,27 +24,28 @@ export function ProjectMain() {
   }
 
   const columns = createColumns({
-    onEdit: handleEdit,
+    onEdit: () => {},
     onDelete: handleDelete,
   })
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">项目管理</h1>
-        <Button onClick={() => setOpen(true)}>
+        <Link
+          className={buttonVariants({ variant: "default" })}
+          href="/dashboard/projects/new"
+        >
           <Plus className="mr-2 h-4 w-4" /> 新增项目
-        </Button>
+        </Link>
       </div>
-
-      <DataTable columns={columns} data={projects || []} />
-
-      <ProjectDialog
-        open={open}
-        onOpenChange={setOpen}
-        project={editingProject}
-        onClose={() => setEditingProject(null)}
-      />
+      {isLoading ? (
+        <div className="flex justify-center items-center h-96">
+          <Loader2 className="animate-spin" />
+        </div>
+      ) : (
+        <DataTable columns={columns} data={projects} />
+      )}
     </div>
   )
 }

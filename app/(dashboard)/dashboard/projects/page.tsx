@@ -1,7 +1,9 @@
-import { ProjectMain } from "./components/main";
+import { ProjectMain } from "./components/main"
 
-export default function ProjectsPage(){
-  return <div>
-    <ProjectMain/>
-  </div>
+export default function ProjectsPage() {
+  return (
+    <div>
+      <ProjectMain />
+    </div>
+  )
 }

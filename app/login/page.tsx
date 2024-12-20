@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -31,6 +31,7 @@ const FormSchema = z.object({
 export default function LoginPage() {
   const { login } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -41,7 +42,8 @@ export default function LoginPage() {
   const handleSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
       await login(data.username, data.password)
-      router.push("/dashboard/posts")
+      const redirect = searchParams.get("redirect")
+      router.push(redirect || "/dashboard")
     } catch (error) {
       console.error("Login failed:", error)
     }

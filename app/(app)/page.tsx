@@ -1,3 +1,4 @@
+import { env } from "@/env"
 import * as motion from "framer-motion/client"
 
 interface Social {
@@ -7,7 +8,7 @@ interface Social {
 }
 
 async function fetchUserProfile() {
-  const res = await fetch("http://localhost:8080/users/user-profile")
+  const res = await fetch(`${env.NEXT_PUBLIC_API_URL}/users/user-profile`)
   const data = await res.json()
   return data
 }

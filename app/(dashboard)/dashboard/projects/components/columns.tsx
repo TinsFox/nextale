@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal, Pencil, Trash } from "lucide-react"
 
@@ -100,10 +101,11 @@ export const createColumns = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>操作</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => onEdit(project)}>
-              <Pencil className="mr-2 h-4 w-4" />
-              编辑
+            <DropdownMenuItem asChild>
+              <Link href={`/dashboard/projects/${project.id}`}>
+                <Pencil className="mr-2 h-4 w-4" />
+                编辑
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onDelete(project.id)}>
               <Trash className="mr-2 h-4 w-4" />

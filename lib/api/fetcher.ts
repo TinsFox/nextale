@@ -44,7 +44,9 @@ export async function fetcher<T>(
     if (typeof window !== "undefined") {
       console.error("request url: ", endpoint)
       toast.error("登录已过期，请重新登录")
-      window.location.href = "/login"
+      // 获取当前路径
+      const currentPath = window.location.pathname
+      window.location.href = `/login?redirect=${currentPath}`
     }
     throw new Error("Unauthorized")
   }

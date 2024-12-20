@@ -1,8 +1,9 @@
 import * as z from "zod"
+
 import { statusSchema } from "./shared.schema"
 
 export const projectSchema = z.object({
-  id: z.number(),
+  id: z.number().optional(),
   name: z.string(),
   docsUrl: z.string(),
   previewUrl: z.string(),
@@ -14,9 +15,9 @@ export const projectSchema = z.object({
   coverImage: z.string(),
   status: statusSchema,
   isDeleted: z.boolean(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-  techStack: z.array(z.string()).default([])
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  techStack: z.array(z.string()).default([]),
 })
 
 export type IProject = z.infer<typeof projectSchema>

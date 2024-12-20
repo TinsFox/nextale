@@ -48,3 +48,7 @@ export async function deleteProject(id: number) {
 
   return response.json()
 }
+
+export function getProject(id: number) {
+  return apiFetch<APIResponse<IProject>>(`/api/projects/${id}`)
+}

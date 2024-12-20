@@ -75,3 +75,25 @@ export function getUrlFromString(str: string) {
 export function absoluteUrl(path: string) {
   return `${process.env.NEXT_PUBLIC_APP_URL}${path}`
 }
+
+export function isVideoFile(filename: string): boolean {
+  const videoExtensions = [".mp4", ".webm", ".ogg", ".mov"]
+  const videoMimeTypes = [
+    "video/mp4",
+    "video/webm",
+    "video/ogg",
+    "video/quicktime",
+  ]
+
+  // 检查文件扩展名
+  const hasVideoExtension = videoExtensions.some((ext) =>
+    filename.toLowerCase().endsWith(ext)
+  )
+
+  // 检查 MIME 类型（如果 URL 包含它）
+  const hasVideoMimeType = videoMimeTypes.some((type) =>
+    filename.toLowerCase().includes(type)
+  )
+
+  return hasVideoExtension || hasVideoMimeType
+}
