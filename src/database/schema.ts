@@ -108,6 +108,7 @@ export const projectsTable = pgTable('projects', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 256 }),
   docsUrl: varchar('docs_url', { length: 256 }),
+  github: varchar('github', { length: 256 }),
   previewUrl: varchar('preview_url', { length: 256 }),
   videoUrl: varchar('video_url', { length: 256 }),
   summary: text('summary'),

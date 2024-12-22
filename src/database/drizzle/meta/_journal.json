@@ -85,6 +85,20 @@
       "when": 1733976370633,
       "tag": "0011_condemned_maginty",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1734874683711,
+      "tag": "0012_acoustic_firelord",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1734874867350,
+      "tag": "0013_remarkable_bullseye",
+      "breakpoints": true
     }
   ]
 }

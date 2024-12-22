@@ -1,0 +1,1 @@
+ALTER TABLE "projects" RENAME COLUMN "github_url" TO "github";
