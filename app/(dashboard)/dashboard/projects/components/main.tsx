@@ -12,20 +12,25 @@ import { createColumns } from "./columns"
 import { DataTable } from "./data-table"
 
 export function ProjectMain() {
-  const { data: projects, isLoading } = useProjects()
+  const { data: projects, isLoading, refetch } = useProjects()
 
   const handleDelete = async (id: number) => {
     try {
       await deleteProject(id)
       toast("项目已成功删除")
+
     } catch (error) {
       toast("删除项目时发生错误")
+    }
+    finally {
+      refetch()
     }
   }
 
   const columns = createColumns({
-    onEdit: () => {},
+    onEdit: () => { },
     onDelete: handleDelete,
+    refetch,
   })
 
   return (

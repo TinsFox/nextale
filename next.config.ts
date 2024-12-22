@@ -11,11 +11,24 @@ const nextConfig: NextConfig = {
       }, {
         protocol: "https",
         hostname: "github.com",
-      }
-      , {
+      },
+      {
         protocol: "https",
         hostname: "nextale.cdn.tinsfox.com",
-      }
+      },
+      {
+        protocol: "https",
+        hostname: "static.nextale.tinsfox.com",
+      },
+      {
+        protocol: "https",
+        hostname: "x.com",
+      },
+      {
+        protocol: "https",
+
+        hostname: "shadcnui-boilerplate.pages.dev",
+      },
     ],
   },
   async rewrites() {

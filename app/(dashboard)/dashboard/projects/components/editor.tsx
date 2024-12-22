@@ -61,6 +61,7 @@ export function Editor({ id }: { id: string }) {
       order: 0,
       coverImage: "",
       isDeleted: false,
+      github: "",
     },
   })
   const [isPendingSaving, startTransitionSaving] = useTransition()
@@ -81,13 +82,15 @@ export function Editor({ id }: { id: string }) {
       form.setValue("name", data.name)
       form.setValue("status", data.status)
       form.setValue("order", data.order)
+      form.setValue("github", data.github || "")
+      form.setValue("summary", data.summary || "")
       form.setValue("techStack", data.techStack)
       form.setValue("readme", data.readme)
       form.setValue("previewImage", data.previewImage)
       form.setValue("videoUrl", data.videoUrl)
       form.setValue("docsUrl", data.docsUrl)
       form.setValue("previewUrl", data.previewUrl)
-      form.setValue("coverImage", data.coverImage)
+      form.setValue("coverImage", data.coverImage || "")
       form.setValue("isDeleted", data.isDeleted)
       form.setValue("id", data.id)
       form.setValue("createdAt", new Date(data.createdAt))
@@ -190,7 +193,38 @@ export function Editor({ id }: { id: string }) {
               )}
             />
           </div>
-
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="github"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Github</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="order"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>排序</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <FormField
               control={form.control}
@@ -271,6 +305,19 @@ export function Editor({ id }: { id: string }) {
 
           <FormField
             control={form.control}
+            name="summary"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>项目简介</FormLabel>
+                <FormControl>
+                  <Textarea {...field} rows={6} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="readme"
             render={({ field }) => (
               <FormItem>
@@ -307,23 +354,7 @@ export function Editor({ id }: { id: string }) {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="order"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>排序</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
           <div className="grid grid-cols-2 gap-4">
             {/* createdAt */}
             <FormField

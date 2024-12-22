@@ -3,12 +3,12 @@ import { Icons } from "@/components/icons"
 import BlurFade from "@/components/magicui/blur-fade"
 import { ProjectCard } from "@/components/project-card"
 import { IProject } from "@/lib/schema/projects"
+import dayjs from "dayjs"
 
 const BLUR_FADE_DELAY = 0.04
 
 export default async function Projects() {
   const projects = await featuredProjects()
-
 
   return (
     <section id="projects" className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -38,17 +38,27 @@ export default async function Projects() {
                 key={project.name}
                 title={project.name}
                 description={project.summary}
-                dates={project.createdAt}
+                dates={dayjs(project.createdAt).format('YYYY-MM-DD')}
                 tags={project.techStack}
-                image={""}
+                image={project.previewImage?.[0]}
                 video={project.videoUrl}
                 links={[
-                  {
+                  project.github ? {
+                    type: "Github",
+                    href: project.github,
+                    icon: <Icons.github className="size-3" />
+                  } : null,
+                  project.docsUrl ? {
                     type: "Website",
-                    href: "https://chatcollect.com",
-                    icon: <Icons.globe className="size-3" />,
-                  },
-                ]}
+                    href: project.docsUrl,
+                    icon: <Icons.globe className="size-3" />
+                  } : null,
+                  project.previewUrl ? {
+                    type: "Preview",
+                    href: project.previewUrl,
+                    icon: <Icons.liveDemo className="size-3" />
+                  } : null
+                ].filter((link) => link !== null)}
               />
             </BlurFade>
           ))}

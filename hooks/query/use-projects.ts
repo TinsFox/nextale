@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getProject, getProjects } from "@/lib/api/admin/projects"
 
 export function useProjects() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["projects"],
     queryFn: () => getProjects(),
   })
@@ -11,6 +11,7 @@ export function useProjects() {
   return {
     data: data?.data || [],
     isLoading,
+    refetch,
   }
 }
 

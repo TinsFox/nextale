@@ -5,6 +5,7 @@ import { statusSchema } from "./shared.schema"
 export const projectSchema = z.object({
   id: z.number().optional(),
   name: z.string(),
+  github: z.string(),
   docsUrl: z.string(),
   previewUrl: z.string(),
   videoUrl: z.string(),
