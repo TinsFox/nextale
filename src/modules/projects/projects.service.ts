@@ -5,6 +5,7 @@ import { DRIZZLE } from '../database/database.module';
 import { DrizzleDB } from '../database/drizzle';
 import { projectsTable } from '~/database/schema';
 import { asc, eq } from 'drizzle-orm';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class ProjectsService {
@@ -34,9 +35,15 @@ export class ProjectsService {
   }
 
   update(id: number, updateProjectDto: UpdateProjectDto) {
+    console.log('updateProjectDto: ', updateProjectDto);
+    console.log('createdAt', new Date(updateProjectDto.createdAt));
     return this.db
       .update(projectsTable)
-      .set(updateProjectDto)
+      .set({
+        ...updateProjectDto,
+        updatedAt: new Date(),
+        createdAt: new Date(updateProjectDto.createdAt),
+      })
       .where(eq(projectsTable.id, id));
   }
 

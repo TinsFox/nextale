@@ -120,7 +120,8 @@ export const projectsTable = pgTable('projects', {
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at')
     .notNull()
-    .$onUpdate(() => new Date()),
+    .$onUpdate(() => new Date())
+    .$default(() => new Date()),
   techStack: json('tech_stack').$type<string[]>().default([]),
 });
 
