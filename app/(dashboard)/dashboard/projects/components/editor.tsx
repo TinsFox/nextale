@@ -1,12 +1,13 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
+import { ReloadIcon } from "@radix-ui/react-icons"
 
 import { createProject, updateProject } from "@/lib/api/admin/projects"
 import { IProject, projectSchema } from "@/lib/schema/projects"
@@ -37,13 +38,13 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { UploadInput } from "@/components/upload-input"
+import { useHotkeys } from "react-hotkeys-hook"
 
 export function Editor({ id }: { id: string }) {
   const router = useRouter()
   const isNew = id === "new"
 
   const { data } = useProject(isNew ? 0 : Number(id))
-  console.log("data: ", data)
 
   const form = useForm<IProject>({
     resolver: zodResolver(projectSchema),
@@ -61,6 +62,18 @@ export function Editor({ id }: { id: string }) {
       coverImage: "",
       isDeleted: false,
     },
+  })
+  const [isPendingSaving, startTransitionSaving] = useTransition()
+
+  const handleSave = async () => {
+    if (isPendingSaving) return
+    form.handleSubmit(onSubmit)()
+  }
+
+  useHotkeys("meta+s, ctrl+enter", handleSave, {
+    preventDefault: true,
+    enableOnContentEditable: true,
+    enableOnFormTags: true,
   })
 
   useEffect(() => {
@@ -81,22 +94,24 @@ export function Editor({ id }: { id: string }) {
       form.setValue("updatedAt", new Date(data.updatedAt))
     }
   }, [data])
-  console.log("form.formState.errors: ", form.formState.errors)
-  const onSubmit = async (data: IProject) => {
-    console.log("data: ", data)
 
-    try {
-      if (!isNew) {
-        await updateProject(Number(id), data)
-      } else {
-        await createProject(data)
+  const onSubmit = async (data: IProject) => {
+    startTransitionSaving(async () => {
+      try {
+        if (!isNew) {
+          await updateProject(Number(id), data)
+        } else {
+          await createProject(data)
+        }
+        toast.success(`项目${isNew ? "创建" : "更新"}成功`)
+
+      } catch (error) {
+        console.log("error: ", error)
+        toast(`项目${isNew ? "创建" : "更新"}失败`)
       }
-      toast(`项目${isNew ? "创建" : "更新"}成功`)
-      router.push("/dashboard/projects")
-    } catch (error) {
-      toast(`项目${isNew ? "创建" : "更新"}失败`)
-    }
+    })
   }
+
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
@@ -111,7 +126,15 @@ export function Editor({ id }: { id: string }) {
           >
             取消
           </Button>
-          <Button type="submit" form="project-form">
+          <Button
+            type="submit"
+            form="project-form"
+            disabled={isPendingSaving}
+            onClick={handleSave}
+          >
+            {isPendingSaving && (
+              <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+            )}
             保存
           </Button>
         </div>
@@ -148,6 +171,7 @@ export function Editor({ id }: { id: string }) {
                   <FormLabel>状态</FormLabel>
                   <Select
                     onValueChange={field.onChange}
+                    value={field.value}
                     defaultValue={field.value}
                   >
                     <FormControl>
@@ -300,59 +324,17 @@ export function Editor({ id }: { id: string }) {
               </FormItem>
             )}
           />
-          {/* createdAt */}
-          <FormField
-            control={form.control}
-            name="createdAt"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>创建时间</FormLabel>
-                <FormControl>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-[240px] pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          {/* updatedAt */}
-          <FormField
-            control={form.control}
-            name="updatedAt"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>更新时间</FormLabel>
-                <FormControl>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
+          <div className="grid grid-cols-2 gap-4">
+            {/* createdAt */}
+            <FormField
+              control={form.control}
+              name="createdAt"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>创建时间</FormLabel>
+                  <FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
                         <Button
                           variant={"outline"}
                           className={cn(
@@ -367,25 +349,69 @@ export function Editor({ id }: { id: string }) {
                           )}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* updatedAt */}
+            <FormField
+              control={form.control}
+              name="updatedAt"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>更新时间</FormLabel>
+                  <FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-[240px] pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </form>
       </Form>
     </div>

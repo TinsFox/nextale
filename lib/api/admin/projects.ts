@@ -6,12 +6,9 @@ export function getProjects() {
 }
 
 export async function createProject(data: IProject) {
-  const response = await fetch("/api/admin/projects", {
+  const response = await apiFetch("/api/admin/projects", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
+    body: data,
   })
 
   if (!response.ok) {
@@ -22,23 +19,15 @@ export async function createProject(data: IProject) {
 }
 
 export async function updateProject(id: number, data: IProject) {
-  const response = await fetch(`/api/admin/projects/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
+  const response = await apiFetch(`/api/projects/${id}`, {
+    method: "PATCH",
+    body: data,
   })
-
-  if (!response.ok) {
-    throw new Error("Failed to update project")
-  }
-
-  return response.json()
+  return response
 }
 
 export async function deleteProject(id: number) {
-  const response = await fetch(`/api/admin/projects/${id}`, {
+  const response = await apiFetch(`/api/admin/projects/${id}`, {
     method: "DELETE",
   })
 

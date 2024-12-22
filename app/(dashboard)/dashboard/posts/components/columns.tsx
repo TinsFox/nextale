@@ -7,7 +7,7 @@ import { Eye, FilePenLine, MoreHorizontal } from "lucide-react"
 import { toast } from "sonner"
 
 import { revalidatePost } from "@/lib/actions/post"
-import { Badge } from "@/components/ui/badge"
+
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -70,27 +70,24 @@ export const columns: ColumnDef<IPost>[] = [
         <div className="flex gap-4 py-4">
           <div className="flex-1 min-w-0 max-w-52">
             <div className="flex items-center gap-2 ">
+
               <HoverCard>
                 <HoverCardTrigger asChild>
                   <h3 className="font-medium text-base truncate">
                     {post.title}
                   </h3>
                 </HoverCardTrigger>
-                <HoverCardContent className="w-[120px] h-[80px]" side="top">
-                  <div className="size-full">
-                    {post.coverImage ? (
+                {post.coverImage && (
+                  <HoverCardContent className="w-[120px] h-[80px]" side="top">
+                    <div className="size-full">
                       <img
                         src={post.coverImage}
                         alt={post.title}
                         className="w-full h-full object-cover rounded-md"
                       />
-                    ) : (
-                      <div className="bg-muted rounded-md flex items-center justify-center size-full">
-                        No Image
-                      </div>
-                    )}
-                  </div>
-                </HoverCardContent>
+                    </div>
+                  </HoverCardContent>
+                )}
               </HoverCard>
 
               <div className="invisible group-hover:visible flex gap-2">
