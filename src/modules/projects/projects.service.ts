@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 
 @Injectable()
 export class ProjectsService {
-  constructor(@Inject(DRIZZLE) private db: DrizzleDB) { }
+  constructor(@Inject(DRIZZLE) private db: DrizzleDB) {}
 
   create(createProjectDto: CreateProjectDto) {
     return this.db.insert(projectsTable).values(createProjectDto);
@@ -36,13 +36,11 @@ export class ProjectsService {
 
   update(id: number, updateProjectDto: UpdateProjectDto) {
     console.log('updateProjectDto: ', updateProjectDto);
-    console.log('createdAt', new Date(updateProjectDto.createdAt));
     return this.db
       .update(projectsTable)
       .set({
         ...updateProjectDto,
         updatedAt: new Date(),
-        createdAt: new Date(updateProjectDto.createdAt),
       })
       .where(eq(projectsTable.id, id));
   }
