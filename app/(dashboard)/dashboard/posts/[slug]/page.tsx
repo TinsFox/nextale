@@ -16,9 +16,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
   const post = await fetchPostDetail(slug)
-
+  if (!post) {
+    return {
+      title: "Post not found",
+    }
+  }
   return {
-    title: post.title,
+    title: post?.title,
   }
 }
 export default async function PostPage(props: {

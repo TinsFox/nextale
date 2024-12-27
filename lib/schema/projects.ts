@@ -16,8 +16,8 @@ export const projectSchema = z.object({
   coverImage: z.string(),
   status: statusSchema,
   isDeleted: z.boolean(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
   techStack: z.array(z.string()).default([]),
 })
 

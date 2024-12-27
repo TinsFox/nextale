@@ -31,7 +31,7 @@ const FormSchema = z.object({
 export default function LoginPage() {
   const { login } = useAuth()
   const router = useRouter()
-  const searchParams = useSearchParams()
+  // const searchParams = useSearchParams()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -42,8 +42,8 @@ export default function LoginPage() {
   const handleSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
       await login(data.username, data.password)
-      const redirect = searchParams.get("redirect")
-      router.push(redirect || "/dashboard")
+      // const redirect = searchParams.get("redirect")
+      router.push("/dashboard")
     } catch (error) {
       console.error("Login failed:", error)
     }

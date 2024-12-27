@@ -2,10 +2,10 @@
 
 import { revalidatePath } from "next/cache"
 import { cookies } from "next/headers"
+import { IPost } from "../schema/post.schema"
+import { env } from "@/env"
 
-import { Post } from "@/types/post"
-
-export async function createOrUpdatePost(post: Post) {
+export async function createOrUpdatePost(post: IPost) {
   const cookieStore = await cookies()
   const token = cookieStore.get("token")
 
@@ -16,7 +16,7 @@ export async function createOrUpdatePost(post: Post) {
     throw new Error("Post is required")
   }
   if (post.id) {
-    const res = await fetch(`http://localhost:8080/posts/${post.id}`, {
+    const res = await fetch(`${env.NEXT_PUBLIC_API_URL}/posts/${post.id}`, {
       method: "PATCH",
       body: JSON.stringify(post),
       headers: {
@@ -29,7 +29,7 @@ export async function createOrUpdatePost(post: Post) {
     const data = await res.json()
     return data
   } else {
-    const res = await fetch(`http://localhost:8080/posts`, {
+    const res = await fetch(`${env.NEXT_PUBLIC_API_URL}/posts`, {
       method: "POST",
       body: JSON.stringify(post),
       headers: {
@@ -38,7 +38,7 @@ export async function createOrUpdatePost(post: Post) {
       },
       credentials: "include",
     })
-    revalidatePost(post.slug)
+
     const data = await res.json()
     return data
   }

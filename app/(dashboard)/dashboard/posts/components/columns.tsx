@@ -6,8 +6,6 @@ import { formatDate } from "date-fns"
 import { Eye, FilePenLine, MoreHorizontal } from "lucide-react"
 import { toast } from "sonner"
 
-import { revalidatePost } from "@/lib/actions/post"
-
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -30,35 +28,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
+import { IPost, POST_STATUS } from "@/lib/schema/post.schema"
 
-export interface IPost {
-  id: number
-  title: string
-  content: string
-  authorId: number
-  coverImage: string
-  tags: any[]
-  isCopyright: boolean
-  isTop: boolean
-  topOrder: number
-  summary: string
-  customCreatedAt: string
-  customUpdatedAt: string
-  relatedPosts: any[]
-  categoryIds: any[]
-  tagIds: any[]
-  slug: string
-  createdAt: string
-  updatedAt: string
-  deletedAt: string
-  status: string
-}
-
-const POST_STATUS = {
-  DRAFT: "draft",
-  PUBLISHED: "published",
-  ARCHIVED: "archived",
-} as const
 
 export const columns: ColumnDef<IPost>[] = [
   {
@@ -150,7 +121,7 @@ export const columns: ColumnDef<IPost>[] = [
             throw new Error("Failed to update status")
           }
 
-          revalidatePost(post.slug)
+
           toast.success("状态更新成功")
         } catch (error) {
           toast.error("状态更新失败")
@@ -213,7 +184,7 @@ export const columns: ColumnDef<IPost>[] = [
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Link href={`./posts/${post.slug || post.id}`}>编辑</Link>
+                <Link href={`./posts/${post.id}`}>编辑</Link>
               </DropdownMenuItem>
               <DropdownMenuItem>删除</DropdownMenuItem>
             </DropdownMenuContent>

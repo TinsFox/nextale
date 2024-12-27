@@ -1,7 +1,4 @@
 import { env } from "@/env"
-
-import { Post } from "@/types/post"
-
 import { apiFetch, APIResponse } from "../api-fetch"
 import { IPost } from "../schema/post.schema"
 import { IApiPaginationResponse } from "./config"
@@ -17,7 +14,7 @@ export const fetchPosts = async () => {
   if (res.code !== 200) {
     throw new Error("Failed to fetch posts")
   }
-  console.log("res: ", res.data)
+
   return res.data
 }
 
@@ -27,7 +24,7 @@ export async function fetchPostDetail(slug: string) {
   return res.data
 }
 
-export async function publishPost(post: Post) {
+export async function publishPost(post: IPost) {
   return await fetcher(`/api/posts`, {
     method: "POST",
     body: JSON.stringify(post),

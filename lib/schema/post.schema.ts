@@ -12,13 +12,17 @@ export const postFormSchema = z.object({
   isTop: z.boolean().optional(),
   topOrder: z.number().optional(),
   summary: z.string().optional(),
-  customCreatedAt: z.date().optional(),
-  customUpdatedAt: z.date().optional(),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  customCreatedAt: z.coerce.date().optional(),
+  customUpdatedAt: z.coerce.date().optional(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
   relatedPosts: z.array(z.string()).optional(),
   category: z.string().optional(),
   status: statusSchema,
 })
-
+export const POST_STATUS = {
+  DRAFT: "draft",
+  PUBLISHED: "published",
+  ARCHIVED: "archived",
+} as const
 export type IPost = z.infer<typeof postFormSchema>

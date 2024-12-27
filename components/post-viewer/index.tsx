@@ -2,17 +2,18 @@
 
 import { Suspense } from "react"
 import Image from "next/image"
-import { format } from "date-fns"
+import { format, formatDate } from "date-fns"
 import { Calendar } from "lucide-react"
 
-import { Post, RelatedPosts } from "@/types/post"
+
 import NotFoundPost from "@/app/not-found"
 
 import { Copyright } from "../copyright"
 import { MinimalTiptapEditor } from "../minimal-tiptap"
+import { IPost } from "@/lib/schema/post.schema"
 
 export interface PostViewerProps {
-  post: Post
+  post: IPost
 }
 
 export function PostViewer({ post }: PostViewerProps) {
@@ -24,7 +25,11 @@ export function PostViewer({ post }: PostViewerProps) {
         <div className="flex flex-wrap items-center text-gray-600 mb-4">
           <Calendar className="w-4 h-4 mr-2" />
           <time
-            dateTime={post.customCreatedAt || post.createdAt}
+            dateTime={
+              formatDate(
+                post.customCreatedAt || post.createdAt,
+                "yyyy-MM-dd HH:mm"
+              )}
             className="mr-4"
           >
             {format(
@@ -32,7 +37,7 @@ export function PostViewer({ post }: PostViewerProps) {
               "MM/dd/yyyy"
             )}
           </time>
-          {post.tags?.length > 0 &&
+          {post.tags?.length &&
             post.tags.map((tag: string, index: number) => (
               <span
                 key={index}
@@ -51,7 +56,7 @@ export function PostViewer({ post }: PostViewerProps) {
             className="rounded-lg shadow-lg w-full h-auto"
           />
         )}
-      </div>
+      </div >
       <article className="max-w-none">
         <Suspense fallback={<>Loading...</>}>
           <MinimalTiptapEditor
@@ -62,8 +67,8 @@ export function PostViewer({ post }: PostViewerProps) {
           />
         </Suspense>
         {post.isCopyright && <Copyright />}
-
-        {post.relatedPosts?.length > 0 && (
+        {/* related post  */}
+        {/* {post.relatedPosts?.length && (
           <section className="mt-12">
             <h2 className="text-2xl font-bold mb-4">Related Posts</h2>
             <ul className="space-y-2">
@@ -79,7 +84,7 @@ export function PostViewer({ post }: PostViewerProps) {
               ))}
             </ul>
           </section>
-        )}
+        )} */}
       </article>
     </>
   )

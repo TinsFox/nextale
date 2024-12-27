@@ -4,7 +4,7 @@ import { Settings } from "lucide-react"
 import { UseFormReturn } from "react-hook-form"
 
 import { Category } from "@/types/category"
-import { Post } from "@/types/post"
+
 import { IPost } from "@/lib/schema/post.schema"
 import { useCategories } from "@/hooks/query/use-categories"
 import { usePosts } from "@/hooks/query/use-posts"
@@ -127,7 +127,7 @@ export function SettingForm({
                   ) : (
                     <MultiSelect
                       options={
-                        posts?.map((p: Post) => ({
+                        posts?.map((p: IPost) => ({
                           value: String(p.id),
                           label: p.title,
                         })) || []

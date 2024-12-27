@@ -37,7 +37,7 @@ export async function uploadToObjectStorage(
   if (presignedUrl.code !== 200) {
     throw new Error(presignedUrl.message)
   }
-  console.log("presignedUrl: ", presignedUrl)
+
 
   const response = await fetch(presignedUrl.data.presignedUrl, {
     method: "PUT",

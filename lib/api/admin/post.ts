@@ -1,7 +1,5 @@
 import { env } from "@/env"
 import { IPost } from "@/lib/schema/post.schema"
-
-import { Post } from "@/types/post"
 import { fetcher } from "../fetcher"
 import { APIResponse } from "@/lib/api-fetch"
 
@@ -11,7 +9,7 @@ export async function fetchPostDetail(slug: string) {
   return res.data
 }
 
-export async function publishPost(post: Post) {
+export async function publishPost(post: IPost) {
   return await fetcher(`/api/posts`, {
     method: "POST",
     body: JSON.stringify(post),

@@ -33,25 +33,7 @@ import { AdvancedForm } from "./advanced-form"
 import { BasicForm } from "./basic-form"
 import { SettingForm } from "./setting-form"
 
-const defaultValues: IPost = {
-  id: 0,
-  title: "",
-  slug: "",
-  customCreatedAt: undefined,
-  customUpdatedAt: undefined,
-  createdAt: undefined,
-  updatedAt: undefined,
-  content: "",
-  coverImage: "",
-  tags: [],
-  category: "",
-  status: "draft",
-  isTop: false,
-  topOrder: 0,
-  summary: "",
-  relatedPosts: [],
-  isCopyright: true,
-}
+
 export function PostEditor({ slug, post }: { slug: string; post?: IPost }) {
   const router = useRouter()
 
@@ -59,7 +41,7 @@ export function PostEditor({ slug, post }: { slug: string; post?: IPost }) {
 
   const form = useForm<IPost>({
     resolver: zodResolver(postFormSchema),
-    defaultValues,
+    // defaultValues,
   })
 
   useEffect(() => {

@@ -3,11 +3,12 @@
 import { useEffect, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { ReloadIcon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
+import { useHotkeys } from "react-hotkeys-hook"
 import { toast } from "sonner"
-import { ReloadIcon } from "@radix-ui/react-icons"
 
 import { createProject, updateProject } from "@/lib/api/admin/projects"
 import { IProject, projectSchema } from "@/lib/schema/projects"
@@ -38,7 +39,6 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { UploadInput } from "@/components/upload-input"
-import { useHotkeys } from "react-hotkeys-hook"
 
 export function Editor({ id }: { id: string }) {
   const router = useRouter()
@@ -93,12 +93,13 @@ export function Editor({ id }: { id: string }) {
       form.setValue("coverImage", data.coverImage || "")
       form.setValue("isDeleted", data.isDeleted)
       form.setValue("id", data.id)
-      form.setValue("createdAt", new Date(data.createdAt))
-      form.setValue("updatedAt", new Date(data.updatedAt))
+      form.setValue("createdAt", data.createdAt)
+      form.setValue("updatedAt", data.updatedAt)
     }
   }, [data])
 
   const onSubmit = async (data: IProject) => {
+
     startTransitionSaving(async () => {
       try {
         if (!isNew) {
@@ -107,7 +108,6 @@ export function Editor({ id }: { id: string }) {
           await createProject(data)
         }
         toast.success(`项目${isNew ? "创建" : "更新"}成功`)
-
       } catch (error) {
         console.log("error: ", error)
         toast(`项目${isNew ? "创建" : "更新"}失败`)
@@ -354,7 +354,6 @@ export function Editor({ id }: { id: string }) {
             )}
           />
 
-
           <div className="grid grid-cols-2 gap-4">
             {/* createdAt */}
             <FormField
@@ -389,7 +388,6 @@ export function Editor({ id }: { id: string }) {
                           disabled={(date) =>
                             date > new Date() || date < new Date("1900-01-01")
                           }
-                          initialFocus
                         />
                       </PopoverContent>
                     </Popover>
@@ -433,7 +431,6 @@ export function Editor({ id }: { id: string }) {
                           disabled={(date) =>
                             date > new Date() || date < new Date("1900-01-01")
                           }
-                          initialFocus
                         />
                       </PopoverContent>
                     </Popover>

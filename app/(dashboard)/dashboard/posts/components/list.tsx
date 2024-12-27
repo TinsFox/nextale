@@ -24,9 +24,7 @@ const schema = z.object({
   status: z.string(),
 })
 export function PostList() {
-  const { posts } = usePosts()
-  console.log("posts: ", posts)
-
+  const { data: posts } = usePosts()
   const [query, setQuery] = useQueryState("query", parseAsJson(schema.parse))
 
   return (

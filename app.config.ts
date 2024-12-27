@@ -56,9 +56,10 @@ export interface IAppConfig {
       username: string
       avatar: string
       socialIds: {
-        github: string
-        twitter: string
-        mail: string
+        github?: string
+        twitter?: string
+        mail?: string
+        x?: string
       }
     }
   }
