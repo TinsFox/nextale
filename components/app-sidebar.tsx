@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/sidebar"
 import { UserDropdown } from "@/app/(dashboard)/components/user-dropdown"
 
-const items = [
+export const items = [
   {
     title: "Home",
     url: "/dashboard",

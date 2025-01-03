@@ -1,8 +1,10 @@
+import { env } from "@/env"
+
 import { PostViewer } from "@/components/post-viewer"
 import NotFoundPost from "@/app/not-found"
 
 async function fetchPost(slug: string) {
-  const post = await fetch(`http://localhost:8080/posts/${slug}`)
+  const post = await fetch(`${env.NEXT_PUBLIC_API_URL}/posts/${slug}`)
   return post.json()
 }
 

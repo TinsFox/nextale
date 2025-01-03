@@ -8,7 +8,8 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "avatars.githubusercontent.com",
-      }, {
+      },
+      {
         protocol: "https",
         hostname: "github.com",
       },
@@ -26,7 +27,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-
         hostname: "shadcnui-boilerplate.pages.dev",
       },
     ],
@@ -39,15 +39,15 @@ const nextConfig: NextConfig = {
       },
     ]
   },
-  async redirects() {
-    return [
-      {
-        source: "/dashboard",
-        destination: "/dashboard/posts",
-        permanent: true,
-      },
-    ]
-  },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: "/dashboard",
+  //       destination: "/dashboard",
+  //       permanent: true,
+  //     },
+  //   ]
+  // },
   async headers() {
     return [
       {

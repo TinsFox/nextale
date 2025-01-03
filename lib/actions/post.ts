@@ -2,8 +2,9 @@
 
 import { revalidatePath } from "next/cache"
 import { cookies } from "next/headers"
-import { IPost } from "../schema/post.schema"
 import { env } from "@/env"
+
+import { IPost } from "../schema/post.schema"
 
 export async function createOrUpdatePost(post: IPost) {
   const cookieStore = await cookies()
