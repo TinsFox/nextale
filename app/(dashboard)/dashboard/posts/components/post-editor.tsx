@@ -1,10 +1,9 @@
 "use client"
 
-import { useEffect, useTransition } from "react"
+import { useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ReloadIcon } from "@radix-ui/react-icons"
-import { isEmpty } from "lodash-es"
 import { PanelLeft, PanelLeftClose } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { useHotkeys } from "react-hotkeys-hook"
@@ -40,41 +39,12 @@ export function PostEditor({ slug, post }: { slug: string; post?: IPost }) {
 
   const form = useForm<IPost>({
     resolver: zodResolver(postFormSchema),
-    // defaultValues,
+    values: post,
+    resetOptions: {
+      keepDirtyValues: true,
+    },
   })
 
-  useEffect(() => {
-    if (!post) return
-    Object.keys(post).forEach((key) => {
-      const value = post[key as keyof IPost]
-      const formKey = key as keyof IPost
-      const isDate = [
-        "customCreatedAt",
-        "customUpdatedAt",
-        "createdAt",
-        "updatedAt",
-      ].includes(key)
-      if (isDate) {
-        if (value !== undefined && value !== null) {
-          form.setValue(formKey, new Date(value.toString()))
-        }
-      } else {
-        if (value === undefined || value === null) {
-          form.setValue(formKey, "")
-        } else {
-          form.setValue(formKey, value)
-        }
-      }
-    })
-  }, [post])
-
-  useEffect(() => {
-    if (form.formState.errors && !isEmpty(form.formState.errors)) {
-      toast.error(JSON.stringify(form.formState.errors))
-    }
-  }, [form.formState.errors])
-
-  // listen to CMD + S ctrl+enter and override the default behavior
   const handleSave = async () => {
     startTransitionSaving(async () => {
       form.handleSubmit(onSubmit)()

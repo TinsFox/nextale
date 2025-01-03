@@ -40,7 +40,7 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { UploadInput } from "@/components/upload-input"
 
-export function Editor({ id }: { id: string }) {
+export function ProjectEditor({ id }: { id: string }) {
   const router = useRouter()
   const isNew = id === "new"
 
@@ -48,20 +48,9 @@ export function Editor({ id }: { id: string }) {
 
   const form = useForm<IProject>({
     resolver: zodResolver(projectSchema),
-    defaultValues: {
-      name: "",
-      summary: "",
-      docsUrl: "",
-      previewUrl: "",
-      videoUrl: "",
-      previewImage: [],
-      readme: "",
-      techStack: [],
-      status: "draft",
-      order: 0,
-      coverImage: "",
-      isDeleted: false,
-      github: "",
+    values: data,
+    resetOptions: {
+      keepDirtyValues: true,
     },
   })
   const [isPendingSaving, startTransitionSaving] = useTransition()
@@ -77,26 +66,26 @@ export function Editor({ id }: { id: string }) {
     enableOnFormTags: true,
   })
 
-  useEffect(() => {
-    if (data) {
-      form.setValue("name", data.name)
-      form.setValue("status", data.status)
-      form.setValue("order", data.order)
-      form.setValue("github", data.github || "")
-      form.setValue("summary", data.summary || "")
-      form.setValue("techStack", data.techStack)
-      form.setValue("readme", data.readme)
-      form.setValue("previewImage", data.previewImage)
-      form.setValue("videoUrl", data.videoUrl)
-      form.setValue("docsUrl", data.docsUrl)
-      form.setValue("previewUrl", data.previewUrl)
-      form.setValue("coverImage", data.coverImage || "")
-      form.setValue("isDeleted", data.isDeleted)
-      form.setValue("id", data.id)
-      form.setValue("createdAt", data.createdAt)
-      form.setValue("updatedAt", data.updatedAt)
-    }
-  }, [data])
+  // useEffect(() => {
+  //   if (data) {
+  //     form.setValue("name", data.name)
+  //     form.setValue("status", data.status)
+  //     form.setValue("order", data.order)
+  //     form.setValue("github", data.github || "")
+  //     form.setValue("summary", data.summary || "")
+  //     form.setValue("techStack", data.techStack)
+  //     form.setValue("readme", data.readme)
+  //     form.setValue("previewImage", data.previewImage)
+  //     form.setValue("videoUrl", data.videoUrl)
+  //     form.setValue("docsUrl", data.docsUrl)
+  //     form.setValue("previewUrl", data.previewUrl)
+  //     form.setValue("coverImage", data.coverImage || "")
+  //     form.setValue("isDeleted", data.isDeleted)
+  //     form.setValue("id", data.id)
+  //     form.setValue("createdAt", data.createdAt)
+  //     form.setValue("updatedAt", data.updatedAt)
+  //   }
+  // }, [data])
 
   const onSubmit = async (data: IProject) => {
 

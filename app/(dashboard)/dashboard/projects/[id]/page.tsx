@@ -1,4 +1,4 @@
-import { Editor } from "../components/editor"
+import { ProjectEditor } from "../components/project-editor"
 
 export default async function ProjectPage({
   params,
@@ -9,7 +9,7 @@ export default async function ProjectPage({
 
   return (
     <div className="container mx-auto max-w-3xl">
-      <Editor id={id} />
+      <ProjectEditor id={id} />
     </div>
   )
 }
