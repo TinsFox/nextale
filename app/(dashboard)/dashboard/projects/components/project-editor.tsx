@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useTransition } from "react"
+import { useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ReloadIcon } from "@radix-ui/react-icons"
@@ -9,7 +9,6 @@ import { CalendarIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { useHotkeys } from "react-hotkeys-hook"
 import { toast } from "sonner"
-
 import { createProject, updateProject } from "@/lib/api/admin/projects"
 import { IProject, projectSchema } from "@/lib/schema/projects"
 import { cn } from "@/lib/utils"
@@ -49,6 +48,19 @@ export function ProjectEditor({ id }: { id: string }) {
   const form = useForm<IProject>({
     resolver: zodResolver(projectSchema),
     values: data,
+    defaultValues: {
+      name: "",
+      github: "",
+      docsUrl: "",
+      previewUrl: "",
+      videoUrl: "",
+      summary: "",
+      previewImage: [],
+      readme: "",
+      order: 0,
+      coverImage: "",
+      status: "draft",
+    },
     resetOptions: {
       keepDirtyValues: true,
     },
@@ -66,35 +78,15 @@ export function ProjectEditor({ id }: { id: string }) {
     enableOnFormTags: true,
   })
 
-  // useEffect(() => {
-  //   if (data) {
-  //     form.setValue("name", data.name)
-  //     form.setValue("status", data.status)
-  //     form.setValue("order", data.order)
-  //     form.setValue("github", data.github || "")
-  //     form.setValue("summary", data.summary || "")
-  //     form.setValue("techStack", data.techStack)
-  //     form.setValue("readme", data.readme)
-  //     form.setValue("previewImage", data.previewImage)
-  //     form.setValue("videoUrl", data.videoUrl)
-  //     form.setValue("docsUrl", data.docsUrl)
-  //     form.setValue("previewUrl", data.previewUrl)
-  //     form.setValue("coverImage", data.coverImage || "")
-  //     form.setValue("isDeleted", data.isDeleted)
-  //     form.setValue("id", data.id)
-  //     form.setValue("createdAt", data.createdAt)
-  //     form.setValue("updatedAt", data.updatedAt)
-  //   }
-  // }, [data])
 
   const onSubmit = async (data: IProject) => {
 
     startTransitionSaving(async () => {
       try {
-        if (!isNew) {
-          await updateProject(Number(id), data)
-        } else {
-          await createProject(data)
+        const res = isNew ? await createProject(data) : await updateProject(Number(id), data)
+        if (res.code !== 200) {
+          toast.error("项目保存失败")
+          return
         }
         toast.success(`项目${isNew ? "创建" : "更新"}成功`)
       } catch (error) {
