@@ -39,19 +39,19 @@ export function BasicForm({ form }: { form: UseFormReturn<IPost> }) {
         render={({ field }) => (
           <FormItem>
             <FormControl>
-              <div className="flex items-end w-full justify-start group">
-                <p className="text-sm text-muted-foreground">
+              <div className="flex items-end w-full gap-2">
+                <p className="text-sm text-muted-foreground whitespace-nowrap leading-7">
                   {`${env.NEXT_PUBLIC_URL}/posts/`}
                 </p>
-                <div className="flex items-center gap-2 relative ">
+                <div className="relative flex-1 group">
                   <Input
                     {...field}
-                    className="flex-1 w-full focus-visible:ring-0 shadow-none border-b border border-t-0 border-l-0 border-r-0 rounded-none focus-visible:border-primary hover:z-[1] peer"
+                    className="shadow-none w-full pr-10 border-0 border-b rounded-none focus-visible:ring-0 focus:border-primary hover:border-primary/50 transition-colors h-7 px-0 pb-0"
                   />
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="absolute right-0 opacity-0 transition-opacity peer-hover:opacity-100 peer-focus:opacity-100"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-transparent"
                     type="button"
                     onClick={() => {
                       const title = form.getValues("title")
@@ -60,7 +60,7 @@ export function BasicForm({ form }: { form: UseFormReturn<IPost> }) {
                       })
                     }}
                   >
-                    <WandSparkles className="size-4" />
+                    <WandSparkles className="size-4 text-muted-foreground hover:text-primary transition-colors" />
                   </Button>
                 </div>
               </div>

@@ -33,7 +33,6 @@ import { AdvancedForm } from "./advanced-form"
 import { BasicForm } from "./basic-form"
 import { SettingForm } from "./setting-form"
 
-
 export function PostEditor({ slug, post }: { slug: string; post?: IPost }) {
   const router = useRouter()
 
@@ -138,7 +137,7 @@ export function PostEditor({ slug, post }: { slug: string; post?: IPost }) {
                           <Input
                             {...field}
                             placeholder="起个标题吧~"
-                            className="focus-visible:ring-0 text-lg font-semibold md:text-2xl w-full border-none border-b focus:border-none focus-visible:border-b focus-visible:border-primary"
+                            className="text-lg font-semibold md:text-2xl shadow-none w-full border-0 border-b rounded-none focus-visible:ring-0 focus:border-primary hover:border-primary/50 transition-colors"
                           />
                         </FormControl>
                         <FormMessage />
