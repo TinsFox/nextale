@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "static.nextale.tinsfox.com",
+        hostname: "assets.nextale.tinsfox.com",
       },
       {
         protocol: "https",
