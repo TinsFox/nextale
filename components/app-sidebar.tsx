@@ -2,7 +2,14 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { FileText, FolderKanban, Home, ListTree, Settings } from "lucide-react"
+import {
+  FileText,
+  FolderKanban,
+  Home,
+  ListTree,
+  LucideIcon,
+  Settings,
+} from "lucide-react"
 
 import {
   Sidebar,
@@ -17,29 +24,53 @@ import {
 } from "@/components/ui/sidebar"
 import { UserDropdown } from "@/app/(dashboard)/components/user-dropdown"
 
-export const items = [
+export type MenuItem = {
+  title: string
+  url: string
+  icon: LucideIcon
+  children?: {
+    pattern: RegExp
+    getTitle: (pathname: string) => string
+  }
+}
+
+export const navigationConfig: MenuItem[] = [
   {
-    title: "Home",
+    title: "首页",
     url: "/dashboard",
     icon: Home,
   },
   {
-    title: "Posts",
+    title: "文章",
     url: "/dashboard/posts",
     icon: FileText,
+    children: {
+      pattern: /^\/dashboard\/posts\/([^/]+)$/,
+      getTitle: (pathname) => {
+        const slug = pathname.split("/").pop()
+        return slug === "create" ? "创建文章" : "编辑文章"
+      },
+    },
   },
   {
-    title: "Projects",
+    title: "项目",
     url: "/dashboard/projects",
     icon: FolderKanban,
+    children: {
+      pattern: /^\/dashboard\/projects\/([^/]+)$/,
+      getTitle: (pathname) => {
+        const slug = pathname.split("/").pop()
+        return slug === "create" ? "创建项目" : "编辑项目"
+      },
+    },
   },
   {
-    title: "Categories",
+    title: "分类",
     url: "/dashboard/categories",
     icon: ListTree,
   },
   {
-    title: "Settings",
+    title: "设置",
     url: "/dashboard/settings",
     icon: Settings,
   },
@@ -55,7 +86,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {navigationConfig.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={pathname === item.url}>
                     <Link href={item.url}>
