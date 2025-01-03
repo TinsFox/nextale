@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import { usePathname } from "next/navigation"
 
 import {
@@ -17,6 +18,10 @@ function getBreadcrumbs(pathname: string, items: MenuItem[]) {
   const currentItem = items.find((item) => item.url === parentPath)
 
   if (!currentItem) return null
+
+  if (currentItem === navigationConfig[0]) {
+    return [{ title: currentItem.title, href: currentItem.url }]
+  }
 
   const breadcrumbs = [navigationConfig[0], currentItem].map((item) => ({
     title: item.title,
@@ -43,14 +48,16 @@ export function HeaderBreadcrumb() {
     <Breadcrumb>
       <BreadcrumbList>
         {breadcrumbs.map((crumb, index) => (
-          <BreadcrumbItem key={index}>
+          <React.Fragment key={index}>
             {index > 0 && <BreadcrumbSeparator />}
-            {crumb.href ? (
-              <BreadcrumbLink href={crumb.href}>{crumb.title}</BreadcrumbLink>
-            ) : (
-              <BreadcrumbPage>{crumb.title}</BreadcrumbPage>
-            )}
-          </BreadcrumbItem>
+            <BreadcrumbItem key={index}>
+              {crumb.href ? (
+                <BreadcrumbLink href={crumb.href}>{crumb.title}</BreadcrumbLink>
+              ) : (
+                <BreadcrumbPage>{crumb.title}</BreadcrumbPage>
+              )}
+            </BreadcrumbItem>
+          </React.Fragment>
         ))}
       </BreadcrumbList>
     </Breadcrumb>
