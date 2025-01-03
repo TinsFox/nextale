@@ -35,7 +35,7 @@ export default async function DashboardLayout({
           <HeaderBreadcrumb />
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">
-          <main className="w-full">{children}</main>
+          <main className="w-full max-w-7xl mx-auto">{children}</main>
         </div>
       </SidebarInset>
     </SidebarProvider>
