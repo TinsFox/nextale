@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { env } from "@/env"
 import { FileText, LayoutDashboard, Tags, TrendingUp } from "lucide-react"
 
 import { Card } from "@/components/ui/card"
@@ -38,10 +39,11 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto">
       <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">Welcome to your blog dashboard</p>
+        <p className="text-muted-foreground">
+          欢迎使用博客管理后台，在这里你可以管理你的博客。
+        </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -95,6 +97,42 @@ export default async function DashboardPage() {
         <Card className="p-6">
           <h3 className="font-semibold mb-4">Recent Posts</h3>
           <RecentPosts />
+        </Card>
+
+        <Card className="p-6">
+          <h3 className="font-semibold mb-4">信息</h3>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span>🌐 网站链接:</span>
+              <Link
+                href={env.NEXT_PUBLIC_URL}
+                className="text-blue-500 hover:underline"
+                target="_blank"
+              >
+                {env.NEXT_PUBLIC_URL}
+              </Link>
+            </div>
+            <div className="flex items-center gap-2">
+              <span>📡 RSS:</span>
+              <Link
+                href={`${env.NEXT_PUBLIC_URL}/feed`}
+                className="text-blue-500 hover:underline"
+                target="_blank"
+              >
+                {env.NEXT_PUBLIC_URL}/feed
+              </Link>
+            </div>
+            <div className="flex items-center gap-2">
+              <span>🗺️ Sitemap:</span>
+              <Link
+                href={`${env.NEXT_PUBLIC_URL}/sitemap`}
+                className="text-blue-500 hover:underline"
+                target="_blank"
+              >
+                {env.NEXT_PUBLIC_URL}/sitemap
+              </Link>
+            </div>
+          </div>
         </Card>
       </div>
     </div>
