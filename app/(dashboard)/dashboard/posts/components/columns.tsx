@@ -3,9 +3,10 @@
 import Link from "next/link"
 import { ColumnDef } from "@tanstack/react-table"
 import { formatDate } from "date-fns"
-import { Eye, FilePenLine, MoreHorizontal } from "lucide-react"
+import { ExternalLink, MoreHorizontal, Pencil } from "lucide-react"
 import { toast } from "sonner"
 
+import { IPost, POST_STATUS } from "@/lib/schema/post.schema"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -16,11 +17,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -28,8 +24,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { IPost, POST_STATUS } from "@/lib/schema/post.schema"
-
 
 export const columns: ColumnDef<IPost>[] = [
   {
@@ -39,34 +33,16 @@ export const columns: ColumnDef<IPost>[] = [
       const post = row.original
       return (
         <div className="flex gap-4 py-4">
-          <div className="flex-1 min-w-0 max-w-52">
+          <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 ">
-
-              <HoverCard>
-                <HoverCardTrigger asChild>
-                  <h3 className="font-medium text-base truncate">
-                    {post.title}
-                  </h3>
-                </HoverCardTrigger>
-                {post.coverImage && (
-                  <HoverCardContent className="w-[120px] h-[80px]" side="top">
-                    <div className="size-full">
-                      <img
-                        src={post.coverImage}
-                        alt={post.title}
-                        className="w-full h-full object-cover rounded-md"
-                      />
-                    </div>
-                  </HoverCardContent>
-                )}
-              </HoverCard>
+              <h3 className="font-medium text-base truncate">{post.title}</h3>
 
               <div className="invisible group-hover:visible flex gap-2">
                 <Link href={`/dashboard/posts/${post.id}`} target="_blank">
-                  <FilePenLine className="size-4 text-muted-foreground hover:text-primary" />
+                  <Pencil className="size-4 text-muted-foreground hover:text-primary" />
                 </Link>
                 <Link href={`/posts/${post.slug}`} target="_blank">
-                  <Eye className="size-4 text-muted-foreground hover:text-primary" />
+                  <ExternalLink className="size-4 text-muted-foreground hover:text-primary" />
                 </Link>
               </div>
             </div>
@@ -120,7 +96,6 @@ export const columns: ColumnDef<IPost>[] = [
           if (!response.ok) {
             throw new Error("Failed to update status")
           }
-
 
           toast.success("状态更新成功")
         } catch (error) {
