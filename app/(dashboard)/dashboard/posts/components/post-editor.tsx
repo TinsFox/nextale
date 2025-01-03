@@ -31,6 +31,7 @@ import { MinimalTiptapEditor } from "@/components/minimal-tiptap"
 import { AdvancedForm } from "./advanced-form"
 import { BasicForm } from "./basic-form"
 import { SettingForm } from "./setting-form"
+import { createPost, updatePost } from "@/lib/api/admin/post"
 
 export function PostEditor({ slug, post }: { slug: string; post?: IPost }) {
   const router = useRouter()
@@ -40,10 +41,23 @@ export function PostEditor({ slug, post }: { slug: string; post?: IPost }) {
   const form = useForm<IPost>({
     resolver: zodResolver(postFormSchema),
     values: post,
+    defaultValues: {
+      title: "",
+      slug: "",
+      content: "",
+      tags: [],
+      isCopyright: false,
+      isTop: false,
+      topOrder: 0,
+      summary: null,
+      relatedPosts: [],
+      status: "draft",
+    },
     resetOptions: {
       keepDirtyValues: true,
     },
   })
+  console.log(form.formState.errors);
 
   const handleSave = async () => {
     startTransitionSaving(async () => {
@@ -59,17 +73,9 @@ export function PostEditor({ slug, post }: { slug: string; post?: IPost }) {
 
   const onSubmit = async (data: IPost) => {
     try {
-      const url = slug === "create" ? "/api/posts" : `/api/posts/${slug}`
-      const res = await fetch(url, {
-        method: slug === "create" ? "POST" : "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...data }),
-        credentials: "include",
-      })
-
-      if (res.status !== 200) {
+      const res = slug === "create" ? await createPost(data) : await updatePost(data)
+      console.log('res: ', res);
+      if (res.code !== 200) {
         toast.error("保存文章失败")
         return
       }
