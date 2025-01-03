@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Inbox, List, Settings } from "lucide-react"
+import { FileText, FolderKanban, Home, ListTree, Settings } from "lucide-react"
 
 import {
   Sidebar,
@@ -26,17 +26,17 @@ export const items = [
   {
     title: "Posts",
     url: "/dashboard/posts",
-    icon: Inbox,
+    icon: FileText,
   },
   {
     title: "Projects",
     url: "/dashboard/projects",
-    icon: Inbox,
+    icon: FolderKanban,
   },
   {
     title: "Categories",
     url: "/dashboard/categories",
-    icon: List,
+    icon: ListTree,
   },
   {
     title: "Settings",
