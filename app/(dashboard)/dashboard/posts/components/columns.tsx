@@ -6,7 +6,7 @@ import { formatDate } from "date-fns"
 import { ExternalLink, MoreHorizontal, Pencil } from "lucide-react"
 import { toast } from "sonner"
 
-import { IPost, POST_STATUS } from "@/lib/schema/post.schema"
+import { IPost, IPostDetail, POST_STATUS } from "@/lib/schema/post.schema"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 
-export const columns: ColumnDef<IPost>[] = [
+export const columns: ColumnDef<IPostDetail>[] = [
   {
     accessorKey: "title",
     header: () => <div className="w-[80px]">标题</div>,

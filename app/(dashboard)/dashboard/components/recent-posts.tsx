@@ -24,7 +24,7 @@ export function RecentPosts() {
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium">{post.title}</span>
             <span className="text-xs text-muted-foreground">
-              {formatDate(post.createdAt)}
+              {formatDate(post.customCreatedAt || post.createdAt)}
             </span>
           </div>
         </Link>

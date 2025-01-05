@@ -11,7 +11,7 @@ export const postFormSchema = z.object({
   isCopyright: z.boolean().optional(),
   isTop: z.boolean().optional(),
   topOrder: z.number().optional(),
-  summary: z.string().optional().nullable(),
+  summary: z.string().optional(),
   customCreatedAt: z.coerce.date().optional(),
   customUpdatedAt: z.coerce.date().optional(),
   createdAt: z.coerce.date().optional(),
@@ -20,6 +20,11 @@ export const postFormSchema = z.object({
   category: z.string().optional(),
   status: statusSchema,
 })
+export const postDetailSchema = postFormSchema.extend({
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+export type IPostDetail = z.infer<typeof postDetailSchema>
 export const POST_STATUS = {
   DRAFT: "draft",
   PUBLISHED: "published",

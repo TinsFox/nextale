@@ -15,6 +15,7 @@ async function fetchUserProfile() {
 
 export default async function Home() {
   const userProfile = await fetchUserProfile()
+  console.log(userProfile);
   return (
     <div className="flex flex-col min-h-[calc(100vh-5rem)]">
       <motion.main

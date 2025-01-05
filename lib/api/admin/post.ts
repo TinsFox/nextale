@@ -1,4 +1,4 @@
-import { IPost } from "@/lib/schema/post.schema"
+import { IPost, IPostDetail } from "@/lib/schema/post.schema"
 import { apiFetch } from "@/lib/api-fetch"
 import { IApiPaginationResponse, IApiResponse } from "../config"
 
@@ -31,7 +31,7 @@ export async function updatePost(post: IPost) {
 }
 
 export async function fetchPosts() {
-  return await apiFetch<IApiResponse<IApiPaginationResponse<IPost>>>(
+  return await apiFetch<IApiResponse<IApiPaginationResponse<IPostDetail>>>(
     "/api/admin/posts",
     {
       method: "GET",

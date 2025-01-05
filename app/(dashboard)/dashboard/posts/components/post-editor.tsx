@@ -49,7 +49,7 @@ export function PostEditor({ slug, post }: { slug: string; post?: IPost }) {
       isCopyright: false,
       isTop: false,
       topOrder: 0,
-      summary: null,
+      summary: "",
       relatedPosts: [],
       status: "draft",
     },

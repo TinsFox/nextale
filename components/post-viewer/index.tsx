@@ -10,10 +10,10 @@ import NotFoundPost from "@/app/not-found"
 
 import { Copyright } from "../copyright"
 import { MinimalTiptapEditor } from "../minimal-tiptap"
-import { IPost } from "@/lib/schema/post.schema"
+import { IPostDetail } from "@/lib/schema/post.schema"
 
 export interface PostViewerProps {
-  post: IPost
+  post: IPostDetail
 }
 
 export function PostViewer({ post }: PostViewerProps) {
