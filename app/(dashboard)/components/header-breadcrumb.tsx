@@ -11,7 +11,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { MenuItem, navigationConfig } from "@/components/app-sidebar"
+
+import { MenuItem, navMain } from "@/components/app-sidebar"
 
 function getBreadcrumbs(pathname: string, items: MenuItem[]) {
   const parentPath = pathname.split("/").slice(0, 3).join("/")
@@ -19,16 +20,16 @@ function getBreadcrumbs(pathname: string, items: MenuItem[]) {
 
   if (!currentItem) return null
 
-  if (currentItem === navigationConfig[0]) {
+  if (currentItem === navMain[0]) {
     return [{ title: currentItem.title, href: currentItem.url }]
   }
 
-  const breadcrumbs = [navigationConfig[0], currentItem].map((item) => ({
+  const breadcrumbs = [navMain[0], currentItem].map((item) => ({
     title: item.title,
     href: item.url,
   }))
 
-  if (currentItem.children?.pattern.test(pathname)) {
+  if (currentItem.children && currentItem.children.pattern.test(pathname)) {
     breadcrumbs.push({
       title: currentItem.children.getTitle(pathname),
       href: pathname,
@@ -40,7 +41,7 @@ function getBreadcrumbs(pathname: string, items: MenuItem[]) {
 
 export function HeaderBreadcrumb() {
   const pathname = usePathname()
-  const breadcrumbs = getBreadcrumbs(pathname, navigationConfig)
+  const breadcrumbs = getBreadcrumbs(pathname, navMain)
 
   if (!breadcrumbs) return null
 
