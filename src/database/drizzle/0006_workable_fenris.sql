@@ -1,1 +1,0 @@
-ALTER TABLE "cloud_functions" ADD COLUMN "javascript_code" text;

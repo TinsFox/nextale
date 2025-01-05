@@ -1,1 +1,0 @@
-ALTER TABLE "projects" ALTER COLUMN "summary" SET DATA TYPE text;

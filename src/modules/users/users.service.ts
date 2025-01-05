@@ -43,7 +43,7 @@ export class UsersService {
     });
 
     const user = await this.db.query.usersTable.findFirst({
-      where: sql`${usersTable.roles} @> ${'["owner"]'}::jsonb`,
+      where: sql`${usersTable.roles}::jsonb @> '["owner"]'::jsonb`,
       columns: {
         id: true,
         username: true,
