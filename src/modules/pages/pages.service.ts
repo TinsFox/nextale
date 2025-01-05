@@ -23,20 +23,20 @@ export class PagesService {
     });
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.db.query.pagesTable.findFirst({
       where: and(eq(pagesTable.id, id), eq(pagesTable.isDeleted, false)),
     });
   }
 
-  update(id: number, updatePageDto: UpdatePageDto) {
+  update(id: string, updatePageDto: UpdatePageDto) {
     return this.db
       .update(pagesTable)
       .set(updatePageDto)
       .where(eq(pagesTable.id, id));
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.db
       .update(pagesTable)
       .set({

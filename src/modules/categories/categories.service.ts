@@ -25,7 +25,7 @@ export class CategoriesService {
     });
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.db.query.categoriesTable.findFirst({
       where: and(
         eq(categoriesTable.id, id),
@@ -34,14 +34,14 @@ export class CategoriesService {
     });
   }
 
-  async update(id: number, updateCategoryDto: UpdateCategoryDto) {
+  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
     return this.db
       .update(categoriesTable)
       .set(updateCategoryDto)
       .where(eq(categoriesTable.id, id));
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const result = await this.db
       .update(categoriesTable)
       .set({ isDeleted: true, updatedAt: new Date() })

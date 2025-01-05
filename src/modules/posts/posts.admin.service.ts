@@ -8,13 +8,13 @@ import { paginateQuery } from '~/common/helpers/pagination.helper';
 import { postsTable, tagsTable } from '~/database/schema';
 import { DRIZZLE } from '../database/database.module';
 import { DrizzleDB } from '../database/drizzle';
-import { and, count, eq, inArray, desc } from 'drizzle-orm';
+import { count, eq, inArray, desc } from 'drizzle-orm';
 
 @Injectable()
 export class PostsAdminService {
   constructor(@Inject(DRIZZLE) private db: DrizzleDB) {}
 
-  async create(userId: number, createPostDto: CreatePostDto) {
+  async create(userId: string, createPostDto: CreatePostDto) {
     const post = await this.db
       .insert(postsTable)
       .values({ ...createPostDto, authorId: userId })
@@ -74,14 +74,14 @@ export class PostsAdminService {
     return { ...post, tags: relatedTags };
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
+  update(id: string, updatePostDto: UpdatePostDto) {
     return this.db
       .update(postsTable)
       .set({
         title: updatePostDto.title,
         content: updatePostDto.content,
         coverImage: updatePostDto.coverImage,
-        tagIds: updatePostDto.tags?.map((tag) => +tag),
+        tagIds: updatePostDto.tags?.map((tag) => tag),
         status: updatePostDto.status,
         slug: updatePostDto.slug,
         isTop: updatePostDto.isTop,
@@ -90,7 +90,7 @@ export class PostsAdminService {
       .where(eq(postsTable.id, id));
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.db.delete(postsTable).where(eq(postsTable.id, id));
   }
 }

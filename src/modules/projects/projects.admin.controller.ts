@@ -33,19 +33,19 @@ export class ProjectsAdminController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a project by id' })
   findOne(@Param('id') id: string) {
-    return this.projectsService.findOne(+id);
+    return this.projectsService.findOne(id);
   }
 
   @Patch(':id')
   @ApiBody({ type: UpdateProjectDto })
   @ApiOperation({ summary: 'Update a project by id' })
   update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
-    return this.projectsService.update(+id, updateProjectDto);
+    return this.projectsService.update(id, updateProjectDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a project by id' })
   remove(@Param('id') id: string) {
-    return this.projectsService.remove(+id);
+    return this.projectsService.remove(id);
   }
 }

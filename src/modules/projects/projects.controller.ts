@@ -19,6 +19,6 @@ export class ProjectsController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a project by id' })
   findOne(@Param('id') id: string) {
-    return this.projectsService.findOne(+id);
+    return this.projectsService.findOne(id);
   }
 }

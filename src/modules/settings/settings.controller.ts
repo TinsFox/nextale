@@ -68,11 +68,11 @@ export class SettingsController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateSettingDto: UpdateSettingDto) {
-    return this.settingsService.update(+id, updateSettingDto);
+    return this.settingsService.update(id, updateSettingDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.settingsService.remove(+id);
+    return this.settingsService.remove(id);
   }
 }

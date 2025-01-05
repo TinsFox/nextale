@@ -79,26 +79,26 @@ export class PostsAdminController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a post by id' })
   findOneById(@Param('id') id: string) {
-    return this.postsAdminService.findOneById(+id);
+    return this.postsAdminService.findOneById(id);
   }
 
   @Patch(':id')
   @ApiBody({ type: UpdatePostDto })
   @ApiOperation({ summary: 'Update a post by id' })
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsAdminService.update(+id, updatePostDto);
+    return this.postsAdminService.update(id, updatePostDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a post by id' })
   remove(@Param('id') id: string) {
-    return this.postsAdminService.remove(+id);
+    return this.postsAdminService.remove(id);
   }
 
   @Patch(':id/status')
   @ApiOperation({ summary: 'Update a post status by id' })
   async updateStatus(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body('status') status: PostStatus,
     @User() user: UserPayload,
   ) {

@@ -36,19 +36,19 @@ export class TagsController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a tag by id' })
   findOne(@Param('id') id: string) {
-    return this.tagsService.findOne(+id);
+    return this.tagsService.findOne(id);
   }
 
   @Patch(':id')
   @ApiBody({ type: UpdateTagDto })
   @ApiOperation({ summary: 'Update a tag by id' })
   update(@Param('id') id: string, @Body() updateTagDto: UpdateTagDto) {
-    return this.tagsService.update(+id, updateTagDto);
+    return this.tagsService.update(id, updateTagDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a tag by id' })
   remove(@Param('id') id: string) {
-    return this.tagsService.remove(+id);
+    return this.tagsService.remove(id);
   }
 }

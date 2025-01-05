@@ -20,7 +20,7 @@ export class ProjectsService {
     });
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.db.query.projectsTable.findFirst({
       where: eq(projectsTable.id, id),
     });

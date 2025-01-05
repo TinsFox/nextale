@@ -27,7 +27,7 @@ export class SocialLinksController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.socialLinksService.findOne(+id);
+    return this.socialLinksService.findOne(id);
   }
 
   @Patch(':id')
@@ -35,11 +35,11 @@ export class SocialLinksController {
     @Param('id') id: string,
     @Body() updateSocialLinkDto: UpdateSocialLinkDto,
   ) {
-    return this.socialLinksService.update(+id, updateSocialLinkDto);
+    return this.socialLinksService.update(id, updateSocialLinkDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.socialLinksService.remove(+id);
+    return this.socialLinksService.remove(id);
   }
 }

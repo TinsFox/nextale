@@ -20,7 +20,7 @@ export class SocialLinksService {
     });
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.db.query.socialLinksTable.findFirst({
       where: and(
         eq(socialLinksTable.id, id),
@@ -29,14 +29,14 @@ export class SocialLinksService {
     });
   }
 
-  update(id: number, updateSocialLinkDto: UpdateSocialLinkDto) {
+  update(id: string, updateSocialLinkDto: UpdateSocialLinkDto) {
     return this.db
       .update(socialLinksTable)
       .set(updateSocialLinkDto)
       .where(eq(socialLinksTable.id, id));
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.db
       .update(socialLinksTable)
       .set({ isDeleted: true })

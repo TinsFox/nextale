@@ -37,7 +37,7 @@ export const postsTable = pgTable('posts', {
   id: uuid('id').primaryKey().defaultRandom(),
   title: varchar('title', { length: 256 }),
   content: text('content'),
-  authorId: integer('author_id').references(() => usersTable.id),
+  authorId: varchar('author_id').references(() => usersTable.id),
   coverImage: varchar('cover_image', { length: 256 }),
   tags: json('tags').$type<string[]>().default([]),
   // 是否开启版权注明

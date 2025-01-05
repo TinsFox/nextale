@@ -23,14 +23,14 @@ export class SettingsService {
     });
   }
 
-  update(id: number, updateSettingDto: UpdateSettingDto) {
+  update(id: string, updateSettingDto: UpdateSettingDto) {
     return this.db
       .update(settingsTable)
       .set(updateSettingDto)
       .where(eq(settingsTable.id, id));
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.db
       .update(settingsTable)
       .set({

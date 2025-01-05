@@ -18,7 +18,6 @@ import {
   ApiBody,
   ApiOperation,
 } from '@nestjs/swagger';
-import { IDParams } from '~/common/dto/id.dto';
 import { Public } from '~/common/decorators/public.decorator';
 
 @ApiTags('Categories')
@@ -49,23 +48,23 @@ export class CategoriesController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a category by id' })
-  findOne(@Param() { id }: IDParams) {
-    return this.categoriesService.findOne(+id);
+  findOne(@Param('id') id: string) {
+    return this.categoriesService.findOne(id);
   }
 
   @Patch(':id')
   @ApiBody({ type: UpdateCategoryDto })
   @ApiOperation({ summary: 'Update a category by id' })
   update(
-    @Param() { id }: IDParams,
+    @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
-    return this.categoriesService.update(+id, updateCategoryDto);
+    return this.categoriesService.update(id, updateCategoryDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a category by id' })
-  remove(@Param() { id }: IDParams) {
-    return this.categoriesService.remove(+id);
+  remove(@Param('id') id: string) {
+    return this.categoriesService.remove(id);
   }
 }
