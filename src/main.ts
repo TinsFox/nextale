@@ -50,9 +50,11 @@ async function bootstrap() {
     logger.log(`Server is running on ${url}`);
     globalPrefix && logger.log(`Global Prefix is ${globalPrefix}`);
     logger.log(
-      `Scalar document is running on ${url}/${globalPrefix}api-reference`,
+      `Scalar document is running on ${url}${globalPrefix ? `${globalPrefix}` : ''}/api-reference`,
     );
-    logger.log(`Swagger document is running on ${url}/${globalPrefix}api-docs`);
+    logger.log(
+      `Swagger document is running on ${url}${globalPrefix ? `${globalPrefix}` : ''}/api-docs`,
+    );
   });
 }
 bootstrap();
