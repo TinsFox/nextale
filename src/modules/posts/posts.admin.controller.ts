@@ -14,7 +14,7 @@ import {
   ForbiddenException,
   ParseIntPipe,
 } from '@nestjs/common';
-import { PostsService } from './posts.service';
+import { PostsAdminService } from './posts.admin.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { User } from '~/common/decorators/user.decorator';
@@ -28,19 +28,35 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Public } from '~/common/decorators/public.decorator';
 import { PostStatus } from './types/post.types';
 
-@ApiTags('Public/Posts')
+@ApiTags('Admin/Posts')
 @ApiResponse({ status: 400, description: 'Bad Request' })
 @ApiResponse({ status: 500, description: 'Internal Server Error' })
 @ApiExtraModels(CreatePostDto, UpdatePostDto)
-@Controller('posts')
-export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+@Controller('admin/posts')
+export class PostsAdminController {
+  constructor(private readonly postsAdminService: PostsAdminService) {}
+
+  @HttpCode(HttpStatus.CREATED)
+  @Post()
+  @ApiBody({ type: CreatePostDto })
+  @ApiOperation({ summary: 'Create a new post' })
+  async create(
+    @Body() createPostDto: CreatePostDto,
+    @User() user: UserPayload,
+  ) {
+    const record = await this.postsAdminService.create(
+      user.userId,
+      createPostDto,
+    );
+    return {
+      message: 'Post created successfully',
+      id: record[0].id,
+    };
+  }
 
   @Get()
-  @Public()
   @ApiOperation({ summary: 'Get all posts' })
   @ApiQuery({
     name: 'page',
@@ -57,34 +73,26 @@ export class PostsController {
     example: 10,
   })
   findAll(@Query() query: PaginationQueryDto) {
-    return this.postsService.findAll(query);
+    return this.postsAdminService.findAll(query);
   }
 
-  @Public()
-  @Get(':slug')
-  @ApiOperation({ summary: 'Get a post by slug' })
-  findOneBySlug(@Param('slug') slug: string) {
-    return this.postsService.findOneBySlug(slug);
-  }
-
-  @Public()
-  @Get('/s/:id')
+  @Get(':id')
   @ApiOperation({ summary: 'Get a post by id' })
   findOneById(@Param('id') id: string) {
-    return this.postsService.findOneById(+id);
+    return this.postsAdminService.findOneById(+id);
   }
 
   @Patch(':id')
   @ApiBody({ type: UpdatePostDto })
   @ApiOperation({ summary: 'Update a post by id' })
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.update(+id, updatePostDto);
+    return this.postsAdminService.update(+id, updatePostDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a post by id' })
   remove(@Param('id') id: string) {
-    return this.postsService.remove(+id);
+    return this.postsAdminService.remove(+id);
   }
 
   @Patch(':id/status')
@@ -100,7 +108,7 @@ export class PostsController {
       throw new BadRequestException('Invalid status value');
     }
 
-    const post = await this.postsService.findOneById(id);
+    const post = await this.postsAdminService.findOneById(id);
 
     // 检查文章是否存在
     if (!post) {
@@ -115,6 +123,6 @@ export class PostsController {
     }
 
     // 更新文章状态
-    return this.postsService.update(id, { status });
+    return this.postsAdminService.update(id, { status });
   }
 }

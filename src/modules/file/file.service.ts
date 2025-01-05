@@ -17,7 +17,6 @@ export class FileService {
 
     const baseUrl = this.getBaseUrl(request);
     const fileUrl = `${baseUrl}/assets/${file.filename}`;
-    console.log('fileUrl: ', fileUrl);
 
     return {
       filename: file.filename,

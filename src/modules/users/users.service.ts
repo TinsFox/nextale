@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DRIZZLE } from '../database/database.module';
 import { DrizzleDB } from '../database/drizzle';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { SelectUser, usersTable } from '~/database/schema';
 import { CreateUserDto } from '../auth/dto/create-user-dto';
 import * as bcrypt from 'bcrypt';
@@ -28,7 +28,7 @@ export class UsersService {
     });
   }
 
-  async queryCurrentUser(id: number) {
+  async queryCurrentUser(id: string) {
     return this.db.query.usersTable.findFirst({
       where: eq(usersTable.id, id),
       columns: {
@@ -38,18 +38,24 @@ export class UsersService {
   }
 
   async querySiteProfile() {
-    const socialLinks = await this.db.query.socialLinksTable.findMany();
+    const socialLinks = await this.db.query.socialLinksTable.findMany({
+      orderBy: (links) => [links.order],
+    });
+
     const user = await this.db.query.usersTable.findFirst({
-      where: eq(usersTable.id, 1),
+      where: sql`${usersTable.roles} @> ${'["owner"]'}::jsonb`,
       columns: {
-        password: false,
-        roles: false,
-        createdAt: false,
-        updatedAt: false,
-        email: false,
-        name: false,
+        id: true,
+        username: true,
+        avatar: true,
+        bio: true,
       },
     });
+
+    if (!user) {
+      throw new BadRequestException('Site owner not found');
+    }
+
     return {
       ...user,
       socialLinks,

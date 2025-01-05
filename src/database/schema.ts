@@ -3,17 +3,17 @@ import {
   integer,
   json,
   pgTable,
-  serial,
   timestamp,
   varchar,
   text,
   pgEnum,
+  uuid,
 } from 'drizzle-orm/pg-core';
 import { POST_STATUS } from '~/common/constants/post.constant';
 import { PROJECT_STATUS } from '~/common/constants/project.constant';
 
 export const usersTable = pgTable('users', {
-  id: serial('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 256 }),
   email: varchar('email', { length: 256 }),
   username: varchar('username', { length: 256 }),
@@ -34,7 +34,7 @@ export type InsertUser = typeof usersTable.$inferInsert;
 export const postStatusEnum = pgEnum('post_status', POST_STATUS);
 
 export const postsTable = pgTable('posts', {
-  id: serial('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   title: varchar('title', { length: 256 }),
   content: text('content'),
   authorId: integer('author_id').references(() => usersTable.id),
@@ -55,9 +55,9 @@ export const postsTable = pgTable('posts', {
   // 关联文章
   relatedPosts: json('related_posts').$type<string[]>().default([]),
   // 分类
-  categoryIds: json('category_ids').$type<number[]>().default([]),
+  categoryIds: json('category_ids').$type<string[]>().default([]),
   // 标签
-  tagIds: json('tag_ids').$type<number[]>().default([]),
+  tagIds: json('tag_ids').$type<string[]>().default([]),
 
   slug: varchar('slug', { length: 256 }),
   createdAt: timestamp('created_at').defaultNow(),
@@ -77,7 +77,7 @@ export type InsertPost = typeof postsTable.$inferInsert;
 export type SelectPost = typeof postsTable.$inferSelect;
 
 export const tagsTable = pgTable('tags', {
-  id: serial('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 256 }),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at')
@@ -90,7 +90,7 @@ export type Tag = typeof tagsTable.$inferSelect;
 export type CreateTag = typeof tagsTable.$inferInsert;
 
 export const categoriesTable = pgTable('categories', {
-  id: serial('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 256 }),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at')
@@ -105,7 +105,7 @@ export type CreateCategory = typeof categoriesTable.$inferInsert;
 export const projectStatusEnum = pgEnum('project_status', PROJECT_STATUS);
 
 export const projectsTable = pgTable('projects', {
-  id: serial('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 256 }),
   docsUrl: varchar('docs_url', { length: 256 }),
   github: varchar('github', { length: 256 }),
@@ -136,10 +136,8 @@ export const dbSchema = {
   categories: categoriesTable,
 };
 
-const httpMethodEnum = pgEnum('http_method', ['GET', 'POST', 'PUT', 'DELETE']);
-
 export const cloudFunctionsTable = pgTable('cloud_functions', {
-  id: serial('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),
   url: varchar('url', { length: 255 }).notNull().unique(),
   code: text('code').notNull(),
@@ -156,7 +154,7 @@ export type CloudFunction = typeof cloudFunctionsTable.$inferSelect;
 export type NewCloudFunction = typeof cloudFunctionsTable.$inferInsert;
 
 export const menusTable = pgTable('menus', {
-  id: serial('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),
   url: varchar('url', { length: 255 }).notNull().unique(),
   order: integer('order').default(0),
@@ -172,7 +170,7 @@ export type Menu = typeof menusTable.$inferSelect;
 export type NewMenu = typeof menusTable.$inferInsert;
 
 export const pagesTable = pgTable('pages', {
-  id: serial('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),
   url: varchar('url', { length: 255 }).notNull().unique(),
   content: text('content'),
@@ -189,7 +187,7 @@ export type SelectPage = typeof pagesTable.$inferSelect;
 export type InsertPage = typeof pagesTable.$inferInsert;
 
 export const socialLinksTable = pgTable('social_links', {
-  id: serial('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),
   url: varchar('url', { length: 255 }).notNull().unique(),
   order: integer('order').default(0),
@@ -205,7 +203,7 @@ export type SocialLink = typeof socialLinksTable.$inferSelect;
 export type NewSocialLink = typeof socialLinksTable.$inferInsert;
 
 export const settingsTable = pgTable('settings', {
-  id: serial('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),
   value: text('value').notNull(),
   type: varchar('type', { length: 255 }).notNull(),

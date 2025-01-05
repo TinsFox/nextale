@@ -16,7 +16,6 @@ export class AuthService {
     if (!user) {
       throw new BadRequestException('Username or password is incorrect');
     }
-    console.log(user);
     if (!user.password) {
       throw new BadRequestException('Invalid password');
     }

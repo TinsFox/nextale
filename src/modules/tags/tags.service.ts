@@ -23,20 +23,20 @@ export class TagsService {
     });
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.db.query.tagsTable.findFirst({
       where: and(eq(tagsTable.id, id), eq(tagsTable.isDeleted, false)),
     });
   }
 
-  update(id: number, updateTagDto: UpdateTagDto) {
+  update(id: string, updateTagDto: UpdateTagDto) {
     return this.db
       .update(tagsTable)
       .set(updateTagDto)
       .where(eq(tagsTable.id, id));
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.db
       .update(tagsTable)
       .set({ isDeleted: true })

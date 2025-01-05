@@ -11,7 +11,7 @@ import { DrizzleDB } from '../database/drizzle';
 import { and, count, eq, inArray, desc } from 'drizzle-orm';
 
 @Injectable()
-export class PostsService {
+export class PostsAdminService {
   constructor(@Inject(DRIZZLE) private db: DrizzleDB) {}
 
   async create(userId: number, createPostDto: CreatePostDto) {
@@ -37,7 +37,6 @@ export class PostsService {
     const dbQuery = this.db
       .select()
       .from(postsTable)
-      .where(eq(postsTable.status, 'published'))
       .offset(offset)
       .limit(limit)
       .orderBy(desc(postsTable.createdAt));
@@ -58,23 +57,8 @@ export class PostsService {
       },
     };
   }
-  async findOneBySlug(slug: string) {
-    const post = await this.db.query.postsTable.findFirst({
-      where: and(eq(postsTable.slug, slug), eq(postsTable.status, 'published')),
-      columns: {
-        status: false,
-      },
-    });
-    if (!post) {
-      throw new NotFoundException('Post not found');
-    }
-    const relatedTags = await this.db.query.tagsTable.findMany({
-      where: inArray(tagsTable.id, post.tagIds ?? []),
-    });
-    return { ...post, tags: relatedTags };
-  }
 
-  async findOneById(id: number) {
+  async findOneById(id: string) {
     const post = await this.db.query.postsTable.findFirst({
       where: eq(postsTable.id, id),
       columns: {
@@ -90,14 +74,14 @@ export class PostsService {
     return { ...post, tags: relatedTags };
   }
 
-  update(id: string, updatePostDto: UpdatePostDto) {
+  update(id: number, updatePostDto: UpdatePostDto) {
     return this.db
       .update(postsTable)
       .set({
         title: updatePostDto.title,
         content: updatePostDto.content,
         coverImage: updatePostDto.coverImage,
-        tagIds: updatePostDto.tags?.map((tag) => tag),
+        tagIds: updatePostDto.tags?.map((tag) => +tag),
         status: updatePostDto.status,
         slug: updatePostDto.slug,
         isTop: updatePostDto.isTop,
@@ -106,7 +90,7 @@ export class PostsService {
       .where(eq(postsTable.id, id));
   }
 
-  remove(id: string) {
+  remove(id: number) {
     return this.db.delete(postsTable).where(eq(postsTable.id, id));
   }
 }
