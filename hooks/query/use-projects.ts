@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 
-import { getProject, getProjects } from "@/lib/api/admin/projects"
+import { fetchProjectDetail, getProjects } from "@/lib/api/admin/projects"
 
 export function useProjects() {
   const { data, isLoading, refetch } = useQuery({
@@ -18,7 +18,7 @@ export function useProjects() {
 export function useProject(id: number) {
   const { data, isLoading } = useQuery({
     queryKey: ["project", id],
-    queryFn: () => getProject(id),
+    queryFn: () => fetchProjectDetail(id),
     enabled: !!id && !isNaN(id),
   })
 

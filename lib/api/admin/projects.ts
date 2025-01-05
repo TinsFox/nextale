@@ -1,8 +1,9 @@
 import { apiFetch, APIResponse } from "@/lib/api-fetch"
 import { IProject } from "@/lib/schema/projects"
+import { env } from "process"
 
 export function getProjects() {
-  return apiFetch<APIResponse<IProject[]>>("/api/projects/s")
+  return apiFetch<APIResponse<IProject[]>>("/api/admin/projects")
 }
 
 export function createProject(data: IProject) {
@@ -27,4 +28,8 @@ export function deleteProject(id: number) {
 
 export function getProject(id: number) {
   return apiFetch<APIResponse<IProject>>(`/api/projects/${id}`)
+}
+
+export async function fetchProjectDetail(id: string | number) {
+  return await apiFetch(`/api/admin/projects/${id}`)
 }

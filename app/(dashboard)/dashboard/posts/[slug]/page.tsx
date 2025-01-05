@@ -1,44 +1,32 @@
-import type { Metadata } from "next"
+"use client"
 
-import { fetchPostDetail } from "@/lib/api/post"
-
+import { useParams } from "next/navigation"
 import { PostEditor } from "../components/post-editor"
+import { usePost } from "@/hooks/query/use-posts"
 
-type Props = {
-  params: Promise<{ slug: string }>
-}
+export default function PostPage() {
+  const { slug } = useParams<{ slug: string }>()
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const slug = (await params).slug
-  if (slug === "create") {
-    return {
-      title: "Create Post",
-    }
-  }
-  const post = await fetchPostDetail(slug)
-  if (!post) {
-    return {
-      title: "Post not found",
-    }
-  }
-  return {
-    title: post?.title,
-  }
-}
-export default async function PostPage(props: {
-  params: Promise<{ slug: string }>
-}) {
-  const params = await props.params
-  const { slug } = params
+  const { data: post, isLoading } = usePost(Number(slug))
 
   if (slug === "create") {
     return <PostEditor slug={slug} />
   }
 
-  const post = await fetchPostDetail(slug)
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div>Loading...</div>
+      </div>
+    )
+  }
 
-  if (!post && slug !== "create") {
-    return <div>Loading...</div>
+  if (!post) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div>文章不存在</div>
+      </div>
+    )
   }
 
   return <PostEditor slug={slug} post={post} />

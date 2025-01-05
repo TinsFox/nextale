@@ -1,8 +1,7 @@
 import { env } from "@/env"
-import { apiFetch, APIResponse } from "../api-fetch"
+import { apiFetch } from "../api-fetch"
 import { IPost } from "../schema/post.schema"
 import { IApiPaginationResponse } from "./config"
-import { fetcher } from "./fetcher"
 
 export const fetchPosts = async () => {
   const res = await apiFetch<{
@@ -18,18 +17,8 @@ export const fetchPosts = async () => {
   return res.data
 }
 
-export async function fetchPostDetail(slug: string) {
-  const post = await fetch(`${env.NEXT_PUBLIC_API_URL}/posts/s/${slug}`)
-  const res = (await post.json()) as APIResponse<IPost>
-  return res.data
-}
-
-export async function publishPost(post: IPost) {
-  return await fetcher(`/api/posts`, {
-    method: "POST",
-    body: JSON.stringify(post),
-    headers: {
-      "Content-Type": "application/json",
-    },
+export async function fetchPostDetail(id: string | number) {
+  return apiFetch(`/api/posts/${id}`, {
+    method: "GET",
   })
 }

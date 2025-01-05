@@ -1,11 +1,12 @@
-import { env } from "@/env"
 import { IPost } from "@/lib/schema/post.schema"
-import { apiFetch, APIResponse } from "@/lib/api-fetch"
+import { apiFetch } from "@/lib/api-fetch"
+import { IApiPaginationResponse, IApiResponse } from "../config"
 
-export async function fetchPostDetail(slug: string) {
-  const post = await fetch(`${env.NEXT_PUBLIC_API_URL}/posts/s/${slug}`)
-  const res = (await post.json()) as APIResponse<IPost>
-  return res.data
+
+export async function fetchPostDetail(id: string | number) {
+  return await apiFetch(`/api/admin/posts/${id}`, {
+    method: "GET",
+  })
 }
 
 export async function publishPost(post: IPost) {
@@ -27,4 +28,13 @@ export async function updatePost(post: IPost) {
     method: "PATCH",
     body: post,
   })
+}
+
+export async function fetchPosts() {
+  return await apiFetch<IApiResponse<IApiPaginationResponse<IPost>>>(
+    "/api/admin/posts",
+    {
+      method: "GET",
+    }
+  )
 }

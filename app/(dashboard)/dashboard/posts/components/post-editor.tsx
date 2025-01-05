@@ -40,8 +40,8 @@ export function PostEditor({ slug, post }: { slug: string; post?: IPost }) {
 
   const form = useForm<IPost>({
     resolver: zodResolver(postFormSchema),
-    values: post,
     defaultValues: {
+      id: post?.id || undefined,
       title: "",
       slug: "",
       content: "",
@@ -53,14 +53,17 @@ export function PostEditor({ slug, post }: { slug: string; post?: IPost }) {
       relatedPosts: [],
       status: "draft",
     },
+    values: post,
     resetOptions: {
       keepDirtyValues: true,
     },
   })
-  console.log(form.formState.errors);
 
-  const handleSave = async () => {
-    startTransitionSaving(async () => {
+  const handleSave = (e?: any) => {
+    if (e) {
+      e.preventDefault()
+    }
+    startTransitionSaving(() => {
       form.handleSubmit(onSubmit)()
     })
   }
@@ -74,7 +77,6 @@ export function PostEditor({ slug, post }: { slug: string; post?: IPost }) {
   const onSubmit = async (data: IPost) => {
     try {
       const res = slug === "create" ? await createPost(data) : await updatePost(data)
-      console.log('res: ', res);
       if (res.code !== 200) {
         toast.error("保存文章失败")
         return
@@ -82,7 +84,7 @@ export function PostEditor({ slug, post }: { slug: string; post?: IPost }) {
       toast.success(`${slug === "create" ? "创建" : "更新"}文章成功`)
       router.refresh()
     } catch (error) {
-      console.error("Error saving post:", error)
+      console.error("[POST_EDITOR]", error)
       toast.error("保存文章失败")
     }
   }
