@@ -1,0 +1,10 @@
+{
+  "tailwindCSS.experimental.classRegex": [
+    ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ],
+  "cSpell.words": ["Nextale", "Tiptap"],
+  "stylua.targetReleaseVersion": "latest",
+  "alt-editor.name": "webstorm"
+}
