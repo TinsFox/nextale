@@ -5,12 +5,14 @@ import {
 	Home,
 	ListTree,
 	type LucideIcon,
+	Map,
+	Rss,
 	Send,
 	Settings,
 	Settings2,
 } from "lucide-react";
 
-import type * as React from "react";
+import type React from "react";
 
 import { AppInfo } from "@/components/app-info";
 import { NavMain } from "@/components/nav-main";
@@ -45,7 +47,7 @@ export const navMain = [
 		items: [],
 	},
 	{
-		title: "Post12123",
+		title: "Post",
 		url: "/dashboard/posts",
 		icon: BookOpen,
 		items: [],
@@ -89,18 +91,6 @@ export const navMain = [
 		icon: Settings,
 		items: [],
 	},
-	{
-		title: "站点信息",
-		url: "/dashboard/site-info",
-		icon: Settings2,
-		items: [
-			{
-				title: "站点信息",
-				url: "/dashboard/site-info",
-				icon: Settings2,
-			},
-		],
-	},
 ];
 const navSecondary = [
 	{
@@ -116,12 +106,14 @@ const navSecondary = [
 	},
 	{
 		title: "RSS",
-		url: `/feed`,
+		url: "/feed",
+		icon: Rss,
 		external: true,
 	},
 	{
 		title: "Sitemap",
-		url: `/sitemap`,
+		url: "/sitemap",
+		icon: Map,
 		external: true,
 	},
 ];

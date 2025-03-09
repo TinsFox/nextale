@@ -17,6 +17,7 @@ import {
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { Link } from "@tanstack/react-router";
 import React from "react";
 
 export function NavMain({
@@ -51,11 +52,11 @@ export function NavMain({
 									data-active={item.isActive}
 									className="data-[active=true]:bg-accent data-[active=true]:text-accent-foreground"
 								>
-									<a href={item.url}>
+									<Link to={item.url}>
 										{item.icon &&
 											React.createElement(item.icon, { className: "size-4" })}
 										<span>{item.title}</span>
-									</a>
+									</Link>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
 						);
@@ -89,9 +90,9 @@ export function NavMain({
 													data-active={item.isActive}
 													className="data-[active=true]:bg-accent data-[active=true]:text-accent-foreground"
 												>
-													<a href={subItem.url}>
+													<Link to={subItem.url}>
 														<span>{subItem.title}</span>
-													</a>
+													</Link>
 												</SidebarMenuSubButton>
 											</SidebarMenuSubItem>
 										))}
