@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./main.css";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { ClickToComponent } from "click-to-react-component";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import { useSession } from "./lib/auth-client";
 import { routeTree } from "./routeTree.gen";
@@ -43,6 +43,7 @@ if (rootEl) {
 	root.render(
 		<React.StrictMode>
 			<InnerApp />
+			<ClickToComponent />
 		</React.StrictMode>,
 	);
 }

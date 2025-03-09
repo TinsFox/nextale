@@ -39,7 +39,7 @@ export function BasicForm({ form }: { form: UseFormReturn<IPost> }) {
 						<FormControl>
 							<div className="flex items-end w-full gap-2">
 								<p className="text-sm text-muted-foreground whitespace-nowrap leading-7">
-									{`${env.NEXT_PUBLIC_URL}/posts/`}
+									{`${env.VITE_APP_URL}/posts/`}
 								</p>
 								<div className="relative flex-1 group">
 									<Input

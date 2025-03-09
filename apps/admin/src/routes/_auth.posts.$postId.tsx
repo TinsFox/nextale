@@ -7,6 +7,9 @@ export const Route = createFileRoute("/_auth/posts/$postId")({
 	loader: ({ params }) => {
 		return fetchPostDetail(params.postId);
 	},
+	notFoundComponent: () => {
+		return <p>Post not found</p>;
+	},
 });
 
 function RouteComponent() {

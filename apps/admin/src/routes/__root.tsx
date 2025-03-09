@@ -64,7 +64,7 @@ function NotFound() {
 					<p>
 						Need help?{" "}
 						<Link
-							href="/support"
+							to="/support"
 							className="text-primary/80 underline-offset-4 hover:text-primary hover:underline"
 						>
 							Contact support

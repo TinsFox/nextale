@@ -28,6 +28,8 @@ app.route("/admin/posts", adminPostRoute);
 app.get("/", (c) => {
 	return c.text("Hello Hono!");
 });
+app.notFound((c) => c.json({ message: "Not Found", ok: false }, 404));
+
 showRoutes(app);
 serve(
 	{
