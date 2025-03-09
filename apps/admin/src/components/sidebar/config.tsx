@@ -1,33 +1,16 @@
 import {
 	BookOpen,
 	FileText,
-	FolderKanban,
 	Home,
+	Link,
 	ListTree,
-	type LucideIcon,
-	Map,
+	Map as MapIcon,
 	Rss,
 	Send,
 	Settings,
-	Settings2,
 } from "lucide-react";
 
-import type React from "react";
-
-import { AppInfo } from "@/components/app-info";
-import { NavMain } from "@/components/nav-main";
-import { NavUser } from "@/components/nav-user";
-import {
-	Sidebar,
-	SidebarContent,
-	SidebarFooter,
-	SidebarHeader,
-	SidebarRail,
-} from "@/components/ui/sidebar";
-
-import { useLocation } from "@tanstack/react-router";
-import { NavSecondary } from "./nav-secondary";
-
+import type { LucideIcon } from "lucide-react";
 export interface MenuItem {
 	title: string;
 	url: string;
@@ -39,6 +22,7 @@ export interface MenuItem {
 	};
 }
 // Convert existing navigation config to new format
+
 export const navMain = [
 	{
 		title: "Dashboard",
@@ -48,11 +32,11 @@ export const navMain = [
 	},
 	{
 		title: "Post",
-		url: "/dashboard/posts",
+		url: "/posts",
 		icon: BookOpen,
 		items: [],
 		children: {
-			pattern: /^\/dashboard\/posts\/([^/]+)$/,
+			pattern: /^\/posts\/([^/]+)$/,
 			getTitle: (pathname: string) => {
 				const slug = pathname.split("/").pop();
 				return slug === "create" ? "创建文章" : "编辑文章";
@@ -61,11 +45,11 @@ export const navMain = [
 	},
 	{
 		title: "Projects",
-		url: "/dashboard/projects",
+		url: "/projects",
 		icon: FileText,
 		items: [],
 		children: {
-			pattern: /^\/dashboard\/projects\/([^/]+)$/,
+			pattern: /^\/projects\/([^/]+)$/,
 			getTitle: (pathname: string) => {
 				const slug = pathname.split("/").pop();
 				return slug === "create" ? "创建项目" : "编辑项目";
@@ -74,11 +58,11 @@ export const navMain = [
 	},
 	{
 		title: "Category",
-		url: "/dashboard/categories",
+		url: "/categories",
 		icon: ListTree,
 		items: [],
 		children: {
-			pattern: /^\/dashboard\/categories\/([^/]+)$/,
+			pattern: /^\/categories\/([^/]+)$/,
 			getTitle: (pathname: string) => {
 				const slug = pathname.split("/").pop();
 				return slug === "create" ? "创建分类" : "编辑分类";
@@ -87,12 +71,12 @@ export const navMain = [
 	},
 	{
 		title: "Setting",
-		url: "/dashboard/settings",
+		url: "/settings",
 		icon: Settings,
 		items: [],
 	},
 ];
-const navSecondary = [
+export const navSecondary = [
 	{
 		title: "Feedback",
 		url: "https://github.com/TinsFox/shadcnui-boilerplate/issues",
@@ -101,6 +85,7 @@ const navSecondary = [
 	},
 	{
 		title: "网站链接",
+		icon: Link,
 		url: "env.NEXT_PUBLIC_URL",
 		external: true,
 	},
@@ -113,35 +98,7 @@ const navSecondary = [
 	{
 		title: "Sitemap",
 		url: "/sitemap",
-		icon: Map,
+		icon: MapIcon,
 		external: true,
 	},
 ];
-
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-	const location = useLocation();
-
-	const pathname = location.pathname;
-
-	// Update isActive status based on current pathname
-	const items = navMain.map((item) => ({
-		...item,
-		isActive: pathname === item.url,
-	}));
-
-	return (
-		<Sidebar collapsible="icon" {...props}>
-			<SidebarHeader>
-				<AppInfo />
-			</SidebarHeader>
-			<SidebarContent>
-				<NavMain items={items} />
-				<NavSecondary items={navSecondary} className="mt-auto" />
-			</SidebarContent>
-			<SidebarFooter>
-				<NavUser />
-			</SidebarFooter>
-			<SidebarRail />
-		</Sidebar>
-	);
-}

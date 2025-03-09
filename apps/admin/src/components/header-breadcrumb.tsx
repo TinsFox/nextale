@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 
 import {
@@ -11,8 +9,8 @@ import {
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-import { type MenuItem, navMain } from "@/components/app-sidebar";
 import { useLocation } from "@tanstack/react-router";
+import { type MenuItem, navMain } from "./sidebar/config";
 
 function getBreadcrumbs(pathname: string, items: MenuItem[]) {
 	const parentPath = pathname.split("/").slice(0, 3).join("/");
@@ -25,8 +23,8 @@ function getBreadcrumbs(pathname: string, items: MenuItem[]) {
 	}
 
 	const breadcrumbs = [navMain[0], currentItem].map((item) => ({
-		title: item.title,
-		href: item.url,
+		title: item?.title,
+		href: item?.url,
 	}));
 
 	if (currentItem.children?.pattern.test(pathname)) {

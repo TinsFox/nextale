@@ -8,9 +8,11 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { ArrowLeft } from "lucide-react";
 import { motion } from "motion/react";
 import { Toaster } from "sonner";
+
 interface RouterContext {
 	auth?: Session | null;
 }
+
 function NotFound() {
 	return (
 		<div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-background/80">
@@ -83,6 +85,17 @@ function NotFound() {
 export const Route = createRootRouteWithContext<RouterContext>()({
 	component: RootComponent,
 	notFoundComponent: NotFound,
+	head: () => ({
+		meta: [
+			{
+				name: "description",
+				content: "admin dashboard for nextale",
+			},
+			{
+				title: "nextale",
+			},
+		],
+	}),
 });
 
 function RootComponent() {

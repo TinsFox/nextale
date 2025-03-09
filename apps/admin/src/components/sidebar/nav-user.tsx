@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/sidebar";
 
 import { useSession } from "@/lib/auth-client";
-import { Skeleton } from "./ui/skeleton";
+import { Skeleton } from "../ui/skeleton";
 
 export function NavUser() {
 	const { isMobile } = useSidebar();
