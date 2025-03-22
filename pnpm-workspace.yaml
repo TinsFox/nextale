@@ -1,5 +1,8 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
-  - 'components/**'
+  - apps/*
+  - packages/*
+  - components/**
   - '!**/test/**'
+onlyBuiltDependencies:
+  - esbuild
+  - workerd

@@ -1,8 +1,6 @@
 import { z } from "zod";
 
 import { createEnv } from "@t3-oss/env-core";
-import { config } from "dotenv";
-config({ path: "./.env" });
 
 export const env = createEnv({
 	server: {
@@ -15,6 +13,7 @@ export const env = createEnv({
 		S3_ENDPOINT: z.string().optional(),
 		S3_PUBLIC_DOMAIN: z.string().optional(),
 		PUBLIC_URL: z.string().url(),
+		API_PORT: z.string().default("3000"),
 	},
 	runtimeEnv: {
 		PUBLIC_URL: process.env.PUBLIC_URL,
@@ -27,5 +26,6 @@ export const env = createEnv({
 		S3_PUBLIC_DOMAIN: process.env.S3_PUBLIC_DOMAIN,
 		RESEND_API_KEY: process.env.RESEND_API_KEY,
 		BETTER_AUTH_EMAIL: process.env.BETTER_AUTH_EMAIL,
+		API_PORT: process.env.API_PORT,
 	},
 });
