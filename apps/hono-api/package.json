@@ -1,7 +1,7 @@
 {
 	"name": "hono-api",
 	"scripts": {
-		"dev": "tsx watch src/index.ts",
+		"dev": "wrangler dev",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:push": "drizzle-kit push",
@@ -14,12 +14,12 @@
 		"@hono/zod-openapi": "^0.19.2",
 		"@hono/zod-validator": "^0.4.3",
 		"@neondatabase/serverless": "^0.10.4",
-		"@react-email/components": "^0.0.33",
-		"@scalar/hono-api-reference": "^0.5.184",
+		"@react-email/components": "^0.0.34",
+		"@scalar/hono-api-reference": "^0.7.2",
 		"@types/react": "^19.0.10",
 		"better-auth": "^1.2.3",
 		"dotenv": "^16.4.7",
-		"drizzle-orm": "^0.40.0",
+		"drizzle-orm": "^0.41.0",
 		"drizzle-zod": "^0.7.0",
 		"hono": "^4.7.4",
 		"hono-openapi": "^0.4.6",
@@ -31,10 +31,9 @@
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20250109.0",
-		"@t3-oss/env-core": "^0.12.0",
 		"@types/node": "^22.13.10",
 		"drizzle-kit": "^0.30.5",
 		"tsx": "^4.19.3",
-		"wrangler": "^3.114.1"
+		"wrangler": "^4.3.0"
 	}
 }

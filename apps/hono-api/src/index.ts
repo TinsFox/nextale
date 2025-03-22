@@ -11,7 +11,9 @@ import { Hono } from "hono";
 import { describeRoute } from "hono-openapi";
 import { resolver, validator as zValidator } from "hono-openapi/zod";
 import { env } from "./env";
+
 import { auth } from "./lib/auth";
+import { formatTable } from "./lib/log";
 import adminPostRoute from "./modules/admin.post";
 // import docsRoute from "./modules/docs";
 import userRoute from "./modules/user";
@@ -77,9 +79,8 @@ app.get(
 	"/scalar-docs",
 	apiReference({
 		theme: "saturn",
-		spec: {
-			url: `http://localhost:${env.API_PORT}/api/openapi`,
-		},
+		title: "Nextale Hono API Reference",
+		url: `http://localhost:${env.API_PORT}/api/openapi`,
 		authentication: {
 			type: "bearer",
 			name: "Authorization",
@@ -95,9 +96,17 @@ showRoutes(app, {
 export default {
 	fetch: app.fetch,
 };
-console.log(`Server is running on http://localhost:${env.API_PORT}`);
-console.log(`Server API is running on http://localhost:${env.API_PORT}/api`);
-console.log(`OpenAPI on http://localhost:${env.API_PORT}/api/docs/openapi`);
-console.log(
-	`Scalar Docs on http://localhost:${env.API_PORT}/api/docs/scalar-docs`,
-);
+const serverInfo = [
+	{ Description: "Server", URL: `http://localhost:${env.API_PORT}` },
+	{ Description: "Server API", URL: `http://localhost:${env.API_PORT}/api` },
+	{
+		Description: "OpenAPI",
+		URL: `http://localhost:${env.API_PORT}/api/openapi`,
+	},
+	{
+		Description: "Scalar Docs",
+		URL: `http://localhost:${env.API_PORT}/api/scalar-docs`,
+	},
+];
+
+formatTable(serverInfo);
